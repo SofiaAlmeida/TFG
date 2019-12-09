@@ -1,0 +1,70 @@
+% article example for classicthesis.sty
+\documentclass[10pt,a4paper]{article} % KOMA-Script article scrartcl
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{lipsum}
+\usepackage{url}
+\usepackage[nochapters]{./classicthesis} % nochapters
+
+\begin{document}
+    \pagestyle{plain}
+    \title{\rmfamily\normalfont\spacedallcaps{the title}}
+    \author{\spacedlowsmallcaps{Sofía Almeida Bruno}}
+    \date{} % no date
+
+    \maketitle
+
+    \begin{abstract}
+        \noindent\lipsum[1] Just a test.\footnote{This is a footnote.}
+    \end{abstract}
+
+    \tableofcontents
+
+    \section{Varios}
+    Objetivo: aplicar información mutua para seleccionar variables (en un problema de aprendizaje ...) utilizando clustering previamente para disminuir el volumen de los datos a tratar.
+
+    Problema: Una persona no puede trabajar con todas las vraibles que tiene un determinado problema, tratamos de reducirlas, seleccionamos variables utilizando como criterio la información mutua (basada en el concepto de entropía...)
+    ...maldición de la dimensionalidad...calculamos $2^d-1$ distancias
+    La información mutua se basa en un calculo de distancias. Queremos comprobar si reduciendo el número de instancias mediante técnicas de clustering la información mutua no se ve afectada.
+     
+    \section{Teoría de la información}
+
+    El concepto de información es demasiado amplio como para ser recogido en una única definición. Sin embargo, podemos definir el concepto de entropía, ... o el de información mutua que refleja la información que una variable aleatoria contiene sobre otra.
+
+    %\finalVersionString
+    \section{Clustering}
+    Podemos enunciar el problema de clustering (también segmentación o agrupamiento) de la siguiente forma:
+    \begin{quote}
+      Dado un conjunto finito $X=\{x_1,\dots,x_n\}$ encontrar un entero $c$, $2 \leq c < n$, y una c-partición de $X$ en conjuntos homogéneos.
+    \end{quote}
+    Ante este problema una de las primeras dudas que surge es: qué criterio de agrupamiento deberíamos usar. Se pueden usar algunas propiedades matemáticas como la distancia, curvatura, conexión, \dots  En cualquier caso la selección del criterio será subjetiva, no existe un criterio de semejanza universal.
+    
+    A continuación, comentaremos dos algoritmos de clustering: \textit{Hard c-means} y \textit{Fuzzy c-means}, ambos basados en la optimización de una función objetivo. Para ello es necesario introducir las nociones de conjuntos \textit{hard} y \textit{fuzzy}.
+
+    Sea $A \in \mathcal{P}(A)$. Definiremos ambos tipos de conjuntos a partir de su función característica. La función característica de un subconjunto \textit{hard} $A \subset X$, $\chi_A:X \to \{0,1\}$, viene dada por:
+\[  
+\chi_A(x) = 
+     \begin{cases}
+       1, &\quad\text{si } x \in A\\
+       0, &\quad\text{si } x \notin A \\ 
+     \end{cases}.
+\]
+
+La diferencia con un subconjunto \textit{fuzzy} será el codominio de la función característica. En un conjunto \textit{hard} el codominio es discreto, mientras que la función característica de un conjunto \textit{fuzzy} podrá tomar cualquier valor en el intervalo $[0,1]$, $\chi:X \to [0,1]$.
+
+A partir de estos conceptos podemos determinar cuándo una partición es \textit{hard} o \textit{fuzzy}.
+
+
+    
+\subsection{\textit{Hard c-means}}
+Algoritmo propuesto por R. Duda y P. Hart en 1973.
+    
+    \subsection{\textit{Fuzzy c-means}}
+    
+    % bib stuff
+    \nocite{*}
+    \addtocontents{toc}{\protect\vspace{\beforebibskip}}
+    \addcontentsline{toc}{section}{\refname}
+    \bibliographystyle{plain}
+    \bibliography{../Bibliography}
+\end{document}
