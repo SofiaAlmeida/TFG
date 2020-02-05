@@ -12,10 +12,10 @@
 \theoremstyle{definition}
 \newtheorem{definition}{Definición}[section]
 
-\newtheorem{theorem}{Theorem}[section]
+\newtheorem{theorem}{Teorema}[section]
 \newtheorem{lemma}[theorem]{Lema}
 \newtheorem{example}[theorem]{Ejemplo}
-
+\newtheorem{corollary}{Corolario}[theorem]
 
 \begin{document}
     \pagestyle{plain}
@@ -56,7 +56,7 @@ Sea $\Omega$ un espacio muestral discreto y finito y una variable aleatoria, $X 
 
 En la fórmula anterior definiremos $0 \log 0 = 0$. Así, la entropía queda definida por un funcional de la distribución de $X$, no depende de los valores que tome la variable sino de sus probabilidades.
 
-Según cuál sea la base del logaritmo utilizado en la fórmula de la entropía utilizaremos unas unidades u otras. Notamos $H_b(X) = - \sum_{x\in \mathcal{X}} p(x) \log_b p(x)$. Si el logaritmo tiene base 2, la entropía se medirá en bits, mientras que si la base es $e$, las unidades serán \textit{nats}.\\
+Según cuál sea la base del logaritmo utilizado en la fórmula de la entropía utilizaremos unas unidades u otras. Notamos $H_b(X) = - \sum_{x\in \mathcal{X}} p(x) \log_b p(x)$. Si el logaritmo tiene base 2, la entropía se medirá en bits, mientras que si la base es $e$, las unidades serán \textit{nats} (unidad natural de información).\\
 
 Dada la variable aleatoria discreta $X$ con distribución $p(x)$, podemos considerar la variable aleatoria $g(X)$, cuya esperanza, $E$, viene dada por:\[
 E_pg(X) = \sum_{x\in \mathcal{X}}g(x)p(x).
@@ -119,13 +119,25 @@ Tenemos la definición de entropía de una variable aleatoria, podemos extenderl
   que podemos expresar también como \[
   H(X,Y) = - E \log p(X,Y).\]
 \end{definition}
+Presentamos el siguiente lema que será útil para la demostración de propiedades en lo sucesivo.
+
+\begin{lemma}[Desigualdad de Gibbs]\label{l:gibbs}
+  Dadas dos funciones masa de probabilidad $\{p_i\}$ y $\{q_i\}$, entonces \[
+\sum_i p_i \log \frac{p_i}{q_i} \ge 0,
+\]
+dándose la igualdad si, y solo si, $q_i = p_i$ para todo $i$.
+\end{lemma}
+
+\begin{proof}
+  % TODO
+\end{proof}
 
 En el siguiente lema recogemos algunas propiedades de la entropía conjunta.
 
-\begin{lemma} Sean $X, Y$ dos variables aleatorias discretas con alfabeto $\mathcal{X}, \mathcal{Y}$ respectivamente. Entonces se verifican:
+\begin{lemma}\label{l:prop_ent_conj} Sean $X, Y$ dos variables aleatorias discretas con alfabeto $\mathcal{X}, \mathcal{Y}$ respectivamente. Entonces se verifican:
   \begin{enumerate}
   \item $H(X) \le H(X, Y)$.
-  \item $H(X,Y) \le H(X) + H(Y)$.
+  \item $H(X,Y) \le H(X) + H(Y)$. La igualdad se dará si, y solo si, $X$ e $Y$ son independientes.
   \end{enumerate}
 \end{lemma}
 
@@ -141,15 +153,79 @@ En el siguiente lema recogemos algunas propiedades de la entropía conjunta.
   \begin{align*}
     &H(X,Y) - (H(X) + H(Y)) \\ &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) + \sum_{x \in \mathcal{X}} p(x)\log p(x) + \sum_{y \in \mathcal{Y}} p(y)\log p(y)\\
     &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y)\log p(x) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y)\log p(y)\\
-    &= \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log \frac{p(x)p(y)}{p(x,y)}
+    &= \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log \frac{p(x)p(y)}{p(x,y)} \leq 0,
   \end{align*}
+  donde la última desigualdad viene de aplicar el Lema \ref{l:gibbs} sobre las funciones masa de probabilidad $p(x,y)$ y $p(x)p(y)$. Esta última sería la función masa de probabilidad conjunta de dos variables aleatorias $X,Y$ con distribuciones $p(x), p(y)$ independientes. La igualdad ocurre si, y solo si, $p(x)p(y) = p(x,y)$, esto es si $X$ e $Y$ son independientes.
   \end{enumerate}
 \end{proof}
+
+Al considerar dos distribuciones distintas, además de su entropía conjunta podemos definir la entropía condicional de una respecto de la otra.
+
+\begin{definition}[Entropía condicional]
+  Si $(X,Y)$ sigue una distribución $p(x,y)$, la entropía condicional de $Y$ con respecto a $X$, $H(Y|X)$, se define como:
+  \begin{align*}
+    H(Y|X) &= \sum_{x \in \mathcal{X}} p(x) H(Y | X = x)\\
+    &= - \sum_{x \in \mathcal{X}} p(x) \sum_{y \in \mathcal{Y}} p(y | x) \log p(y | x)\\
+    &=  - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(y | x)\\
+    &=- E \log p(Y|X).
+  \end{align*}
+\end{definition}
+
+En la definición anterior, la entropía condicional $p(y|x)$ viene dada por la función masa de probabilidad $p(y|x) = \frac{p(x,y)}{p(x)}$.
+
+\begin{theorem}[Regla de la cadena]\label{t:regla_cadena}
+  Si $(X,Y)$ sigue una distribución $p(x,y)$, entonces se verifica:\[
+H(X,Y) = H(X) + H(Y|X).
+  \]
+\end{theorem}
+
+\begin{proof}
+  \begin{align*}
+    H(X,Y) &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) \stackrel{p(x,y) = p(x)p(y|x)}{=}\\
+    &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log \left( p(x)p(y|x) \right )\\
+    &= - \left(\sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(y|x) \right )\stackrel{\sum_{y\in \mathcal{Y}}p(x,y) = p(x)}{=}\\
+    &= - \sum_{x \in \mathcal{X}} p(x) \log p(x) + H(Y|X)\\
+    &= H(X) + H(Y|X).
+  \end{align*}
+\end{proof}
+
+\begin{corollary} En las condiciones del Teorema \ref{t:regla_cadena},\[
+H(X,Y|Z) = H(X|Z) + H(Y|X, Z).
+  \]
+\end{corollary}
+
+\begin{lemma}
+  Sean $X, Y$ dos variables aleatorias discretas con alfabeto $\mathcal{X}, \mathcal{Y}$ respectivamente. Entonces la entropía condicional cumple:\[
+0 \leq H(Y|X) \leq H(Y).
+\]
+Donde la desigualdad de la derecha es una igualdad si, y solo si, $X$ e $Y$ son independientes.
+\end{lemma}
+
+\begin{proof}
+  Observando la definición de entropía condicional, $H(Y|X) = - E \log p(Y|X)$, se ve que $H(Y|X) \geq 0$, ya que el logaritmo de una probabilidad (que se encontrará en el intervalo $[0,1]$) es siempre negativo, el signo menos hace que la entropía condicional sea positiva.
+
+  Aplicando el Teorema \ref{t:regla_cadena} y el Lema \ref{l:prop_ent_conj} se obtiene la desigualdad de la derecha:\[
+H(X) + H(Y|X) = H(X,Y) \leq H(X) + H(Y),
+\]
+dándose la igualdad solo en el caso en que las variables $X$ e $Y$ sean independientes.
+\end{proof}
+
+¿Añadir ejemplo numérico de cálculo de entropías conjuntas y condicionadas, viendo que se cumplen las propiedades?\\
+
+Pasamos a definir otra medida de información, la entropía relativa, esta será una medida de la distancia entre dos distribuciones. La podemos ver como una medida de ineficiencia al asumir que la distribución es $q$ cuando en realidad es $p$.
+
+\begin{definition}[Entropía relativa]
+  La entropía relativa (o ``distancia'' Kullback Leibler) entre dos funciones masa de probabilidad $p(x)$ y $q(x)$ se define como\[
+D(p||q) = \sum_{x \in \mathcal{X}}p(x) \log \frac{p(x)}{q(x)} = E_p \log \frac{p(X)}{q(X)}.
+  \]
+\end{definition}
+Las posibles indeterminaciones en la fórmula anterior se definen como: $0 \log \frac{0}{0} = 0$ y $p \log \frac{p}{0} = \infty$.
+
 
 Buscamos que la entropía cumpla una serie de propiedades para dar un enfoque axiomático de la medida de información:
 
     \begin{itemize}
-    \item Si las probabilidades de un evento sufren un pequeño cambio, la medida asociada debe cambiar de manera acorde, es decir, que la medida sea continua respecto a la probablidad.
+    \item Si las probabilidades de un evento sufren un pequeño cambio, la medida asociada debe cambiar de manera acorde, es decir, que la medida sea continua respecto a la probabilidad.
     \item La medida de información debe ser simétrica, esto es, no debe cambiar según el orden de las variables a considerar.
     \item La entropía máxima se obtiene cuando los eventos son igualmente probables. Es decir, cuando unas variables no aportan información adicional sobre otras, estamos ante el máximo nivel de incertidumbre.
     \end{itemize}
