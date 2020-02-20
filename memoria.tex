@@ -45,17 +45,17 @@
 
     \subsection{Entropía}
 
-    Intuitivamente, la entropía es una medida de la información o incertidumbre de una variable aleatoria. El término entropía viene del griego, donde significa \textit{transformación} y tiene ¿utilidad? en otras áreas como la física, donde se define como el logaritmo de la razón entre temperatura final e inicial de un sistema.
+    Intuitivamente, la entropía es una medida de la información o incertidumbre de una variable aleatoria. El término entropía viene del griego, donde significa \textit{transformación} y tiene relevancia también en otras áreas, como en la física donde se define como el logaritmo de la razón entre temperatura final e inicial de un sistema.
 
-    La idea de relacionar el número de estados de un sistema con una medida física viene del siglo XIX, en el que Rudolph Clausius sugirió la denominación ``entropía'' para esta medida. En 1928, Ralph Vinton Lyon Hartley define el término en el contexto de la teoría de la información. Aunque no es hasta 1948 que Claude Shannon no da una definición matemática del concepto de información,  sentando las bases de la teoría de la información, que pasó a formar parte de la teoría de la probabilidad. En su concepto de entropía no todos los símbolos de un alfabeto tienen porqué ser equiprobables. Esto nos permite medir la capacidad de comunicación de un canal. Andrei N. Kolmogorov, en la década de los 60, desarrolló su teoría de la complejidad, otra forma de teoría de la información.\\
+    La idea de relacionar el número de estados de un sistema con una medida física viene del siglo XIX, en el que Rudolph Clausius sugirió la denominación ``entropía'' para esta medida. En 1928, Ralph Vinton Lyon Hartley define el término en el contexto de la teoría de la información, básicamente como el logaritmo del tamaño del alfabeto. Aunque no es hasta 1948 que Claude Shannon no da una definición matemática del concepto de información como lo conocemos hoy en día,  sentando las bases de la teoría de la información, que pasó a formar parte de la teoría de la probabilidad. En su concepto de entropía no todos los símbolos de un alfabeto tienen porqué ser equiprobables. Esto nos permite medir la capacidad de comunicación de un canal. Andrei N. Kolmogorov, en la década de los 60, desarrolló su teoría de la complejidad, otra forma de teoría de la información.\\
 
-Sea $\Omega$ un espacio muestral discreto y finito y una variable aleatoria, $X = x_1, \cdots, x_N = \mathcal{X}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.
+Sea una variable aleatoria, $X$ que toma valores en $\mathcal{X} = \{x_1, \cdots, x_N \}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.
 
 \begin{definition}[Entropía]
   La entropía de una variable aleatoria discreta $X$ viene dada por \[H(X) = - \sum_{x\in \mathcal{X}} p(x) \log p(x).\]
 \end{definition}
 
-En la fórmula anterior definiremos $0 \log 0 = 0$. Así, la entropía queda definida por un funcional de la distribución de $X$, no depende de los valores que tome la variable sino de sus probabilidades.
+En la fórmula anterior definiremos, por continuidad, $0 \log 0 = 0$. Así, la entropía queda definida por un funcional de la distribución de $X$, no depende de los valores que tome la variable sino de sus probabilidades.
 
 Según cuál sea la base del logaritmo utilizado en la fórmula de la entropía utilizaremos unas unidades u otras. Notamos $H_b(X) = - \sum_{x\in \mathcal{X}} p(x) \log_b p(x)$. Si el logaritmo tiene base 2, la entropía se medirá en bits, mientras que si la base es $e$, las unidades serán \textit{nats} (unidad natural de información).\\
 
@@ -73,7 +73,9 @@ H(X) = E_p \log \frac{1}{p(X)} = \sum_{x\in \mathcal{X}}\left ( \log \frac{1}{p(
 \begin{lemma} La entropía de una variable aleatoria discreta es no negativa, $H(X) \ge 0$.
 \end{lemma}
 \begin{proof}
-  La probabilidad de un elemento $x$ es positiva, de hecho se encuentra en el intervalo $[0,1]$, luego el logaritmo de la probabilidad será negativo, ya que en 1 es donde cambia su signo. El producto de ambos factores es negativo para cualquier $x \in \mathcal{X}$, luego el signo menos en la fórmula de la entropía nos permite concluir que $H(X) = - \sum_{x \in \mathcal{X}}p(x)\log p(x) \ge 0$.
+  La probabilidad de un elemento $x$ es positiva, de hecho se encuentra en el intervalo $[0,1]$, luego el logaritmo de la probabilidad será negativo, ya que en 1 es donde cambia su signo. Al realizar el producto de ambos factores y cambiar su signo obtenemos $H(X) = - \sum_{x \in \mathcal{X}}p(x)\log p(x) \ge 0$.
+
+  %% El producto de ambos factores es negativo para cualquier $x \in \mathcal{X}$, luego el signo menos en la fórmula de la entropía nos permite concluir que $H(X) = - \sum_{x \in \mathcal{X}}p(x)\log p(x) \ge 0$.
 \end{proof}
 
 El siguiente lema, mediante propiedades del logaritmo, nos permitirá cambiar la base con la que calculemos la entropía.
@@ -93,9 +95,14 @@ El siguiente lema, mediante propiedades del logaritmo, nos permitirá cambiar la
        1, \quad\text{con probabilidad } p\\
        0, \quad\text{con probabilidad } 1-p \\
      \end{cases}.$\\
-     La entropía viene dada por $H(X) = - \left ( p \log p + (1-p) \log (1-p) \right ) =: H(p)$.
-
-     La función $H(p)$ es cóncava. Cuando $p=0$ o $p=1$, $H(p) = 0$, luego no hay incertidumbre, se conoce el valor que tomará la variable $X$. La incertidumbre máxima se alcanza en $p=\frac{1}{2}$: \[H\left (\frac{1}{2}\right ) = - \left ( \frac{1}{2}\log\frac{1}{2} + \frac{1}{2} \log\frac{1}{2} \right ) = - \log \frac{1}{2} = 1.\]
+     La entropía de la variable aleatoria $X$ la notaremos $H(p)$ y se calcula como sigue: $ H(p) := H(X) = - \left ( p \log p + (1-p) \log (1-p) \right )$.
+     Cuando $p=0$ o $p=1$, $H(p) = 0$, luego no hay incertidumbre, se conoce el valor que tomará la variable $X$. Calcularemos la primera y segunda derivada de $H(p)$ para conocer su comportamiento en el intervalo $(0,1)$.
+     \begin{align*}
+       H'(p) &= - \left ( \log p + \frac{p}{p} - \log(1-p) - \frac{1-p}{1-p} \right ) = - \left ( \log \left (\frac{p}{1-p} \right) \right ).\\
+     H''(p) &= - \left ( \frac{1}{p} + \frac{1}{1-p} \right ) \leq 0 \quad \forall p \in (0,1).
+     \end{align*}
+     
+     Hemos comprobado que la función $H(p)$ es cóncava. La incertidumbre máxima se alcanzará en $p=\frac{1}{2}$: \[H\left (\frac{1}{2}\right ) = - \left ( \frac{1}{2}\log\frac{1}{2} + \frac{1}{2} \log\frac{1}{2} \right ) = - \log \frac{1}{2} = 1.\]
 
 \end{example}
 
@@ -112,7 +119,7 @@ Pasamos a un ejemplo en el que el valor de las probabilidades es uno concreto:
      Utilizamos la fórmula de la entropía y obtenemos \[H(X) = - \left (\frac{1}{2} \log \frac{1}{2} + \frac{1}{4} \log \frac{1}{4} + \frac{1}{4} \log \frac{1}{8} \right ) = - \left (-\frac{1}{2} - \frac{1}{2} - \frac{3}{4} \right ) = 1 + \frac{3}{4} = \frac{7}{4} \text{ bits}.\]
 \end{example}
 
-Tenemos la definición de entropía de una variable aleatoria, podemos extenderla a un par de variables aleatorias.
+La definición de entropía de una variable aleatoria se puede aplicar a un par de variables aleatorias dando lugar a la entropía conjunta.
 
 \begin{definition}[Entropía conjunta]
   La entropía conjunta, $H(X,Y)$, de un par de variables aleatorias discretas $(X,Y)$ con distribución conjunta $p(x,y)$ se define como \[
@@ -129,9 +136,9 @@ Presentamos el siguiente lema que será útil para la demostración de propiedad
 dándose la igualdad si, y solo si, $q_i = p_i$ para todo $i$.
 \end{lemma}
 
-\begin{proof}
-  % TODO
-\end{proof}
+%% \begin{proof}
+%%   % TODO
+%% \end{proof}
 
 En el siguiente lema recogemos algunas propiedades de la entropía conjunta.
 
@@ -144,7 +151,7 @@ En el siguiente lema recogemos algunas propiedades de la entropía conjunta.
 
 \begin{proof}\hfill
   \begin{enumerate}
-  \item Para cualesquiera $x \in \mathcal{X}, y \in \mathcal{Y}$ se tiene que $p(x,y) \le p(x)$ y $\sum_{y \in \mathcal{Y}} p(x,y) = p(x)$, luego:
+  \item Para cualesquiera $x \in \mathcal{X}, y \in \mathcal{Y}$ se tiene que $\sum_{y \in \mathcal{Y}} p(x,y) = p(x)$ y $p(x,y) \le p(x)$, luego:
 \begin{align*}
   H(X,Y) &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) \ge - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x)\\
    &= - \sum_{x \in \mathcal{X}} p(x) \log p(x) = H(X).
@@ -234,10 +241,10 @@ Las posibles indeterminaciones en la fórmula anterior se definen como: $0 \log 
 La entropía relativa no es realmente una distancia, ya que no es simétrica ni verifica la desigualdad triangular. Sin embargo, a veces es útil pensar en ella como una medida de distancia entre distribuciones.
 
 \begin{example}
-  Sea $\mathcal{X} = \{0,1\}$ y consideramos dos distribuciones $p$ y $q$ en $\mathcal{X}$. Sea $p(0) = 1-r$, $p(1) = r$ y $q(0) = 1-s,\ q(1) = s$.
+  Sea $\mathcal{X} = \{0,1\}$ y consideramos dos distribuciones $p$ y $q$ en $\mathcal{X}$. Tomamos $p(0) = 1-r$, $p(1) = r$ y $q(0) = 1-s,\ q(1) = s$.
   \begin{align*}
     D(p \Vert q) &= \sum_{x \in \mathcal{X}} p(x) \log \frac{p(x)}{q(x)} = (1 - r) \log \frac{1-r}{1-s} + r \log \frac{r}{s}.\\
-    D(q \Vert p) &= \sum_{x \in \mathcal{X}}q(x) \log \frac{q(x)}{p(x)} = (1-s) \log \frac{a-s}{1-r} + s \log \frac{s}{r}.
+    D(q \Vert p) &= \sum_{x \in \mathcal{X}}q(x) \log \frac{q(x)}{p(x)} = (1-s) \log \frac{1-s}{1-r} + s \log \frac{s}{r}.
   \end{align*}
 
   Si tuviéramos $r=s$, entonces $D(p \Vert q) = 0 = D(q \Vert p)$.
@@ -254,9 +261,9 @@ Luego, $D(p\Vert q) \ne D(q \Vert p)$.
   H(X) \leq \log{\left\Vert\mathcal{X}\right\Vert}. 
   \]
 \end{lemma}
-\begin{proof}
+%% \begin{proof}
   
-\end{proof}
+%% \end{proof}
 
 La información mutua es una medida de la cantidad de información que una variable aleatoria contiene sobre otra. Se define como sigue.
 
