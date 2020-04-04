@@ -1,0 +1,283 @@
+% article example for classicthesis.sty
+\documentclass[10pt,a4paper]{article} % KOMA-Script article scrartcl
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{lipsum}
+\usepackage{url}
+\usepackage[nochapters]{./classicthesis} % nochapters
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{enumitem}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definición}[section]
+
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{lemma}[theorem]{Lema}
+\newtheorem{example}[theorem]{Ejemplo}
+\newtheorem{corollary}{Corolario}[theorem]
+
+\begin{document}     
+    \section{Teoría de la información}
+
+    El concepto de información es demasiado amplio como para ser recogido en una única definición. Sin embargo, podemos definir el concepto de entropía, que mide la cantidad de información necesaria para describir una variable aleatoria, o el de información mutua, que refleja la información que una variable aleatoria contiene sobre otra.
+
+    \subsection{Entropía}
+
+    Intuitivamente, la entropía es una medida de la información o incertidumbre de una variable aleatoria. El término entropía viene del griego, donde significa \textit{transformación} y tiene relevancia también en otras áreas, como en la física donde se define como el logaritmo del cociente entre temperatura final e inicial de un sistema.
+
+    La idea de relacionar el número de estados de un sistema con una medida física viene del siglo XIX, en el que Rudolph Clausius sugirió la denominación ``entropía'' para esta medida. En 1928, Ralph Vinton Lyon Hartley define el término en el contexto de la teoría de la información, básicamente como el logaritmo del tamaño del alfabeto. Aunque no es hasta 1948 cuando Claude Shannon da una definición matemática del concepto de información como lo conocemos hoy en día,  sentando las bases de la teoría de la información, que pasó a formar parte de la teoría de la probabilidad. En su concepto de entropía no todos los símbolos de un alfabeto tienen porqué ser equiprobables. Esto nos permite medir la capacidad de comunicación de un canal. Andrei N. Kolmogorov, en la década de los 60, desarrolló su teoría de la complejidad, otra forma de teoría de la información.\\
+
+Sea una variable aleatoria, $X$ que toma valores en $\mathcal{X} = \{x_1, \cdots, x_N \}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.
+
+\begin{definition}[Entropía]
+  La entropía de una variable aleatoria discreta $X$ viene dada por \[H(X) = - \sum_{x\in \mathcal{X}} p(x) \log p(x).\]
+\end{definition}
+
+En la fórmula anterior definiremos, por continuidad, $0 \log 0 = 0$. Así, la entropía queda definida por un funcional de la distribución de $X$,es decir, que no depende de los valores que tome la variable sino de sus probabilidades.
+
+Según cuál sea la base del logaritmo utilizado en la fórmula de la entropía utilizaremos unas unidades u otras. Notamos $H_b(X) = - \sum_{x\in \mathcal{X}} p(x) \log_b p(x)$. Si el logaritmo tiene base 2, la entropía se medirá en bits, mientras que si la base es $e$, las unidades serán \textit{nats} (unidad natural de información).\\
+
+Dada la variable aleatoria discreta $X$ con distribución $p(x)$, podemos considerar la variable aleatoria $g(X)$, cuya esperanza, $E$, viene dada por:\[
+E_pg(X) = \sum_{x\in \mathcal{X}}g(x)p(x).
+\]
+Tomando $g(X) = \log \frac{1}{p(X)}$ obtenemos otra definición de entropía, la usada en termodinámica:\[
+H(X) = E_p \log \frac{1}{p(X)}.
+\]
+
+La fórmula anterior coincide, efectivamente, con la definición de entropía dada:\[
+H(X) = E_p \log \frac{1}{p(X)} = \sum_{x\in \mathcal{X}}\left ( \log \frac{1}{p(x)} \right ) p(x) = - \sum_{x \in \mathcal{X}}p(x)\log p(x).
+\]
+
+\begin{lemma} La entropía de una variable aleatoria discreta es no negativa, $H(X) \ge 0$.
+\end{lemma}
+\begin{proof}
+  \[H(X) = - \sum_{x \in \mathcal{X}}\underbrace{p(x)}_{\in [0,1]}\underbrace{\log p(x)}_{\leq 0} \ge 0.\]
+
+  %% El producto de ambos factores es negativo para cualquier $x \in \mathcal{X}$, luego el signo menos en la fórmula de la entropía nos permite concluir que $H(X) = - \sum_{x \in \mathcal{X}}p(x)\log p(x) \ge 0$.
+\end{proof}
+
+El siguiente lema, mediante propiedades del logaritmo, nos permitirá cambiar la base con la que calculemos la entropía.
+
+\begin{lemma}\[H_b(X) = (\log_ba) H_a(X).\]
+\end{lemma}
+\begin{proof}
+  Partiremos de la definición alternativa de $H_b$ y usaremos que $\log_bp = \log_ba\ \log_ap$.
+  \[
+  H_b(X) = E_p \left(\log_b \frac{1}{p(X)}\right ) = E_p \left ( \log_b a\ \log_a \frac{1}{p(X)} \right ) = \log_b{a}\ H_a(X).
+  \]
+\end{proof}
+
+\begin{example}
+  Sea \[X = 
+     \begin{cases}
+       1, \quad\text{con probabilidad } p\\
+       0, \quad\text{con probabilidad } 1-p \\
+     \end{cases}.\]
+     La entropía de la variable aleatoria $X$ la notaremos $H(p)$ y se calcula como sigue: $ H(p) := H(X) = - \left ( p \log p + (1-p) \log (1-p) \right )$.
+     Cuando $p=0$ o $p=1$, $H(p) = 0$, luego no hay incertidumbre, se conoce el valor que tomará la variable $X$. Calcularemos la primera y segunda derivada de $H(p)$ para conocer su comportamiento en el intervalo $(0,1)$.
+     \begin{align*}
+       H'(p) &= - \left ( \log p + \frac{p}{p} - \log(1-p) - \frac{1-p}{1-p} \right ) = - \left ( \log \left (\frac{p}{1-p} \right) \right ).\\
+     H''(p) &= - \left ( \frac{1}{p} + \frac{1}{1-p} \right ) \leq 0 \quad \forall p \in (0,1).
+     \end{align*}
+     
+     Hemos comprobado que la función $H(p)$ es cóncava. La incertidumbre máxima se alcanzará en $p=\frac{1}{2}$: \[H\left (\frac{1}{2}\right ) = - \left ( \frac{1}{2}\log\frac{1}{2} + \frac{1}{2} \log\frac{1}{2} \right ) = - \log \frac{1}{2} = 1.\]
+
+\end{example}
+
+Pasamos a un ejemplo en el que el valor de las probabilidades es uno concreto:
+\begin{example}
+  Sea  \[X = 
+     \begin{cases}
+       a, \quad\text{con probabilidad } \frac{1}{2}\\
+       b, \quad\text{con probabilidad } \frac{1}{4} \\
+       c, \quad\text{con probabilidad } \frac{1}{8} \\
+       d, \quad\text{con probabilidad } \frac{1}{8} \\
+     \end{cases}.\]
+
+     Utilizamos la fórmula de la entropía y obtenemos \[H(X) = - \left (\frac{1}{2} \log \frac{1}{2} + \frac{1}{4} \log \frac{1}{4} + \frac{1}{4} \log \frac{1}{8} \right ) = - \left (-\frac{1}{2} - \frac{1}{2} - \frac{3}{4} \right ) = 1 + \frac{3}{4} = \frac{7}{4} \text{ bits}.\]
+\end{example}
+
+La definición de entropía de una variable aleatoria se puede aplicar a un par de variables aleatorias dando lugar a la entropía conjunta.
+
+\begin{definition}[Entropía conjunta]
+  La entropía conjunta, $H(X,Y)$, de un par de variables aleatorias discretas $(X,Y)$ con distribución conjunta $p(x,y)$ se define como \[
+  H(X,Y) = - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y), \]
+  que podemos expresar también como \[
+  H(X,Y) = - E \log p(X,Y).\]
+\end{definition}
+Presentamos el siguiente lema que será útil para la demostración de propiedades en lo sucesivo.
+
+\begin{lemma}[Desigualdad de Gibbs]\label{l:gibbs}
+  Dadas dos funciones masa de probabilidad $\{p_i\}$ y $\{q_i\}$, entonces \[
+\sum_i p_i \log \frac{p_i}{q_i} \ge 0,
+\]
+dándose la igualdad si, y solo si, $q_i = p_i$ para todo $i$.
+\end{lemma}
+
+%% \begin{proof}
+%%   % TODO
+%% \end{proof}
+
+En el siguiente lema recogemos algunas propiedades de la entropía conjunta.
+
+\begin{lemma}\label{l:prop_ent_conj} Sean $X, Y$ dos variables aleatorias discretas con alfabeto $\mathcal{X}, \mathcal{Y}$ respectivamente. Entonces se verifican:
+  \begin{enumerate}
+  \item $H(X) \le H(X, Y)$.
+  \item $H(X,Y) \le H(X) + H(Y)$. La igualdad se dará si, y solo si, $X$ e $Y$ son independientes.
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}\hfill
+  \begin{enumerate}
+  \item Para cualesquiera $x \in \mathcal{X}, y \in \mathcal{Y}$ se tiene que $\sum_{y \in \mathcal{Y}} p(x,y) = p(x)$ y $p(x,y) \le p(x)$, luego:
+\begin{align*}
+  H(X,Y) &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) \ge - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x)\\
+   &= - \sum_{x \in \mathcal{X}} p(x) \log p(x) = H(X).
+\end{align*}
+
+\item Usando la definición, $\sum_{y \in \mathcal{Y}} p(x,y) = p(x)$ y propiedades del logaritmo:
+  \begin{align*}
+    &H(X,Y) - (H(X) + H(Y)) \\ &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) + \sum_{x \in \mathcal{X}} p(x)\log p(x) + \sum_{y \in \mathcal{Y}} p(y)\log p(y)\\
+    &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y)\log p(x) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y)\log p(y)\\
+    &= \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log \frac{p(x)p(y)}{p(x,y)} \leq 0,
+  \end{align*}
+  donde la última desigualdad viene de aplicar el Lema \ref{l:gibbs} sobre las funciones masa de probabilidad $p(x,y)$ y $p(x)p(y)$. Esta última sería la función masa de probabilidad conjunta de dos variables aleatorias $X,Y$ con distribuciones $p(x), p(y)$ independientes. La igualdad ocurre si, y solo si, $p(x)p(y) = p(x,y)$, esto es si $X$ e $Y$ son independientes.
+  \end{enumerate}
+\end{proof}
+
+Al considerar dos distribuciones distintas, además de su entropía conjunta podemos definir la entropía condicional de una respecto de la otra.
+
+\begin{definition}[Entropía condicional]
+  Si $(X,Y)$ sigue una distribución $p(x,y)$, la entropía condicional de $Y$ con respecto a $X$, $H(Y|X)$, se define como:
+  \begin{align*}
+    H(Y|X) &= \sum_{x \in \mathcal{X}} p(x) H(Y | X = x)\\
+    &= - \sum_{x \in \mathcal{X}} p(x) \sum_{y \in \mathcal{Y}} p(y | x) \log p(y | x)\\
+    &=  - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(y | x)\\
+    &=- E \log p(Y|X).
+  \end{align*}
+\end{definition}
+
+En la definición anterior, la entropía condicional $p(y|x)$ viene dada por la función masa de probabilidad $p(y|x) = \frac{p(x,y)}{p(x)}$.
+
+\begin{theorem}[Regla de la cadena]\label{t:regla_cadena}
+  Si $(X,Y)$ sigue una distribución $p(x,y)$, entonces se verifica:\[
+H(X,Y) = H(X) + H(Y|X).
+  \]
+\end{theorem}
+
+\begin{proof}
+  \begin{align*}
+    H(X,Y) &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) \stackrel{p(x,y) = p(x)p(y|x)}{=}\\
+    &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log \left( p(x)p(y|x) \right )\\
+    &= - \left(\sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(y|x) \right )\stackrel{\sum_{y\in \mathcal{Y}}p(x,y) = p(x)}{=}\\
+    &= - \sum_{x \in \mathcal{X}} p(x) \log p(x) + H(Y|X)\\
+    &= H(X) + H(Y|X).
+  \end{align*}
+\end{proof}
+
+\begin{corollary} En las condiciones del Teorema \ref{t:regla_cadena},\[
+H(X,Y|Z) = H(X|Z) + H(Y|X, Z).
+  \]
+\end{corollary}
+
+\begin{lemma}
+  Sean $X, Y$ dos variables aleatorias discretas con alfabeto $\mathcal{X}, \mathcal{Y}$ respectivamente. Entonces la entropía condicional cumple:\[
+0 \leq H(Y|X) \leq H(Y).
+\]
+Donde la desigualdad de la derecha es una igualdad si, y solo si, $X$ e $Y$ son independientes.
+\end{lemma}
+
+\begin{proof}
+  La desigualdad izquierda se obtiene de la definición de entropía condicional, \[H(Y|X) = - E \underbrace{\log \overbrace{p(Y|X)}^{\in [0,1]}}_{\leq 0} \ge 0.\]
+
+  Aplicando el Teorema \ref{t:regla_cadena} y el Lema \ref{l:prop_ent_conj} se obtiene la desigualdad de la derecha:\[
+H(X) + H(Y|X) = H(X,Y) \leq H(X) + H(Y),
+\]
+dándose la igualdad solo en el caso en que las variables $X$ e $Y$ sean independientes.
+\end{proof}
+
+¿Añadir ejemplo numérico de cálculo de entropías conjuntas y condicionadas, viendo que se cumplen las propiedades?\\
+
+Pasamos a definir otra medida de información, la entropía relativa, esta será una medida de la distancia entre dos distribuciones. La podemos ver como una medida de ineficiencia al asumir que la distribución es $q$ cuando en realidad es $p$.
+
+\begin{definition}[Entropía relativa]
+  La entropía relativa (o ``distancia'' Kullback Leibler) entre dos funciones masa de probabilidad $p(x)$ y $q(x)$ se define como\[
+D(p||q) = \sum_{x \in \mathcal{X}}p(x) \log \frac{p(x)}{q(x)} = E_p \log \frac{p(X)}{q(X)}.
+  \]
+\end{definition}
+Las posibles indeterminaciones en la fórmula anterior se definen como: $0 \log \frac{0}{0} = 0$ y $p \log \frac{p}{0} = \infty$.
+
+\begin{lemma}
+  Para dos funciones masa de probabilidad $p(x)$ y $q(x)$ se tiene \[
+  D(p||q) \ge 0,\]
+  con igualdad si, y solo si, $p(x) = q(x) \quad \forall x \in \mathcal{X}$.
+\end{lemma}
+\begin{proof}
+  Usando la definición de entropía relativa, se obtiene el resultado aplicando el Lema \ref{l:gibbs}.
+\end{proof}
+
+La entropía relativa no es realmente una distancia, ya que no es simétrica ni verifica la desigualdad triangular. Sin embargo, a veces es útil pensar en ella como una medida de distancia entre distribuciones.
+
+\begin{example}
+  Sea $\mathcal{X} = \{0,1\}$ y consideramos dos distribuciones $p$ y $q$ en $\mathcal{X}$. Tomamos $p(0) = 1-r$, $p(1) = r$ y $q(0) = 1-s,\ q(1) = s$.
+  \begin{align*}
+    D(p \Vert q) &= \sum_{x \in \mathcal{X}} p(x) \log \frac{p(x)}{q(x)} = (1 - r) \log \frac{1-r}{1-s} + r \log \frac{r}{s}.\\
+    D(q \Vert p) &= \sum_{x \in \mathcal{X}}q(x) \log \frac{q(x)}{p(x)} = (1-s) \log \frac{1-s}{1-r} + s \log \frac{s}{r}.
+  \end{align*}
+
+  Si tuviéramos $r=s$, entonces $D(p \Vert q) = 0 = D(q \Vert p)$.
+  Tomando $r = \frac{1}{2}$ y $s = \frac{1}{4}$ comprobaremos que no se da la simetría de la entropía relativa.
+  \begin{align*}
+    D(p \Vert q) &= \frac{1}{2} \log \frac{1/2}{3/4} + \frac{1}{2} \log \frac{1/2}{1/4} = 1 - \frac{1}{2} \log 6 + \frac{1}{2} = 1 - \frac{1}{2} \log 3 = 0.2075\ bits.\\
+    D(q \Vert p) &= \frac{3}{4} \log \frac{3/4}{1/2} + \frac{1}{4} \log \frac{1/4}{1/2} = \frac{3}{4} \log 6 - \frac{3}{2} - \frac{1}{4} = -1 + \frac{3}{4} \log 3 = 0.1887\ bits. % \frac{2}{4} - \frac{3}{2} + \frac{3}{4} \log 3 =
+  \end{align*}
+Luego, $D(p\Vert q) \ne D(q \Vert p)$.
+\end{example}
+
+\begin{lemma}
+  Si $X$ es una variable aleatoria con alfabeto $\mathcal{X}$, entonces \[
+  H(X) \leq \log{\left\Vert\mathcal{X}\right\Vert}, 
+  \]
+donde $\left\Vert\mathcal{X}\right\Vert$ representa al cardinal de $\mathcal{X}$.
+\end{lemma}
+%% \begin{proof}
+  
+%% \end{proof}
+
+La información mutua es una medida de la cantidad de información que una variable aleatoria contiene sobre otra. Se define como sigue.
+
+\begin{definition}[Información mutua]
+  Dadas dos variables aleatorias $X$ e $Y$ discretas con función masa de probabilidad conjunta $p(x,y)$ y funciones masa de probabilidad marginales $p(x)$ y $p(y)$. La información mutua, representada por $I(X;Y)$, es la entropía relativa entre la distribución conjunta y la distribución producto $p(x)p(y)$.
+  \begin{align*}
+  I(X;Y) &= D \left ( p(x,y) \Vert p(x)p(y) \right ) = \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(x,y) \log \frac{p(x,y)}{p(x)p(y)}\\ &= E_{p(x,y)} \log \frac{p(X,Y)}{p(X)p(Y)}.
+  \end{align*}
+\end{definition}
+
+%% \begin{example}
+%%   Para las distribuciones consideradas en el Ejemplo \ref{e:}
+%% \end{example}
+
+\begin{theorem}[Relación entre entropía e información mutua] La siguiente lista recoge algunas relaciones entre la entropía y la información mutua.
+\begin{enumerate}[label={\alph*)}]
+  \item $I(X;Y) = H(X) - H(X|Y)$.
+  \item $I(X;Y) = H(Y) - H(Y|X)$.
+  \item $I(X;Y) = H(X) + H(Y) - H(X,Y)$.
+  \item $I(X;Y) = I(Y;X)$.
+    \item $I(X;X) = H(X)$, la entropía es un caso particular de la información mutua.
+  \end{enumerate}
+\end{theorem}
+\begin{proof}
+   
+  \begin{align*}
+    \text{a) }I(X;Y) &= \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}}p(x,y) \log \frac{p(x,y)}{p(x)p(y)} = \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(y) p(x|y) \log \frac{p(y)p(x|y)}{p(x)p(y)}\\
+    &= \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(x,y) \log p(x|y) - \sum_{x \in \mathcal{X}}\underbrace{\left ( \sum_{y \in \mathcal{Y}} p(y) p(x|y) \right)}_{p(x)} \log p(x)\\
+    &= - H(X|Y) + H(X).
+  \end{align*}
+  b) Se obtiene de forma análoga.\\
+  c) Se prueba aplicando la regla de la cadena sobre $H(X|Y)$, $I(X;Y) = H(X) - H(X|Y) = H(X) + H(Y) - H(X,Y)$.\\
+  d) Se prueba usando el apartado c).\\
+  e) $I(X;X) = H(X) - H(X|X) = H(X)$.
+\end{proof}
+\end{document}
