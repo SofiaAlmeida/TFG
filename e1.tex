@@ -6,9 +6,17 @@
 \usepackage{url}
 \usepackage[nochapters]{./classicthesis} % nochapters
 
+%%% Matemáticas
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{enumitem}
+
+%%% Tablas
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{adjustbox}
+\usepackage{booktabs}
+\usepackage{diagbox}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definición}[section]
@@ -116,9 +124,17 @@ Presentamos el siguiente lema que será útil para la demostración de propiedad
 dándose la igualdad si, y solo si, $q_i = p_i$ para todo $i$.
 \end{lemma}
 
-%% \begin{proof}
-%%   % TODO
-%% \end{proof}
+\begin{proof}
+  Sea $I = \{i : p_i > 0\}$, entonces\[
+- \sum_{i \in I} p_i \log \frac{p_i}{q_i} = \sum_{i \in I} p_i \log \frac{q_i}{p_i},
+  \]
+  usando $\log x \le x - 1$, con igualdad si, y solo si, x = 1, obtenemos\[
+  \sum_{i \in I} p_i \log \frac{q_i}{p_i} \leq
+  \sum_{i\in I}p_i \left ( \frac{q_i}{p_i} - 1 \right )
+  = \sum_{i\in I}q_i - \underbrace{\sum_{i \in I}p_i}_{= 1} \leq 0.\]
+
+  Tendremos la igualdad cuando $\frac{q_i}{p_i} = 1$ para todo $i$.
+\end{proof}
 
 En el siguiente lema recogemos algunas propiedades de la entropía conjunta.
 
@@ -198,7 +214,34 @@ H(X) + H(Y|X) = H(X,Y) \leq H(X) + H(Y),
 dándose la igualdad solo en el caso en que las variables $X$ e $Y$ sean independientes.
 \end{proof}
 
-¿Añadir ejemplo numérico de cálculo de entropías conjuntas y condicionadas, viendo que se cumplen las propiedades?\\
+\begin{example}
+Sea $(X,Y)$ una variable aleatoria con distribución conjunta:
+  \begin{table}[H]
+\centering
+%\caption{}
+\label{}
+\begin{tabular}{r|llll}
+  \toprule
+\backslashbox{$Y$}{$X$} & 1 & 2 & 3 & 4\\ \hline\\[-10pt]
+1 & $\frac{1}{8}$ & $\frac{1}{16}$ & $\frac{1}{32}$ & $\frac{1}{32}$\\[5pt]
+2 & $\frac{1}{16}$ & $\frac{1}{8}$ & $\frac{1}{32}$ & $\frac{1}{32}$\\[5pt]
+3 & $\frac{1}{16}$ & $\frac{1}{16}$ & $\frac{1}{16}$ & $\frac{1}{16}$\\[5pt]
+4 & $\frac{1}{4}$ & 0 & 0 & 0\\[5pt]
+\bottomrule
+\end{tabular}
+\end{table}
+
+  La distribución marginal de $X$ es $\left ( \frac{1}{2}, \frac{1}{4}, \frac{1}{8}, \frac{1}{8} \right )$ y la distribución marginal de $Y$ es $\left ( \frac{1}{4}, \frac{1}{4}, \frac{1}{4}, \frac{1}{4} \right )$. Calculamos las entropías de las variables marginales:
+  \begin{align*}
+    H(X) &= - \frac{1}{2} \log \frac{1}{2} - \frac{1}{4} \log \frac{1}{4} - 2 \frac{1}{8} \log \frac{1}{8} = -\frac{1}{2} - \frac{1}{2} - \frac{6}{8} = \frac{7}{4} \text{ bits}.\\
+    H(Y) &= - 4 \frac{1}{4} \log \frac{1}{4} = 2 \text{ bits}.
+  \end{align*}
+  Calculamos la entropía conjunta:
+  \begin{align*}
+    H(X,Y) &= - \frac{1}{4} \log \frac{1}{4} - \frac{2}{8} \log \frac{1}{8} - \frac{6}{16} \log \frac{6}{16} - \frac{4}{32} \log \frac{1}{32}\\
+    &= \frac{1}{2} + \frac{3}{4} + \frac{6}{4} + \frac{5}{8} = \frac{27}{8} \text{ bits}.
+  \end{align*}
+\end{example}
 
 Pasamos a definir otra medida de información, la entropía relativa, esta será una medida de la distancia entre dos distribuciones. La podemos ver como una medida de ineficiencia al asumir que la distribución es $q$ cuando en realidad es $p$.
 
