@@ -214,7 +214,7 @@ H(X) + H(Y|X) = H(X,Y) \leq H(X) + H(Y),
 dándose la igualdad solo en el caso en que las variables $X$ e $Y$ sean independientes.
 \end{proof}
 
-\begin{example}
+\begin{example}\label{e:dist_conj}
 Sea $(X,Y)$ una variable aleatoria con distribución conjunta:
   \begin{table}[H]
 \centering
@@ -241,6 +241,21 @@ Sea $(X,Y)$ una variable aleatoria con distribución conjunta:
     H(X,Y) &= - \frac{1}{4} \log \frac{1}{4} - \frac{2}{8} \log \frac{1}{8} - \frac{6}{16} \log \frac{6}{16} - \frac{4}{32} \log \frac{1}{32}\\
     &= \frac{1}{2} + \frac{3}{4} + \frac{6}{4} + \frac{5}{8} = \frac{27}{8} \text{ bits}.
   \end{align*}
+
+  Vemos que, efectivamente, la entropía conjunta es mayor que cada una de las individuales, pero menor que su suma $\left( \frac{30}{8} \right )$. Calculamos las entropías condicionales:
+  \begin{align*}
+    H(Y|X) = &- \frac{1}{8} \log \frac{1}{4} - \frac{2}{16} \log\frac{1}{8} - \frac{1}{4} \log \frac{1}{2} - \frac{2}{16} \log \frac{1}{4} - \frac{1}{8} \log \frac{1}{2}\\
+    &- \frac{2}{32} \log \frac{1}{4} - \frac{1}{16} \log \frac{1}{2} - \frac{2}{32} \log \frac{1}{4} - \frac{1}{16} \log \frac{1}{2}\\
+    =& \frac{1}{2} + \frac{6}{8} + \frac{3}{8} = \frac{13}{8} \text {bits}.\\
+    H(X|Y) = & - \frac{1}{8} \log \frac{1}{2} - \frac{2}{16} \log \frac{1}{4}- \frac{2}{16} \log \frac{1}{4} - \frac{1}{8} \log \frac{1}{2}\\
+    &- \frac{2}{32} \log \frac{1}{8} - \frac{1}{16} \log \frac{1}{4} - \frac{2}{32} \log \frac{1}{8} - \frac{1}{16} \log \frac{1}{4}\\
+    =& \frac{1}{4} + \frac{6}{8} + \frac{3}{8} = \frac{11}{8} \text{ bits}.
+  \end{align*}
+  Observamos que las entropías condicionales son positivas y menores que las entropías individuales, además $H(Y|X) \neq H(X|Y)$. Comprobamos que se verifica el Teorema \ref{t:regla_cadena}:
+  \begin{align*}
+    H(X,Y) &= H(X) + H(Y|X) = \frac{7}{4} + \frac{13}{8} = \frac{27}{8} \text{ bits}.\\
+    H(X,Y) &= H(Y) + H(X|Y) = 2 + \frac{11}{8} = \frac{27}{8} \text{ bits}.
+  \end{align*}
 \end{example}
 
 Pasamos a definir otra medida de información, la entropía relativa, esta será una medida de la distancia entre dos distribuciones. La podemos ver como una medida de ineficiencia al asumir que la distribución es $q$ cuando en realidad es $p$.
@@ -252,7 +267,7 @@ D(p||q) = \sum_{x \in \mathcal{X}}p(x) \log \frac{p(x)}{q(x)} = E_p \log \frac{p
 \end{definition}
 Las posibles indeterminaciones en la fórmula anterior se definen como: $0 \log \frac{0}{0} = 0$ y $p \log \frac{p}{0} = \infty$.
 
-\begin{lemma}
+\begin{lemma}\label{l:ent_rel_pos}
   Para dos funciones masa de probabilidad $p(x)$ y $q(x)$ se tiene \[
   D(p||q) \ge 0,\]
   con igualdad si, y solo si, $p(x) = q(x) \quad \forall x \in \mathcal{X}$.
@@ -285,9 +300,19 @@ Luego, $D(p\Vert q) \ne D(q \Vert p)$.
   \]
 donde $\left\Vert\mathcal{X}\right\Vert$ representa al cardinal de $\mathcal{X}$.
 \end{lemma}
-%% \begin{proof}
+\begin{proof}
+  Sea $u(x) = \frac{1}{\left\Vert\mathcal{X}\right\Vert}$ la función masa de probabilidad uniforme sobre $\left\Vert\mathcal{X}\right\Vert$, y sea $p(x)$ la función masa de probabilidad de $X$. Entonces,
   
-%% \end{proof}
+ \begin{align*}
+   D \left ( p \Vert u \right ) &= \sum_{x \in \mathcal{X}}
+   p(x) \log \frac{p(x)}{u(x)} = \sum_{x \in \mathcal{X}} p(x) \log p(x) - \sum_{x \in \mathcal{X}} p(x) \log \frac{1}{\left\Vert\mathcal{X}\right\Vert}\\
+  &= -H(X) + \log \left\Vert\mathcal{X}\right\Vert.
+ \end{align*}
+ 
+    Usando el Lema \ref{l:ent_rel_pos}, obtenemos el resultado: \[
+0 \leq D\left ( p \Vert u \right ) = -H(X) + \log \left\Vert\mathcal{X}\right\Vert.
+    \]
+\end{proof}
 
 La información mutua es una medida de la cantidad de información que una variable aleatoria contiene sobre otra. Se define como sigue.
 
@@ -298,9 +323,11 @@ La información mutua es una medida de la cantidad de información que una varia
   \end{align*}
 \end{definition}
 
-%% \begin{example}
-%%   Para las distribuciones consideradas en el Ejemplo \ref{e:}
-%% \end{example}
+Notamos que la información mutua, al estar definida como una entropía relativa, será no negativa (Lema \ref{l:ent_rel_pos}).
+
+\begin{example}
+  Para las distribuciones consideradas en el Ejemplo \ref{e:ent_rel_pos},
+\end{example}
 
 \begin{theorem}[Relación entre entropía e información mutua] La siguiente lista recoge algunas relaciones entre la entropía y la información mutua.
 \begin{enumerate}[label={\alph*)}]
