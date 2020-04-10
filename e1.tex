@@ -288,8 +288,8 @@ La entropía relativa no es realmente una distancia, ya que no es simétrica ni 
   Si tuviéramos $r=s$, entonces $D(p \Vert q) = 0 = D(q \Vert p)$.
   Tomando $r = \frac{1}{2}$ y $s = \frac{1}{4}$ comprobaremos que no se da la simetría de la entropía relativa.
   \begin{align*}
-    D(p \Vert q) &= \frac{1}{2} \log \frac{1/2}{3/4} + \frac{1}{2} \log \frac{1/2}{1/4} = 1 - \frac{1}{2} \log 6 + \frac{1}{2} = 1 - \frac{1}{2} \log 3 = 0.2075\ bits.\\
-    D(q \Vert p) &= \frac{3}{4} \log \frac{3/4}{1/2} + \frac{1}{4} \log \frac{1/4}{1/2} = \frac{3}{4} \log 6 - \frac{3}{2} - \frac{1}{4} = -1 + \frac{3}{4} \log 3 = 0.1887\ bits. % \frac{2}{4} - \frac{3}{2} + \frac{3}{4} \log 3 =
+    D(p \Vert q) &= \frac{1}{2} \log \frac{1/2}{3/4} + \frac{1}{2} \log \frac{1/2}{1/4} = 1 - \frac{1}{2} \log 6 + \frac{1}{2} = 1 - \frac{1}{2} \log 3 = 0.2075 \text{ bits}.\\
+    D(q \Vert p) &= \frac{3}{4} \log \frac{3/4}{1/2} + \frac{1}{4} \log \frac{1/4}{1/2} = \frac{3}{4} \log 6 - \frac{3}{2} - \frac{1}{4} = -1 + \frac{3}{4} \log 3 = 0.1887 \text{ bits}. % \frac{2}{4} - \frac{3}{2} + \frac{3}{4} \log 3 =
   \end{align*}
 Luego, $D(p\Vert q) \ne D(q \Vert p)$.
 \end{example}
@@ -314,6 +314,8 @@ donde $\left\Vert\mathcal{X}\right\Vert$ representa al cardinal de $\mathcal{X}$
     \]
 \end{proof}
 
+\subsection{Información mutua}
+
 La información mutua es una medida de la cantidad de información que una variable aleatoria contiene sobre otra. Se define como sigue.
 
 \begin{definition}[Información mutua]
@@ -325,17 +327,14 @@ La información mutua es una medida de la cantidad de información que una varia
 
 Notamos que la información mutua, al estar definida como una entropía relativa, será no negativa (Lema \ref{l:ent_rel_pos}).
 
-\begin{example}
-  Para las distribuciones consideradas en el Ejemplo \ref{e:ent_rel_pos},
-\end{example}
-
-\begin{theorem}[Relación entre entropía e información mutua] La siguiente lista recoge algunas relaciones entre la entropía y la información mutua.
+\begin{theorem}[Relación entre entropía e información mutua]\label{t:ent_im}
+  La siguiente lista recoge algunas relaciones entre la entropía y la información mutua.
 \begin{enumerate}[label={\alph*)}]
   \item $I(X;Y) = H(X) - H(X|Y)$.
   \item $I(X;Y) = H(Y) - H(Y|X)$.
   \item $I(X;Y) = H(X) + H(Y) - H(X,Y)$.
   \item $I(X;Y) = I(Y;X)$.
-    \item $I(X;X) = H(X)$, la entropía es un caso particular de la información mutua.
+  \item $I(X;X) = H(X)$, la entropía es un caso particular de la información mutua.
   \end{enumerate}
 \end{theorem}
 \begin{proof}
@@ -350,4 +349,36 @@ Notamos que la información mutua, al estar definida como una entropía relativa
   d) Se prueba usando el apartado c).\\
   e) $I(X;X) = H(X) - H(X|X) = H(X)$.
 \end{proof}
+
+\begin{example}
+  Para las distribuciones consideradas en el Ejemplo \ref{e:dist_conj}, calculamos la información mutua:
+  \begin{align*}
+    I(X;Y) =& \frac{1}{8} \log \frac{1/8}{1/2 \cdot 1/4} + \frac{1}{16} \log \frac{1/16}{1/4 \cdot 1/4} + \frac{2}{32} \log \frac{1/32}{1/8 \cdot 1/4} + \frac{1}{16} \log \frac{1/16}{1/2 \cdot 1/4}\\
+    +& \frac{1}{8} \log \frac{1/8}{1/4 \cdot 1/4} + \frac{2}{32} \log \frac{1/32}{1/8 \cdot 1/4} + \frac{1}{16} \log \frac{1/16}{1/2 \cdot 1/4} + \frac{1}{16} \log \frac{1/16}{1/4 \cdot 1/4}\\
+    +& \frac{2}{16} \log \frac{1/16}{1/8 \cdot 1/4} + \frac{1}{4} \log \frac{1/4}{1/2 \cdot 1/4} = \frac{2}{16} \log \frac{1}{2} + \frac{1}{2} \log 2 = \frac{3}{8} \text{ bits}.
+  \end{align*}
+
+  Vemos que se cumplen las propiedades del Teorema \ref{t:ent_im}:
+  \begin{align*}
+    H(X) -H(X|Y) &= \frac{7}{4} - \frac{11}{8} = \frac{3}{8} \text{ bits} = I(X;Y).\\
+    H(Y) -H(Y|X) &= 2 - \frac{13}{8} = \frac{3}{8} \text{ bits} = I(X;Y).\\
+    H(X) + H(Y) - H(X,Y) &= \frac{7}{4} + 2 - \frac{27}{8} = \frac{3}{8} \text{ bits} = I(X;Y).
+  \end{align*}
+  
+\end{example}
+
+\subsection{Caso continuo}
+
+Hasta ahora las definiciones dadas eran para variables aleatorias discretas, que solo tomaban un conjunto finito de valores. Podemos extender las definiciones dadas al caso continuo, para aplicarlas en variables aleatorias continuas. Trabajaremos en este caso con una variable aleatoria $X$ con función de distribución $F(x) = Pr[X \leq x]$, si $F$ es continua, la variable aleatoria se dice continua. Sea $f(x) = F'(x)$, cuando la derivada esté definida. Si $\int_{-\infty}^{\infty}f(x)=1,\ f(x)$ se llama la función de densidad de $X$. El conjunto donde $f(x) > 0$ es el soporte de $X$.
+
+Las definiciones a continuación incluyen integrales, por lo que deberíamos añadirles un \textit{si existe} a todas ellas. Se pueden construir ejemplos de variables aleatorias cuya función de densidad no exista, o para la que no exista la integral a calcular.
+
+\begin{definition}[Entropía diferencial]
+  La entropía diferencial $h(X)$ de una variable aleatoria continua $X$ con función de densidad $f(x)$ se define como\[
+h(X) = - \int_Sf(x)\log f(x)dx,
+\]
+donde $S$ es el soporte de $X$.
+\end{definition}
+Como en el caso discreto, la entropía diferencial solo depende de la probabilidad de la variable aleatoria, no de los valores que toma.
+
 \end{document}
