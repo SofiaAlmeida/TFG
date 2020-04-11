@@ -368,10 +368,13 @@ Notamos que la información mutua, al estar definida como una entropía relativa
 \end{example}
 
 \subsection{Caso continuo}
+--- Este apartado se puede agrandar si fuera de interés para incluir todas las definiciones del apartado anterior y algunas propiedades. Me limito a definir las definiciones utilizadas en el apartado de estimación.
 
-Hasta ahora las definiciones dadas eran para variables aleatorias discretas, que solo tomaban un conjunto finito de valores. Podemos extender las definiciones dadas al caso continuo, para aplicarlas en variables aleatorias continuas. Trabajaremos en este caso con una variable aleatoria $X$ con función de distribución $F(x) = Pr[X \leq x]$, si $F$ es continua, la variable aleatoria se dice continua. Sea $f(x) = F'(x)$, cuando la derivada esté definida. Si $\int_{-\infty}^{\infty}f(x)=1,\ f(x)$ se llama la función de densidad de $X$. El conjunto donde $f(x) > 0$ es el soporte de $X$.
+Hasta ahora las definiciones dadas eran para variables aleatorias discretas, que solo tomaban un conjunto finito de valores. Podemos extender las definiciones estudiadas al caso continuo, para aplicarlas en variables aleatorias continuas. Trabajaremos en este caso con una variable aleatoria $X$ con función de distribución $F(x) = Pr[X \leq x]$, si $F$ es continua, la variable aleatoria se dice continua. Sea $f(x) = F'(x)$, cuando la derivada esté definida. Si $\int_{-\infty}^{\infty}f(x)=1,\ f(x)$ se llama la función de densidad de $X$. El conjunto donde $f(x) > 0$ es el soporte de $X$.
 
 Las definiciones a continuación incluyen integrales, por lo que deberíamos añadirles un \textit{si existe} a todas ellas. Se pueden construir ejemplos de variables aleatorias cuya función de densidad no exista, o para la que no exista la integral a calcular.
+
+La entropía pasa a llamarse entropía diferencial y podemos definirla como sigue.
 
 \begin{definition}[Entropía diferencial]
   La entropía diferencial $h(X)$ de una variable aleatoria continua $X$ con función de densidad $f(x)$ se define como\[
@@ -380,5 +383,55 @@ h(X) = - \int_Sf(x)\log f(x)dx,
 donde $S$ es el soporte de $X$.
 \end{definition}
 Como en el caso discreto, la entropía diferencial solo depende de la probabilidad de la variable aleatoria, no de los valores que toma.
+
+\begin{example} Consideramos una variable aleatoria con una distribución uniforme sobre $[0,1]$, en este intervalo su densidad es $\frac{1}{a}$ y fuera de él es 0. La entropía es \[
+h(x) = - \int_0^a\frac{1}{a}\log\frac{1}{a} = \log a.
+  \]
+Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo puede ser negativa, no como en el caso discreto.
+  
+\end{example}
+
+\begin{definition}[Información mutua]
+  La información mutua, $I(X;Y)$ estre dos variables aleatorias con función de densidad conjunta $f(x,y)$ viene dada por\[
+I(X;Y) = \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy.
+  \]
+\end{definition}
+
+\subsection{Estimación de la información mutua}
+
+Generalmente no conocemos las funciones de densidad de las variables aleatorias cuya información mutua queremos calcular, por ello, buscamos aproximar este valor a partir de la información que sí tenemos. El objetivo es estimar $I(X;Y)$ a partir de un conjunto $\{z_i=(x_i,y_i) : i = 1,\cdots, N\}$ sin conocer las densidades $f=f_z, f_x$ y $f_y$.
+
+Nos centraremos en los estimadores de Kozachenko - Leonenko, aunque presentaremos brevemente otras dos posibles estimaciones.
+
+\subsubsection{Forma más extendida de estimar}
+
+Particionamos el soporte de $X$ e $Y$ en contenedores de tamaño finito (o necesariamente el mismo) y aproximamos la información mutua por \[
+I(X,Y) \approx I_{binned}(X,Y) = \sum_{i,j} p(i,j) \log \frac{p(i,j)}{p_x(i)p_y(j)},
+\]
+donde $p_x(i) = \int_i f_x(x)dx$, $p_y(j) = \int_j f_y(y)dy$, $\int_i$ representa la integral sobre el i-ésimo contenedor, y $p(i,j) = \int_i\int_jf(x,y)dxdy$.
+
+Notamos $n_x(i)$ al número de puntos en el i-ésimo contenedor de $X$, análogamente $n_y(j)$, $n(i,j)$ es el número de puntos en la intersección de $n_x(i)$ y $n_y(j)$.
+
+Lo que hacemos es aproximar $p_x(i) \approx \frac{n_x(i)}{N}, p_y(j) \approx \frac{n_y(j)}{N}, p(i,j) \approx \frac{n(i,j)}{N}$.
+
+Si todas las densidades son funciones \textit{proper}, cuando $N$ tienda a infinito y el tamaño de cada contenedor converja a cero, la estimación $I_{binned}(X,Y) \to I(X;Y)$.
+
+---Con \textit{proper function} entiendo que el artículo hace referencia a esto: \url{https://en.wikipedia.org/wiki/Proper\_convex\_function}. Es un concepto que no he visto y no sé cómo traducir.
+
+\subsubsection{Estimar la información mutua a partir de estadísticos de los $k$ vecinos más cercanos}
+
+Si $x$ es unidimensional podemos ordenar los distintos $x_i$. Si, además, $x_{i+1} -x_i \to 0$ y $N\to \infty$, aproximamos:\[
+H(X)\approx \frac{1}{N-1}\sum_{i=1}^N \log(x_{i+1}-x_i) + \psi(1) - \psi(N),\]
+donde $\psi(x) = \frac{\Gamma'(x)}{\Gamma(x)}$ es la \textit{función digamma}. La función digamma verifica las siguientes propiedades:
+\begin{itemize}
+\item $\psi(x+1) = \psi(x) + \frac{1}{x}$.
+\item $\psi(1) = -C = 0.5772156\dots$, la constante de Euler - Mascheroni.
+  \item Para $x$ lo suficientemente grandes, $\psi(x) \approx \log x - \frac{1}{2x}$.
+\end{itemize}
+
+La estimación de la entropía propuesta es para $k=1$, existen fórmulas similares que utilizan $x_{i+k}-x_i$  en vez de $x_{i+1}-x_i$, con $k < N$.
+
+Aunque la estimación dada, y sus generalizaciones a $k>1$, parezca ser la mejor para la entropía, $H(x)$, no sirve para calcular la información mutua, porque no es obvio cómo generalizarla a más dimensiones.
+
 
 \end{document}
