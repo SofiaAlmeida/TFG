@@ -10,6 +10,19 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{enumitem}
+\usepackage[Symbol]{upgreek} %pi
+% WIDE HAT
+\usepackage{scalerel,stackengine}
+\stackMath
+\newcommand\reallywidehat[1]{%
+\savestack{\tmpbox}{\stretchto{%
+  \scaleto{%
+    \scalerel*[\widthof{\ensuremath{#1}}]{\kern.1pt\mathchar"0362\kern.1pt}%
+    {\rule{0ex}{\textheight}}%WIDTH-LIMITED CIRCUMFLEX
+  }{\textheight}% 
+}{2.4ex}}%
+\stackon[-6.9pt]{#1}{\tmpbox}%
+}
 
 %%% Tablas
 \usepackage{tabularx}
@@ -382,7 +395,7 @@ h(X) = - \int_Sf(x)\log f(x)dx,
 \]
 donde $S$ es el soporte de $X$.
 \end{definition}
-Como en el caso discreto, la entropía diferencial solo depende de la probabilidad de la variable aleatoria, no de los valores que toma.
+Como en el caso discreto, la entropía diferencial solo depende de la probabilidad de la variable aleatoria, no de los valores que toma. 
 
 \begin{example} Consideramos una variable aleatoria con una distribución uniforme sobre $[0,1]$, en este intervalo su densidad es $\frac{1}{a}$ y fuera de él es 0. La entropía es \[
 h(x) = - \int_0^a\frac{1}{a}\log\frac{1}{a} = \log a.
@@ -405,22 +418,22 @@ Nos centraremos en los estimadores de Kozachenko - Leonenko, aunque presentaremo
 
 \subsubsection{Forma más extendida de estimar}
 
-Particionamos el soporte de $X$ e $Y$ en contenedores de tamaño finito (o necesariamente el mismo) y aproximamos la información mutua por \[
-I(X,Y) \approx I_{binned}(X,Y) = \sum_{i,j} p(i,j) \log \frac{p(i,j)}{p_x(i)p_y(j)},
+Particionamos el soporte de $X$ e $Y$ en \textit{contenedores} de tamaño finito (o necesariamente el mismo) y aproximamos la información mutua por \[
+I(X,Y) \approx I_{\textit{binned}}(X,Y) = \sum_{i,j} p(i,j) \log \frac{p(i,j)}{p_x(i)p_y(j)},
 \]
 donde $p_x(i) = \int_i f_x(x)dx$, $p_y(j) = \int_j f_y(y)dy$, $\int_i$ representa la integral sobre el i-ésimo contenedor, y $p(i,j) = \int_i\int_jf(x,y)dxdy$.
 
-Notamos $n_x(i)$ al número de puntos en el i-ésimo contenedor de $X$, análogamente $n_y(j)$, $n(i,j)$ es el número de puntos en la intersección de $n_x(i)$ y $n_y(j)$.
+Notamos $n_x(i)$ al número de puntos en el i-ésimo contenedor de $X$, análogamente $n_y(j)$. $n(i,j)$ es el número de puntos en la intersección de $n_x(i)$ y $n_y(j)$.
 
 Lo que hacemos es aproximar $p_x(i) \approx \frac{n_x(i)}{N}, p_y(j) \approx \frac{n_y(j)}{N}, p(i,j) \approx \frac{n(i,j)}{N}$.
 
-Si todas las densidades son funciones \textit{proper}, cuando $N$ tienda a infinito y el tamaño de cada contenedor converja a cero, la estimación $I_{binned}(X,Y) \to I(X;Y)$.
+Si todas las densidades son funciones \textit{proper}, cuando $N$ tienda a infinito y el tamaño de cada contenedor converja a cero, la estimación $I_{\textit{binned}}(X,Y) \to I(X;Y)$.
 
 ---Con \textit{proper function} entiendo que el artículo hace referencia a esto: \url{https://en.wikipedia.org/wiki/Proper\_convex\_function}. Es un concepto que no he visto y no sé cómo traducir.
 
-\subsubsection{Estimar la información mutua a partir de estadísticos de los $k$ vecinos más cercanos}
+\subsubsection{Estimar la entropía a partir de estadísticos de los $k$ vecinos más cercanos}
 
-Si $x$ es unidimensional podemos ordenar los distintos $x_i$. Si, además, $x_{i+1} -x_i \to 0$ y $N\to \infty$, aproximamos:\[
+Si $X$ es una variable aleatoria unidimensional, podemos ordenar los distintos $x_i$ (realizaciones muestrales de $X$). Si, además, $x_{i+1} -x_i \to 0$ y $N\to \infty$, aproximamos:\[
 H(X)\approx \frac{1}{N-1}\sum_{i=1}^N \log(x_{i+1}-x_i) + \psi(1) - \psi(N),\]
 donde $\psi(x) = \frac{\Gamma'(x)}{\Gamma(x)}$ es la \textit{función digamma}. La función digamma verifica las siguientes propiedades:
 \begin{itemize}
@@ -431,7 +444,60 @@ donde $\psi(x) = \frac{\Gamma'(x)}{\Gamma(x)}$ es la \textit{función digamma}. 
 
 La estimación de la entropía propuesta es para $k=1$, existen fórmulas similares que utilizan $x_{i+k}-x_i$  en vez de $x_{i+1}-x_i$, con $k < N$.
 
-Aunque la estimación dada, y sus generalizaciones a $k>1$, parezca ser la mejor para la entropía, $H(x)$, no sirve para calcular la información mutua, porque no es obvio cómo generalizarla a más dimensiones.
+Aunque la estimación dada, y sus generalizaciones a $k>1$, parezca ser la mejor para la entropía, $H(X)$, no sirve para calcular la información mutua, porque no es obvio cómo generalizarla a más dimensiones.
+
+\subsubsection{Estimadores de Kozachenko - Leonenko}
+
+Asumimos que tenemos unas métricas dadas para los espacios $X$, $Y$, $Z = (X,Y)$. Para cada punto $z_i = (x_i, y_i)$ sus vecinos según la distancia $d_{i,j}=\Vert z_i-z_j \Vert$ serían $d_{i,j_1} \leq d_{i,j_2} \leq \cdots$. Podríamos obtener los vecindarios de $X$ e $Y$ de manera similar.
+
+Estimaremos la entropía de una variable $X$ promediando la distancia media de los $k$ vecinos más cercanos de todos los $x_i$. De esta forma, estimaremos $H(X), H(Y)$ y $H(X,Y)$. A continuación, estimaremos la información mutua utilizando la ecuación c) del Teorema \ref{t:ent_im}.\\
+
+Sea $X$ una variable aleatoria continua con valores en un espacio métrico, es decir, hay definida una distancia, $\Vert x - x'\Vert$, entre dos realizaciones de $X$, y sea $f(x)$ la función de densidad una función $proper$. Nuestro objetivo es estimar la entropía $H(X)$ a partir de una muestra aleatoria ---simple?--- $(x_1,\cdots,x_N)$ de $N$ realizaciones de $X$.
+
+La ecuación de la entropía, $H(X) = - \int f(x) \log f(x) dx$, se podría entender (salvo el signo menos) como una media de $\log f(x)$. Si tuviéramos un estimador insesgado, $\reallywidehat{\log f}(x)$, del mismo, podríamos obtener un estimador insesgado de la entropía:\[
+\widehat{H}(x) = - \frac{1}{N} \sum_{i=1}^N\reallywidehat{\log f}(x_i).\]
+
+Para obtener el estimador $\reallywidehat{\log f}(x_i)$ consideramos la distribución de probabilidad $P_k(\varepsilon)$ de la distancia entre $x_i$ y su $k$-ésimo vecino más cercano. La probabilidad $P_k(\varepsilon)d\varepsilon$ ---no entiendo por qué aquí añade el $d\varepsilon$--- es igual a la probabilidad de que haya un punto a distancia $r\in \left[ \frac{\varepsilon}{2}, \frac{\varepsilon}{2} + \frac{d\varepsilon}{2} \right ]$ de $x_i$, de que haya otros $k-1$ puntos a menor distancia; y de que $N-k-1$ puntos se encuentren a mayor distancia de $x_i$.
+
+Llamamos $p_i$ a la función masa de probabilidad  de la bola centrada en $x_i$ y radio $\varepsilon$, $p_i(\varepsilon) = \int_{\Vert s - x_i \Vert < \frac{\varepsilon}{2}}f(s)ds$. 
+
+Usaremos la fórmula de la distribución multinomial para expresar $P_k(\varepsilon)d\varepsilon$. Recordamos que la distribución multinomial nos da la probabilidad de un número de éxitos $k$ en $N$ sucesos de Bernouilli (estos sucesos toman valor 1 para la probabilidad de éxito  y 0 para la de fracaso) independientes y equiprobables, tiene como función de densidad $\frac{N!}{x_1!\cdots x_k!}p_1^{x_1}\cdots p_k^{x_k}$. Luego,\[
+P_k(\varepsilon)d\varepsilon = \frac{(N-1)!}{1!(k-1)!(N-k-1)!} \cdot \frac{d p_i(\varepsilon)}{d\varepsilon} d\varepsilon \cdot p_i^{k-1} \cdot (1-p_i)^{N-k-1}.
+\]
+
+--- En la ecuación anterior no entiendo el término $ \frac{d p_i(\varepsilon)}{d\varepsilon} $, entiendo que tiene que ser la probabilidad de que haya un punto justo a distancia $\varepsilon$ de $x_i$ pero no sé por qué se calcula así---
+
+A partir de ahí, integrando, calculamos,\[
+P_k(\varepsilon) = k\binom{N-1}{k}
+\cdot \frac{d p_i(\varepsilon)}{d\varepsilon} \cdot p_i^{k-1} \cdot (1-p_i)^{N-k-1}.
+\]
+
+Se comprueba que $\int P_k(\varepsilon)d\varepsilon = 1$ ---no me salió ---, que debe cumplir para ser función de distribución.
+
+Podemos calcular la esperanza de $\log p_i (\varepsilon)$, a partir de la posición de los $N-1$ puntos restantes, con $x_i$ fijo:
+
+--- No sé por qué se verifican las igualdades siguientes---
+\begin{align*}
+\mathbb{E}(\log p_i) &= \int_0^\infty P_k(\varepsilon) \log p_i(\varepsilon) d\varepsilon =  k\binom{N-1}{k} \int_0^1 p^{k-1}(1-p)^{N-k-1}\log p\ dp\\ &= \psi (k) - \psi(N).
+\end{align*}
+
+Obtenemos un estimador de $\log f(x)$ asumiendo que $f(x)$ es constante en la bola de radio $\varepsilon$. --- ¿por qué es necesario asumir esto?--- Esto nos da $p_i (\varepsilon) \approx c_d \varepsilon^d f(x_i)$, donde $d$ es la dimensión de $X$ y $c_d$ es el volumen de la bola unidad $d$-dimensional. La constante $c_d$ depende de la norma, para la del máximo tenemos $c_d=1$, mientras que para la euclídea $c_d=\frac{\pi^{d/2}}{\Gamma\left ( 1+ \frac{d}{2} \right ) / 2^d}$.
+
+Tomando logaritmos sobre la aproximación de $p_i(\varepsilon)$, obtenemos:\[
+\log p_i(\varepsilon) \approx \log c_d + d \log \varepsilon + \log f(x_i)
+\]
+Continuamos tomando esperanzas respecto de $\varepsilon$ y sustituyendo la esperanza del logaritmo ya calculada:\[
+\log f(x_i) \approx \mathbb{E}(\log p_i) - \log c_d  - d \mathbb{E} (\log \varepsilon) = \psi (k) - \psi (N) - \log c_d  - d \mathbb{E} (\log \varepsilon).
+\]
+
+Hemos calculado el estimador $\reallywidehat{\log f} (x_i)$, sustituiremos de la forma propuesta para obtener un estimador de la entropía:
+\begin{align*}
+  \widehat{H}(x) &= - \frac{1}{N} \sum_{i=1}^N\reallywidehat{\log f} (x_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \psi (N) - \log c_d  - d\log \varepsilon \right )\\
+  &= - \psi (k) + \psi (N) + \log c_d + \frac{d}{N} \sum_{i=1}^N \log \varepsilon (i),
+\end{align*}
+donde $\varepsilon(i)$ es dos veces la distancia de $x_i$ a su $k$-ésimo vecino más cercano.
+---En la ecuación anterior no sé por qué desaparece la esperanza---
 
 
+Por cómo lo hemos obtenido, $\widehat{H}(x)$ será insesgado si la densidad $f(x)$ es estrictametne constante. --- Esto no sé por qué ---
 \end{document}
