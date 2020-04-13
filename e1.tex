@@ -188,7 +188,7 @@ Al considerar dos distribuciones distintas, además de su entropía conjunta pod
   \end{align*}
 \end{definition}
 
-En la definición anterior, la entropía condicional $p(y|x)$ viene dada por la función masa de probabilidad $p(y|x) = \frac{p(x,y)}{p(x)}$.
+En la definición anterior, la probabilidad condicionada $p(y|x)$ viene dada por la función masa de probabilidad $p(y|x) = \frac{p(x,y)}{p(x)}$.
 
 \begin{theorem}[Regla de la cadena]\label{t:regla_cadena}
   Si $(X,Y)$ sigue una distribución $p(x,y)$, entonces se verifica:\[
@@ -492,12 +492,87 @@ Continuamos tomando esperanzas respecto de $\varepsilon$ y sustituyendo la esper
 
 Hemos calculado el estimador $\reallywidehat{\log f} (x_i)$, sustituiremos de la forma propuesta para obtener un estimador de la entropía:
 \begin{align*}
-  \widehat{H}(x) &= - \frac{1}{N} \sum_{i=1}^N\reallywidehat{\log f} (x_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \psi (N) - \log c_d  - d\log \varepsilon \right )\\
+  \widehat{H}(X) &= - \frac{1}{N} \sum_{i=1}^N\reallywidehat{\log f} (x_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \psi (N) - \log c_d  - d\log \varepsilon \right )\\
   &= - \psi (k) + \psi (N) + \log c_d + \frac{d}{N} \sum_{i=1}^N \log \varepsilon (i),
 \end{align*}
 donde $\varepsilon(i)$ es dos veces la distancia de $x_i$ a su $k$-ésimo vecino más cercano.
 ---En la ecuación anterior no sé por qué desaparece la esperanza---
 
 
-Por cómo lo hemos obtenido, $\widehat{H}(x)$ será insesgado si la densidad $f(x)$ es estrictametne constante. --- Esto no sé por qué ---
+Por cómo lo hemos obtenido, $\widehat{H}(X)$ será insesgado si la densidad $f(x)$ es estrictametne constante. --- Esto no sé por qué ---
+
+Consideremos ahora la variable aleatoria conjunta $Z=(X,Y)$ con la norma del máximo: $\Vert z - z' \Vert = \max \{\Vert x-x' \Vert, \Vert y-y'\Vert\}$, donde las normas en $X$ e $Y$ pueden ser cualesquiera, no necesariamente la misma.
+
+Tomamos uno de los $N$ puntos, $z_i$, y notamos $\frac{\varepsilon(i)}{2}$ la distancia de este punto a su $k$-ésimo vecino. $\frac{\varepsilon_x(i)}{2}$ y $\frac{\varepsilon_y(i)}{2}$ reflejan la misma distancia proyectada en el subespacio $X$ e $Y$ respectivamente. $\varepsilon(i) = \max \{\varepsilon_x(i), \varepsilon_y(i)\}$.
+
+Distinguiremos dos algoritmos diferentes para estimar la información mutua según si consideramos los vecinos que se encuentren en el cuadrado de lado $\varepsilon(i)$, o en el rectángulo de lados $\varepsilon_x(i)$, $\varepsilon_y(i)$. 
+
+\paragraph{Primer algoritmo}
+
+Este algoritmo se caracteriza por definir $n_x(i)$ como el número de puntos $x_j$ cuya distancia a $x_i$ es menor que $\frac{\varepsilon(i)}{2}$, de forma análoga se define $n_y(i)$. Como $\varepsilon(i)$ es una variable aleatoria, $n_x(i),\ n_y(i)$ también lo son. $\frac{\varepsilon(i)}{2}$ es una variable aleatoria con distribución dada por $P_k(\varepsilon)$, luego $\mathbb{E}(\log p_i) = \psi(k) - \psi(N)$ se cumple también en este caso. Para utilizar el estimador de la entropía calculado anteriormente debemos cambiar: $x_i$ por $z_i=(x_i,y_i)$, $d$ por $d_X,\ d_Y$ y $c_d$ por $c_{d_X}c_{d_Y}$. Con estas modificaciones obtenemos\[
+\widehat{H}(X,Y) = - \psi(k) + \psi(N) + \log (c_{d_X}c_{d_Y}) + \frac{d_X+d_Y}{N} \sum_{i=1}^N\log(\varepsilon(i)).
+\]
+
+Para obtener $I(X;Y)$ tenemos que restar este valor a las estimaciones de $H(X)$ y $H(Y)$. Podríamos usar el mismo $k$ para realizar estas estimaciones, pero entonces usaríamos diferentes escalas en el espacio conjunto que en los marginales. Para un $k$ fijo, la distancia al $k$-ésimo vecino en el espacio conjunto sería mayor que las distancias a los vecinos en los espacios marginales. El sesgo en el estimador de la entropía marcado por la no uniformidad de la densidad depende de estas distancias, los sesgos en $\widehat{H}(X)$, $\widehat{H}(Y)$, $\widehat{H}(X,Y)$ no se cancerlarían. Para evitar eso, notamos que la estimación se cumple para cualquier valor de $k$ y que no tenemos porqué mantenerlo fijo.
+
+Suponiendo que el $k$-ésimo vecino de $x_i$ se encuentra en uno de los lados verticales del cuadrado de lado $\varepsilon(i)$, si hay $n_x(i)$ puntos en la recta vertical $x = x_i \pm \frac{\varepsilon(i)}{2}$, entonces $\frac{\varepsilon(i)}{2}$ es la distancia al $n_x(i) + 1$ vecino de $x_i$ y estimamos su entropía mediante\[
+\widehat{H}(X) = - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \psi(N) + \log c_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon(i).
+\]
+---En la ecuación anterior, ¿$x$ estaría fijo?---
+
+Para la variable $Y$ podría no cumplirse exactamente así, ya que $\varepsilon(i)$ no tendría por qué ser dos veces la distancia al $(n_y(i)+1)$-ésimo vecino. Sin embargo, consideramos la ecuación anterior una buena aproximación para $H(Y)$ (cambiando $X$ por $Y$). Esta aproximación se vuelve exacta cuando $n_y(i) \to \infty$ y cuando $N\to \infty$.
+
+Usando estas estimaciones en la ecuación correspondiente, obtenemos:
+\begin{align*}
+  I^{(1)}(X,Y) \approx & \widehat{H}(X) + \widehat{H}(Y) - \widehat{H}(X, Y)\\ =& - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \psi(N) + \log c_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon(i)\\
+  & - \frac{1}{N}\sum_{i=1}^N\psi(n_Y(i)+1) + \psi(N) + \log c_{d_Y} + \frac{d_Y}{N} \sum_{i=1}^N\log \varepsilon(i)\\
+  & + \psi(k) - \psi(N) - \log (c_{d_X}c_{d_Y}) - \frac{d_X+d_Y}{N} \sum_{i=1}^N\log(\varepsilon(i))\\
+  =& \psi(k) - \frac{1}{N}\sum_{i=1}^N\left( \psi(n_x(i)+1) + \psi(n_y(i)+1) \right ) + \psi(N).
+\end{align*}
+
+Notamos $\langle \cdots \rangle$ a la media sobre todos los $i\in\{1,\cdots,N\}$ y sobre todas las realizaciones de las muestras aleatorias,\[
+\langle \cdots \rangle = \frac{1}{N} \sum_{i=1}^N\mathbb{E}[\cdots(i)].
+\]
+
+Utilizando esta notación la estimación de la entropía quedaría:\[
+I^{(1)}(X,Y) \approx \psi(k) - \langle \psi(n_x+1) + \psi(n_y+1) \rangle + \psi(N).
+\]
+--- No entiendo cómo aplicamos $\langle \cdots \rangle$, ¿no faltaría una esperanza?---
+
+El principal inconveniente de esta estimación es que solo usamos el estimador de Kozachenko - Leonenko correctamente en una dirección marginal. Esto parece inevitable si queremos usar (hiper)cubos en el espacio conjunto, como opción alternativa podríamos usar (hiper)rectángulos.
+
+\paragraph{Segundo algoritmo} En este caso, $n_x(i)$ y $n_y(i)$ serán el número de puntos con $\Vert x_i - x_j \Vert \leq \frac{\varepsilon_x(i)}{2}$ y $\Vert y_i - y_j \Vert \leq \frac{\varepsilon_y(i)}{2}$ respectivamente. Tenemos que distinguir dos casos:
+
+\begin{enumerate}[label={\alph*)}]
+\item Los lados $\varepsilon_x(i)$ y $\varepsilon_y(i)$ quedan determinados por el mismo punto.
+\item Los lados $\varepsilon_x(i)$ y $\varepsilon_y(i)$ quedan determinados por puntos diferentes.
+\end{enumerate}
+
+En ambos casos tenemos que cambiar $P_k(\varepsilon)$ por una probabilidad 2-dimensional:\[
+P_k(\varepsilon_x, \varepsilon_y) = P_k^{a)}(\varepsilon_x, \varepsilon_y) + P_k^{b)}(\varepsilon_x, \varepsilon_y),
+\]
+---Esto no sé por qué---
+con \[
+P_k^{a)}(\varepsilon_x, \varepsilon_y) = \binom{N-1}{k} \frac{d^2[q_i^k]}{d\varepsilon_x d \varepsilon_y}(1-p_i)^{N-k-1}
+\]
+y\[
+P_k^{b)}(\varepsilon_x, \varepsilon_y) = (k-1)\binom{N-1}{k} \frac{d^2[q_i^k]}{d\varepsilon_x d \varepsilon_y}(1-p_i)^{N-k-1},
+\]
+donde $q_i \equiv q_i(\varepsilon_x, \varepsilon_y)$ es la función de densidad del rectángulo de lados $\varepsilon_x \times \varepsilon_y$ centrado en el punto $(x_i, y_i)$, y $p_i$ es la función de densidad del cuadrado de lado $\varepsilon = \max \{\varepsilon_x, \varepsilon_y\}$. Esta última es necesario porque usando la norma del máximo garantizamos que no hay puntos en ese cuadrado que no estén en el cuadrado.
+
+Se verifica que $\int P_k =1$. Calculamos la esperanza de $\log p_i$:
+---No sé por qué se verifican las igualdades siguientes---
+\[
+\mathbb{E}(\log q_i) = \int \int_0^{\infty} P_k(\varepsilon_x, \varepsilon_y) \log q_i(\varepsilon_x, \varepsilon_y) d \varepsilon_x d\varepsilon_y
+= \psi(k) - \frac{1}{k} - \psi(N)
+\]
+--- ¿Se cumple $pi\approx c_d\varepsilon^df(x)$ y podemos proceder de forma similar al caso anterior?---
+
+La información mutua se aprocimaría por\[
+I^{(2)}(X,Y) \approx \psi(k) - \frac{1}{k} - \langle \psi(n_x) + \psi(n_y) \rangle + \psi(N).
+\]
+
+
+En general ambas fórmulas dan resultados similares. Para un mismo $k$, $I^{(1)}$ da ligeramente menores errores estadísticos (porque $n_x(i)$ y $n_y(i)$ tienden a ser más grandes y tener menores variaciones relativas), pero tienen mayores errores sistemáticos. Este último es grave solo si estamos interesados en variables con dimensiones muy altas, donde $\varepsilon(i)$ tiende típicamente a ser más grande que la marginal $\varepsilon_x(i)$. En ese caso parece preferible el segundo algoritmo, de resto se pueden usar los dos.
+
 \end{document}
