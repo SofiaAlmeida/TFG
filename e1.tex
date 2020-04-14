@@ -50,7 +50,7 @@
 
     La idea de relacionar el número de estados de un sistema con una medida física viene del siglo XIX, en el que Rudolph Clausius sugirió la denominación ``entropía'' para esta medida. En 1928, Ralph Vinton Lyon Hartley define el término en el contexto de la teoría de la información, básicamente como el logaritmo del tamaño del alfabeto. Aunque no es hasta 1948 cuando Claude Shannon da una definición matemática del concepto de información como lo conocemos hoy en día,  sentando las bases de la teoría de la información, que pasó a formar parte de la teoría de la probabilidad. En su concepto de entropía no todos los símbolos de un alfabeto tienen porqué ser equiprobables. Esto nos permite medir la capacidad de comunicación de un canal. Andrei N. Kolmogorov, en la década de los 60, desarrolló su teoría de la complejidad, otra forma de teoría de la información.\\
 
-Sea una variable aleatoria, $X$ que toma valores en $\mathcal{X} = \{x_1, \cdots, x_N \}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.
+Sea una variable aleatoria, $X$ que toma valores en el alfabeto $\mathcal{X} = \{x_1, \cdots, x_N \}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.
 
 \begin{definition}[Entropía]
   La entropía de una variable aleatoria discreta $X$ viene dada por \[H(X) = - \sum_{x\in \mathcal{X}} p(x) \log p(x).\]
@@ -197,11 +197,14 @@ H(X,Y) = H(X) + H(Y|X).
 \end{theorem}
 
 \begin{proof}
+Para la prueba utilizaremos que $p(x,y) = p(x)p(y|x)$,
   \begin{align*}
-    H(X,Y) &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) \stackrel{p(x,y) = p(x)p(y|x)}{=}\\
-    &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log \left( p(x)p(y|x) \right )\\
-    &= - \left(\sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(y|x) \right )\stackrel{\sum_{y\in \mathcal{Y}}p(x,y) = p(x)}{=}\\
-    &= - \sum_{x \in \mathcal{X}} p(x) \log p(x) + H(Y|X)\\
+    H(X,Y) &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) = - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log \left( p(x)p(y|x) \right )\\
+    &= - \left(\sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(y|x) \right ),\\
+  \end{align*}
+usando que $\sum_{y\in \mathcal{Y}}p(x,y) = p(x)$, obtenemos
+\begin{align*}
+  H(X,Y) &= - \sum_{x \in \mathcal{X}} p(x) \log p(x) + H(Y|X)\\
     &= H(X) + H(Y|X).
   \end{align*}
 \end{proof}
@@ -397,7 +400,7 @@ donde $S$ es el soporte de $X$.
 \end{definition}
 Como en el caso discreto, la entropía diferencial solo depende de la probabilidad de la variable aleatoria, no de los valores que toma. 
 
-\begin{example} Consideramos una variable aleatoria con una distribución uniforme sobre $[0,1]$, en este intervalo su densidad es $\frac{1}{a}$ y fuera de él es 0. La entropía es \[
+\begin{example} Consideramos una variable aleatoria con una distribución uniforme sobre $[0,a]$, en este intervalo su densidad es $\frac{1}{a}$ y fuera de él es 0. La entropía es \[
 h(x) = - \int_0^a\frac{1}{a}\log\frac{1}{a} = \log a.
   \]
 Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo puede ser negativa, no como en el caso discreto.
@@ -405,10 +408,27 @@ Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo pued
 \end{example}
 
 \begin{definition}[Información mutua]
-  La información mutua, $I(X;Y)$ estre dos variables aleatorias con función de densidad conjunta $f(x,y)$ viene dada por\[
+  La información mutua, $I(X;Y)$ entre dos variables aleatorias con función de densidad conjunta $f(x,y)$ viene dada por\[
 I(X;Y) = \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy.
   \]
 \end{definition}
+
+\begin{lemma}
+  La información mutua de dos variables aleatorias $X$, $Y$ con funciones de densidad $f(x)$, $f(y)$ y función de densidad $f(x,y)$ conjunta verifican:\[
+  I(X;Y) = h(X) + h(Y) - h(X,Y).
+  \]
+\end{lemma}
+
+\begin{proof}
+  Para realizar la prueba partiremos de la definición de información mutua y utilizaremos propiedades del logaritmo y el Teorema de Fubini para llegar al resultado.
+  \begin{align*}
+    I(X;Y) &= \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy \\
+    &= \int \int f(x,y) \log f(x,y)dxdy - \int \int f(x,y) \log f(x)f(y)dxdy\\
+    &= -h(x,y)-\int\int f(x,y) \log f(x) dy dx - \int \int f(x,y)\log f(y)dxdy\\
+    &= -\int f(x) \log f(x)dx - \int f(y)\log f(y) dy -h(x,y)\\
+    &= h(x) + h(y) - h(x,y).
+  \end{align*}
+\end{proof}
 
 \subsection{Estimación de la información mutua}
 
@@ -418,7 +438,7 @@ Nos centraremos en los estimadores de Kozachenko - Leonenko, aunque presentaremo
 
 \subsubsection{Forma más extendida de estimar}
 
-Particionamos el soporte de $X$ e $Y$ en \textit{contenedores} de tamaño finito (o necesariamente el mismo) y aproximamos la información mutua por \[
+Particionamos el soporte de $X$ e $Y$ en \textit{contenedores} de tamaño finito (no necesariamente el mismo) y aproximamos la información mutua por \[
 I(X,Y) \approx I_{\textit{binned}}(X,Y) = \sum_{i,j} p(i,j) \log \frac{p(i,j)}{p_x(i)p_y(j)},
 \]
 donde $p_x(i) = \int_i f_x(x)dx$, $p_y(j) = \int_j f_y(y)dy$, $\int_i$ representa la integral sobre el i-ésimo contenedor, y $p(i,j) = \int_i\int_jf(x,y)dxdy$.
@@ -452,7 +472,7 @@ Asumimos que tenemos unas métricas dadas para los espacios $X$, $Y$, $Z = (X,Y)
 
 Estimaremos la entropía de una variable $X$ promediando la distancia media de los $k$ vecinos más cercanos de todos los $x_i$. De esta forma, estimaremos $H(X), H(Y)$ y $H(X,Y)$. A continuación, estimaremos la información mutua utilizando la ecuación c) del Teorema \ref{t:ent_im}.\\
 
-Sea $X$ una variable aleatoria continua con valores en un espacio métrico, es decir, hay definida una distancia, $\Vert x - x'\Vert$, entre dos realizaciones de $X$, y sea $f(x)$ la función de densidad una función $proper$. Nuestro objetivo es estimar la entropía $H(X)$ a partir de una muestra aleatoria ---simple?--- $(x_1,\cdots,x_N)$ de $N$ realizaciones de $X$.
+Sea $X$ una variable aleatoria continua con valores en un espacio métrico, es decir, hay definida una distancia, $\Vert x - x'\Vert$, entre dos realizaciones de $X$, y sea $f(x)$ la función de densidad una función $proper$. Nuestro objetivo es estimar la entropía $H(X)$ a partir de una muestra aleatoria simple $(x_1,\cdots,x_N)$ de $N$ realizaciones de $X$.
 
 La ecuación de la entropía, $H(X) = - \int f(x) \log f(x) dx$, se podría entender (salvo el signo menos) como una media de $\log f(x)$. Si tuviéramos un estimador insesgado, $\reallywidehat{\log f}(x)$, del mismo, podríamos obtener un estimador insesgado de la entropía:\[
 \widehat{H}(x) = - \frac{1}{N} \sum_{i=1}^N\reallywidehat{\log f}(x_i).\]
@@ -481,7 +501,7 @@ Podemos calcular la esperanza de $\log p_i (\varepsilon)$, a partir de la posici
 \mathbb{E}(\log p_i) &= \int_0^\infty P_k(\varepsilon) \log p_i(\varepsilon) d\varepsilon =  k\binom{N-1}{k} \int_0^1 p^{k-1}(1-p)^{N-k-1}\log p\ dp\\ &= \psi (k) - \psi(N).
 \end{align*}
 
-Obtenemos un estimador de $\log f(x)$ asumiendo que $f(x)$ es constante en la bola de radio $\varepsilon$. --- ¿por qué es necesario asumir esto?--- Esto nos da $p_i (\varepsilon) \approx c_d \varepsilon^d f(x_i)$, donde $d$ es la dimensión de $X$ y $c_d$ es el volumen de la bola unidad $d$-dimensional. La constante $c_d$ depende de la norma, para la del máximo tenemos $c_d=1$, mientras que para la euclídea $c_d=\frac{\pi^{d/2}}{\Gamma\left ( 1+ \frac{d}{2} \right ) / 2^d}$.
+Obtenemos un estimador de $\log f(x)$ asumiendo que $f(x)$ es constante en la bola de radio $\varepsilon$. --- ¿por qué es necesario asumir esto?, ¿cómo obtiene la aproximación siguiente?--- Esto nos da $p_i (\varepsilon) \approx c_d \varepsilon^d f(x_i)$, donde $d$ es la dimensión de $X$ y $c_d$ es el volumen de la bola unidad $d$-dimensional. La constante $c_d$ depende de la norma, para la del máximo tenemos $c_d=1$, mientras que para la euclídea $c_d=\frac{\pi^{d/2}}{\Gamma\left ( 1+ \frac{d}{2} \right ) / 2^d}$.
 
 Tomando logaritmos sobre la aproximación de $p_i(\varepsilon)$, obtenemos:\[
 \log p_i(\varepsilon) \approx \log c_d + d \log \varepsilon + \log f(x_i)
@@ -499,7 +519,7 @@ donde $\varepsilon(i)$ es dos veces la distancia de $x_i$ a su $k$-ésimo vecino
 ---En la ecuación anterior no sé por qué desaparece la esperanza---
 
 
-Por cómo lo hemos obtenido, $\widehat{H}(X)$ será insesgado si la densidad $f(x)$ es estrictametne constante. --- Esto no sé por qué ---
+Por cómo lo hemos obtenido, $\widehat{H}(X)$ será insesgado si la densidad $f(x)$ es estrictamente constante. --- Esto no sé por qué ---
 
 Consideremos ahora la variable aleatoria conjunta $Z=(X,Y)$ con la norma del máximo: $\Vert z - z' \Vert = \max \{\Vert x-x' \Vert, \Vert y-y'\Vert\}$, donde las normas en $X$ e $Y$ pueden ser cualesquiera, no necesariamente la misma.
 
@@ -513,7 +533,7 @@ Este algoritmo se caracteriza por definir $n_x(i)$ como el número de puntos $x_
 \widehat{H}(X,Y) = - \psi(k) + \psi(N) + \log (c_{d_X}c_{d_Y}) + \frac{d_X+d_Y}{N} \sum_{i=1}^N\log(\varepsilon(i)).
 \]
 
-Para obtener $I(X;Y)$ tenemos que restar este valor a las estimaciones de $H(X)$ y $H(Y)$. Podríamos usar el mismo $k$ para realizar estas estimaciones, pero entonces usaríamos diferentes escalas en el espacio conjunto que en los marginales. Para un $k$ fijo, la distancia al $k$-ésimo vecino en el espacio conjunto sería mayor que las distancias a los vecinos en los espacios marginales. El sesgo en el estimador de la entropía marcado por la no uniformidad de la densidad depende de estas distancias, los sesgos en $\widehat{H}(X)$, $\widehat{H}(Y)$, $\widehat{H}(X,Y)$ no se cancerlarían. Para evitar eso, notamos que la estimación se cumple para cualquier valor de $k$ y que no tenemos porqué mantenerlo fijo.
+Para obtener $I(X;Y)$ tenemos que restar este valor a las estimaciones de $H(X)$ y $H(Y)$. Podríamos usar el mismo $k$ para realizar estas estimaciones, pero entonces usaríamos diferentes escalas en el espacio conjunto que en los marginales. Para un $k$ fijo, la distancia al $k$-ésimo vecino en el espacio conjunto sería mayor que las distancias a los vecinos en los espacios marginales. El sesgo en el estimador de la entropía marcado por la no uniformidad de la densidad depende de estas distancias, los sesgos en $\widehat{H}(X)$, $\widehat{H}(Y)$, $\widehat{H}(X,Y)$ no se cancelarían. Para evitar eso, notamos que la estimación se cumple para cualquier valor de $k$ y que no tenemos porqué mantenerlo fijo.
 
 Suponiendo que el $k$-ésimo vecino de $x_i$ se encuentra en uno de los lados verticales del cuadrado de lado $\varepsilon(i)$, si hay $n_x(i)$ puntos en la recta vertical $x = x_i \pm \frac{\varepsilon(i)}{2}$, entonces $\frac{\varepsilon(i)}{2}$ es la distancia al $n_x(i) + 1$ vecino de $x_i$ y estimamos su entropía mediante\[
 \widehat{H}(X) = - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \psi(N) + \log c_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon(i).
@@ -568,7 +588,7 @@ Se verifica que $\int P_k =1$. Calculamos la esperanza de $\log p_i$:
 \]
 --- ¿Se cumple $pi\approx c_d\varepsilon^df(x)$ y podemos proceder de forma similar al caso anterior?---
 
-La información mutua se aprocimaría por\[
+La información mutua se aproximaría por\[
 I^{(2)}(X,Y) \approx \psi(k) - \frac{1}{k} - \langle \psi(n_x) + \psi(n_y) \rangle + \psi(N).
 \]
 
