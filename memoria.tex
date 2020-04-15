@@ -47,7 +47,7 @@
 
     Intuitivamente, la entropía es una medida de la información o incertidumbre de una variable aleatoria. El término entropía viene del griego, donde significa \textit{transformación} y tiene relevancia también en otras áreas, como en la física donde se define como el logaritmo de la razón entre temperatura final e inicial de un sistema.
 
-    La idea de relacionar el número de estados de un sistema con una medida física viene del siglo XIX, en el que Rudolph Clausius sugirió la denominación ``entropía'' para esta medida. En 1928, Ralph Vinton Lyon Hartley define el término en el contexto de la teoría de la información, básicamente como el logaritmo del tamaño del alfabeto. Aunque no es hasta 1948 que Claude Shannon no da una definición matemática del concepto de información como lo conocemos hoy en día,  sentando las bases de la teoría de la información, que pasó a formar parte de la teoría de la probabilidad. En su concepto de entropía no todos los símbolos de un alfabeto tienen porqué ser equiprobables. Esto nos permite medir la capacidad de comunicación de un canal. Andrei N. Kolmogorov, en la década de los 60, desarrolló su teoría de la complejidad, otra forma de teoría de la información.\\
+    La idea de relacionar el número de estados de un sistema con una medida física viene del siglo XIX, en el que Rudolph Clausius sugirió la denominación \textit{entropía} para esta medida. En 1928, Ralph Vinton Lyon Hartley define el término en el contexto de la teoría de la información, básicamente como el logaritmo del tamaño del alfabeto. Aunque no es hasta 1948 que Claude Shannon no da una definición matemática del concepto de información como lo conocemos hoy en día,  sentando las bases de la teoría de la información, que pasó a formar parte de la teoría de la probabilidad. En su concepto de entropía no todos los símbolos de un alfabeto tienen porqué ser equiprobables. Esto nos permite medir la capacidad de comunicación de un canal. Andrei N. Kolmogorov, en la década de los 60, desarrolló su teoría de la complejidad, otra forma de teoría de la información.\\
 
 Sea una variable aleatoria, $X$ que toma valores en $\mathcal{X} = \{x_1, \cdots, x_N \}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.
 
@@ -92,9 +92,9 @@ El siguiente lema, mediante propiedades del logaritmo, nos permitirá cambiar la
 \begin{example}
   Sea $X = 
      \begin{cases}
-       1, \quad\text{con probabilidad } p\\
-       0, \quad\text{con probabilidad } 1-p \\
-     \end{cases}.$\\
+       1 \quad\text{con probabilidad } p,\\
+       0 \quad\text{con probabilidad } 1-p. \\
+     \end{cases}$\\
      La entropía de la variable aleatoria $X$ la notaremos $H(p)$ y se calcula como sigue: $ H(p) := H(X) = - \left ( p \log p + (1-p) \log (1-p) \right )$.
      Cuando $p=0$ o $p=1$, $H(p) = 0$, luego no hay incertidumbre, se conoce el valor que tomará la variable $X$. Calcularemos la primera y segunda derivada de $H(p)$ para conocer su comportamiento en el intervalo $(0,1)$.
      \begin{align*}
@@ -102,21 +102,24 @@ El siguiente lema, mediante propiedades del logaritmo, nos permitirá cambiar la
      H''(p) &= - \left ( \frac{1}{p} + \frac{1}{1-p} \right ) \leq 0 \quad \forall p \in (0,1).
      \end{align*}
      
-     Hemos comprobado que la función $H(p)$ es cóncava. La incertidumbre máxima se alcanzará en $p=\frac{1}{2}$: \[H\left (\frac{1}{2}\right ) = - \left ( \frac{1}{2}\log\frac{1}{2} + \frac{1}{2} \log\frac{1}{2} \right ) = - \log \frac{1}{2} = 1.\]
+     Hemos comprobado que la función $H(p)$ es cóncava. La incertidumbre máxima se alcanzará en $p=\frac{1}{2}$: \[H\left (\frac{1}{2}\right ) = - \left ( \frac{1}{2}\log\frac{1}{2} + \frac{1}{2} \log\frac{1}{2} \right ) = - \log \frac{1}{2} = 1 \text{bit}.\]
 
 \end{example}
 
-Pasamos a un ejemplo en el que el valor de las probabilidades es uno concreto:
-\begin{example}
+En el ejemplo \ref{e:entr} damos a las probabilidades un valor concreto.
+%en el que el valor de las probabilidades es uno concreto:
+\begin{example}\label{e:entr}
   Sea $X = 
      \begin{cases}
-       a, \quad\text{con probabilidad } \frac{1}{2}\\
-       b, \quad\text{con probabilidad } \frac{1}{4} \\
-       c, \quad\text{con probabilidad } \frac{1}{8} \\
-       d, \quad\text{con probabilidad } \frac{1}{8} \\
-     \end{cases}.$ \\
+       a \quad\text{con probabilidad } \frac{1}{2},\\
+       b \quad\text{con probabilidad } \frac{1}{4}, \\
+       c \quad\text{con probabilidad } \frac{1}{8}, \\
+       d \quad\text{con probabilidad } \frac{1}{8}. \\
+     \end{cases}$ 
 
-     Utilizamos la fórmula de la entropía y obtenemos \[H(X) = - \left (\frac{1}{2} \log \frac{1}{2} + \frac{1}{4} \log \frac{1}{4} + \frac{1}{4} \log \frac{1}{8} \right ) = - \left (-\frac{1}{2} - \frac{1}{2} - \frac{3}{4} \right ) = 1 + \frac{3}{4} = \frac{7}{4} \text{ bits}.\]
+     Utilizamos la fórmula de la entropía y obtenemos: \begin{align*}
+       H(X) &= - \left (\frac{1}{2} \log \frac{1}{2} + \frac{1}{4} \log \frac{1}{4} + \frac{1}{4} \log \frac{1}{8} \right ) = - \left (-\frac{1}{2} - \frac{1}{2} - \frac{3}{4} \right ) = 1 + \frac{3}{4}\\
+       &= \frac{7}{4} \text{ bits}.\end{align*}
 \end{example}
 
 La definición de entropía de una variable aleatoria se puede aplicar a un par de variables aleatorias dando lugar a la entropía conjunta.
@@ -160,7 +163,7 @@ En el siguiente lema recogemos algunas propiedades de la entropía conjunta.
 \item Usando la definición, $\sum_{y \in \mathcal{Y}} p(x,y) = p(x)$ y propiedades del logaritmo:
   \begin{align*}
     &H(X,Y) - (H(X) + H(Y)) \\ &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) + \sum_{x \in \mathcal{X}} p(x)\log p(x) + \sum_{y \in \mathcal{Y}} p(y)\log p(y)\\
-    &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y)\log p(x) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y)\log p(y)\\
+    &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y)\log p(x)\\ &\qquad + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y)\log p(y)\\
     &= \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log \frac{p(x)p(y)}{p(x,y)} \leq 0,
   \end{align*}
   donde la última desigualdad viene de aplicar el Lema \ref{l:gibbs} sobre las funciones masa de probabilidad $p(x,y)$ y $p(x)p(y)$. Esta última sería la función masa de probabilidad conjunta de dos variables aleatorias $X,Y$ con distribuciones $p(x), p(y)$ independientes. La igualdad ocurre si, y solo si, $p(x)p(y) = p(x,y)$, esto es si $X$ e $Y$ son independientes.
@@ -189,10 +192,12 @@ H(X,Y) = H(X) + H(Y|X).
 
 \begin{proof}
   \begin{align*}
-    H(X,Y) &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) \stackrel{p(x,y) = p(x)p(y|x)}{=}\\
+    H(X,Y) &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y)\\
     &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log \left( p(x)p(y|x) \right )\\
-    &= - \left(\sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(y|x) \right )\stackrel{\sum_{y\in \mathcal{Y}}p(x,y) = p(x)}{=}\\
+    \intertext{donde hemos usado que $p(x,y) = p(x)p(y|x)$,}
+    &= - \left(\sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(y|x) \right )\\
     &= - \sum_{x \in \mathcal{X}} p(x) \log p(x) + H(Y|X)\\
+    \intertext{donde hemos utilizado que $\sum_{y\in \mathcal{Y}}p(x,y) = p(x)$,}
     &= H(X) + H(Y|X).
   \end{align*}
 \end{proof}
@@ -251,7 +256,7 @@ La entropía relativa no es realmente una distancia, ya que no es simétrica ni 
   Tomando $r = \frac{1}{2}$ y $s = \frac{1}{4}$ comprobaremos que no se da la simetría de la entropía relativa.
   \begin{align*}
     D(p \Vert q) &= \frac{1}{2} \log \frac{1/2}{3/4} + \frac{1}{2} \log \frac{1/2}{1/4} = 1 - \frac{1}{2} \log 6 + \frac{1}{2} = 1 - \frac{1}{2} \log 3 = 0.2075\ bits.\\
-    D(q \Vert p) &= \frac{3}{4} \log \frac{3/4}{1/2} + \frac{1}{4} \log \frac{1/4}{1/2} = \frac{3}{4} \log 6 - \frac{3}{2} - \frac{1}{4} = -1 + \frac{3}{4} \log 3 = 0.1887\ bits. % \frac{2}{4} - \frac{3}{2} + \frac{3}{4} \log 3 =
+    D(q \Vert p) &= \frac{3}{4} \log \frac{3/4}{1/2} + \frac{1}{4} \log \frac{1/4}{1/2} = \frac{3}{4} \log 6 - \frac{3}{2} - \frac{1}{4} = -1 + \frac{3}{4} \log 3 \\&= \frac{2}{4} - \frac{3}{2} + \frac{3}{4} \log 3 = 0.1887\ bits. % 
   \end{align*}
 Luego, $D(p\Vert q) \ne D(q \Vert p)$.
 \end{example}
@@ -287,17 +292,22 @@ La información mutua es una medida de la cantidad de información que una varia
     \item $I(X;X) = H(X)$, la entropía es un caso particular de la información mutua.
   \end{enumerate}
 \end{theorem}
-\begin{proof}
-   
-  \begin{align*}
-    \text{a) }I(X;Y) &= \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}}p(x,y) \log \frac{p(x,y)}{p(x)p(y)} = \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(y) p(x|y) \log \frac{p(y)p(x|y)}{p(x)p(y)}\\
-    &= \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(x,y) \log p(x|y) - \sum_{x \in \mathcal{X}}\underbrace{\left ( \sum_{y \in \mathcal{Y}} p(y) p(x|y) \right)}_{p(x)} \log p(x)\\
+\begin{proof}\hfill\\
+   \begin{enumerate}[label={\alph*)}]
+   \item Partimos de la definición y utilizamos que $p(x,y) = p(x)p(y|x)$:
+     \begin{align*}
+       I(X;Y) &= \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}}p(x,y) \log \frac{p(x,y)}{p(x)p(y)}\\
+       &= \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(y) p(x|y) \log \frac{p(y)p(x|y)}{p(x)p(y)}\\
+    &= \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(x,y) \log p(x|y) -\!\!\sum_{x \in \mathcal{X}}\underbrace{\left ( \sum_{y \in \mathcal{Y}} p(y) p(x|y) \right)}_{p(x)} \log p(x)\\
     &= - H(X|Y) + H(X).
   \end{align*}
-  b) Se obtiene de forma análoga.\\
-  c) Se prueba aplicando la regla de la cadena sobre $H(X|Y)$, $I(X;Y) = H(X) - H(X|Y) = H(X) + H(Y) - H(X,Y)$.\\
-  d) Se prueba usando el apartado c).\\
-  e) $I(X;X) = H(X) - H(X|X) = H(X)$.
+\item Se obtiene de forma análoga.
+\item \label{item:c}
+  Se prueba aplicando la regla de la cadena sobre $H(X|Y)$ :\[I(X;Y) = H(X) - H(X|Y) = H(X) + H(Y) - H(X,Y).\]
+\item Se prueba usando el apartado \ref{item:c}
+  .
+\item $I(X;X) = H(X) - H(X|X) = H(X)$.
+\end{enumerate}
 \end{proof}
 
 Buscamos que la entropía cumpla una serie de propiedades para dar un enfoque axiomático de la medida de información:
@@ -339,7 +349,27 @@ A partir de estos conceptos podemos determinar cuándo una partición es \textit
 \subsection{\textit{Hard c-means}}
 Algoritmo propuesto por R. Duda y P. Hart en 1973.
     
-    \subsection{\textit{Fuzzy c-means}}
+\subsection{\textit{Fuzzy c-means}}
+
+\section{Implementaciones}
+\subssection{GaelVaroquaux}
+Se implementan las siguientes funciones:
+\begin{itemize}
+\item \texttt{nearest\_distances}: para cada punto de un vector \texttt{X}, devuelve la distancia a su k-ésimo vecino. Se implementa haciendo uso de las funciones de \texttt{scikit-learn}.
+
+\item \texttt{entropy\_gaussian}: entropía de una variable gaussiana ...todavía no sé qué interés tiene. (Parece que es para hacer tests)
+
+\item \texttt{entropy}: calcula la entropía de la variable \texttt{X} usando el estimador de Leonenko - Kozachenko. En esta función comienza inicializando los elementos que utilizará en la fórmula. Notamos que en el cálculo de la constante $c_d$ (\texttt{volume\_unit\_ball}) falta un $\frac{1}{2^d}$... TODO: revisar su referencia. Otra diferencia es que en el estimador propuesto, $\varepsilon$ era dos veces la distancia del punto al vecino, mientras que en \texttt{r} tenemos la distancia del punto a su vecino más cercano una sola vez. ¡Notamos que el comentario no coincide con lo que devuelve en realidad, cuidado al leer el código! Donde el estimador estudidado ponía $\varepsilon$ en esta implementación pone \texttt{r + eps}, donde \texttt{eps} es el menor valor que al ser sumado varía el resultado (1+eps!=1). Suma el logaritmo del volumen de la bola unidad, igual que en el estimador estudiado. A continuación suma $\psi(n)$ y resta $\psi(k)$ al igual que en el estudiado. En conclusión cambia el volumen de la bola unidad y el $\varepsilon$.
+
+\item \texttt{mutual\_information}: devuelve la información mutua entre cualquier número de variables. Para ello suma las entropías de cada una de ellas y les resta la entropía conjunta (usando el mismo valor k para ambas estimaciones).
+
+\item \texttt{mutual\_information\_2d}: calcula la información mutua entre dos variables unidimensionales a partir de su histograma conjunto (?)
+
+\item \texttt{test\_entropy}: Hace pruebas utilizando variables gaussianas (porque los resultados analíticos se conocen), calcula la entropía...no debería diferir mucho.
+
+\item \texttt{test\_mutual\_information}: vuelve a hacer pruebas comparando con una gaussiana.
+  
+\end{itemize} 
     
     % bib stuff
     \nocite{*}
