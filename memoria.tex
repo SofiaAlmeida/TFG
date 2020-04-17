@@ -357,7 +357,22 @@ Se implementan las siguientes funciones:
 \begin{itemize}
 \item \texttt{nearest\_distances}: para cada punto de un vector \texttt{X}, devuelve la distancia a su k-ésimo vecino. Se implementa haciendo uso de las funciones de \texttt{scikit-learn}.
 
-\item \texttt{entropy\_gaussian}: entropía de una variable gaussiana ...todavía no sé qué interés tiene. (Parece que es para hacer tests)
+\item \texttt{entropy\_gaussian}: entropía de una variable gaussiana, se utilizará para hacer tests. Si la matriz de covarianza \texttt{C} es escalar, se utiliza la siguiente fórmula para la entropía:\[
+  % para compilar incluir el paquete de pi
+  H(X) = \frac{1}{2}\left ( 1 + \log(2*\pi) + \frac{1}{2} \log C\right ).
+  \]
+
+  En el Thomas dice que la entropía de la gaussiana con covarianza $\sigma^2$ es:\[
+h(X) = \frac{1}{2}\log (2\pi e \sigma^2 )
+\]
+
+Sabemos que $cov(X,X) = \sigma^2$, entonces no me cuadra el 1/2 que utilliza en el cálculo.
+
+Para el caso en que la matriz \texttt{C} sea realmente una matriz, utiliza la expresión:\[
+H(X_1,\cdots, X_n) = \frac{n}{2} \left (1 + \log(2\pi)) + \frac{1}{2}\log |C|
+\]
+
+Coincidiendo con la fórmula del thomas salvo porque hace el valor absoluto del determinante.
 
 \item \texttt{entropy}: calcula la entropía de la variable \texttt{X} usando el estimador de Leonenko - Kozachenko. En esta función comienza inicializando los elementos que utilizará en la fórmula. Notamos que en el cálculo de la constante $c_d$ (\texttt{volume\_unit\_ball}) falta un $\frac{1}{2^d}$... TODO: revisar su referencia. Otra diferencia es que en el estimador propuesto, $\varepsilon$ era dos veces la distancia del punto al vecino, mientras que en \texttt{r} tenemos la distancia del punto a su vecino más cercano una sola vez. ¡Notamos que el comentario no coincide con lo que devuelve en realidad, cuidado al leer el código! Donde el estimador estudidado ponía $\varepsilon$ en esta implementación pone \texttt{r + eps}, donde \texttt{eps} es el menor valor que al ser sumado varía el resultado (1+eps!=1). Suma el logaritmo del volumen de la bola unidad, igual que en el estimador estudiado. A continuación suma $\psi(n)$ y resta $\psi(k)$ al igual que en el estudiado. En conclusión cambia el volumen de la bola unidad y el $\varepsilon$.
 
@@ -370,7 +385,47 @@ Se implementan las siguientes funciones:
 \item \texttt{test\_mutual\_information}: vuelve a hacer pruebas comparando con una gaussiana.
   
 \end{itemize} 
-    
+
+Si ejecutamos el código tal cual está, se producen como salida dos parejas. La primera es la estimación de la información mutua entre 2 variables normales correladas usando la función \texttt{mutual\_information}. La segunda muestra lo mismos resultados para la función \texttt{mutual\_information\_2d}.
+Resultados: (0.1092329232318674, 0.11157177565710485)
+(2.1173231240729757, 2.2033596236321267)
+
+Añadimos a esta tupla la diferencia entre ambos valores:
+(0.1092329232318674, 0.11157177565710485, 0.0023388524252374587)
+(2.1173231240729757, 2.2033596236321267, 0.08603649955915094)
+
+Notamos que es mayor para el segundo caso. Se nos ha indicado que para valores altos del número de dimensiones hay errores en la implementación. Comenzamos modificando \texttt{test\_entropy}, la nueva versión se llamará \texttt{test\_entropy\_dim} y toma como parámetro un valor \texttt{d} que indicará la dimensión. Probamos que funciona para \texttt{d = 2}, \texttt{d = 5}, para \texttt{d = 10} salta el assert
+
+Traceback (most recent call last):
+  File "mutual_info.py", line 298, in <module>
+    test_entropy_dim(10)
+  File "mutual_info.py", line 263, in test_entropy_dim
+    np.testing.assert_array_less(H_est, H_th)
+  File "/home/sofia/INFORMÁTICA+MATEMÁTICAS/AA/Prácticas/AA/P2/py37/lib/python3.7/site-packages/numpy/testing/_private/utils.py", line 1127, in assert_array_less
+    equal_inf=False)
+  File "/home/sofia/INFORMÁTICA+MATEMÁTICAS/AA/Prácticas/AA/P2/py37/lib/python3.7/site-packages/numpy/testing/_private/utils.py", line 846, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Arrays are not less-ordered
+
+Mismatched elements: 1 / 1 (100%)
+Max absolute difference: 1.85467686
+Max relative difference: 0.08918914
+ x: array(22.649551)
+ y: array(20.794874)
+
+ Hay una diferencia muy grande entre la estimación y el valor real. Para \texttt{d = 7} también ocurre.
+ AssertionError: 
+Arrays are not less-ordered
+
+Mismatched elements: 1 / 1 (100%)
+Max absolute difference: 1.42551252
+Max relative difference: 0.12619372
+ x: array(12.721736)
+ y: array(11.296224)
+
+ Sin embargo, para \texttt{d = 6} se ejecuta normalmente.
+
     % bib stuff
     \nocite{*}
     \addtocontents{toc}{\protect\vspace{\beforebibskip}}
