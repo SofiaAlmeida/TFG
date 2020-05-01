@@ -31,6 +31,13 @@
 \usepackage{booktabs}
 \usepackage{diagbox}
 
+%%% Bibliografía
+\usepackage[backend=biber]{biblatex}
+\DefineBibliographyStrings{spanish}{
+  urlseen = {Último acceso}
+}
+\addbibresource{citations.bib}
+
 \theoremstyle{definition}
 \newtheorem{definition}{Definición}[section]
 
@@ -413,7 +420,7 @@ I(X;Y) = \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy.
   \]
 \end{definition}
 
-\begin{lemma}
+\begin{lemma}\label{l:ent_im}
   La información mutua de dos variables aleatorias $X$, $Y$ con funciones de densidad $f(x)$, $f(y)$ y función de densidad $f(x,y)$ conjunta verifican:\[
   I(X;Y) = h(X) + h(Y) - h(X,Y).
   \]
@@ -470,7 +477,7 @@ Aunque la estimación dada, y sus generalizaciones a $k>1$, parezca ser la mejor
 
 Asumimos que tenemos unas métricas dadas para los espacios $X$, $Y$, $Z = (X,Y)$. Para cada punto $z_i = (x_i, y_i)$ sus vecinos según la distancia $d_{i,j}=\Vert z_i-z_j \Vert$ serían $d_{i,j_1} \leq d_{i,j_2} \leq \cdots$. Podríamos obtener los vecindarios de $X$ e $Y$ de manera similar.
 
-Estimaremos la entropía de una variable $X$ promediando la distancia media de los $k$ vecinos más cercanos de todos los $x_i$. De esta forma, estimaremos $H(X), H(Y)$ y $H(X,Y)$. A continuación, estimaremos la información mutua utilizando la ecuación c) del Teorema \ref{t:ent_im}.\\
+Estimaremos la entropía de una variable $X$ promediando la distancia media de los $k$ vecinos más cercanos de todos los $x_i$. De esta forma, estimaremos $H(X), H(Y)$ y $H(X,Y)$. A continuación, estimaremos la información mutua utilizando el Lema \ref{l:ent_im}.\\
 
 Sea $X$ una variable aleatoria continua con valores en un espacio métrico, es decir, hay definida una distancia, $\Vert x - x'\Vert$, entre dos realizaciones de $X$, y sea $f(x)$ la función de densidad una función $proper$. Nuestro objetivo es estimar la entropía $H(X)$ a partir de una muestra aleatoria simple $(x_1,\cdots,x_N)$ de $N$ realizaciones de $X$.
 
@@ -511,10 +518,10 @@ Continuamos tomando esperanzas respecto de $\varepsilon$ y sustituyendo la esper
 \]
 
 Hemos calculado el estimador $\reallywidehat{\log f} (x_i)$, sustituiremos de la forma propuesta para obtener un estimador de la entropía:
-\begin{align*}
-  \widehat{H}(X) &= - \frac{1}{N} \sum_{i=1}^N\reallywidehat{\log f} (x_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \psi (N) - \log c_d  - d\log \varepsilon \right )\\
-  &= - \psi (k) + \psi (N) + \log c_d + \frac{d}{N} \sum_{i=1}^N \log \varepsilon (i),
-\end{align*}
+\begin{align}
+  \widehat{H}(X) &= - \frac{1}{N} \sum_{i=1}^N\reallywidehat{\log f} (x_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \psi (N) - \log c_d  - d\log \varepsilon \right ) \nonumber \\
+  &= - \psi (k) + \psi (N) + \log c_d + \frac{d}{N} \sum_{i=1}^N \log \varepsilon (i), \label{eq:est_ent}
+\end{align}
 donde $\varepsilon(i)$ es dos veces la distancia de $x_i$ a su $k$-ésimo vecino más cercano.
 ---En la ecuación anterior no sé por qué desaparece la esperanza---
 
@@ -594,5 +601,61 @@ I^{(2)}(X,Y) \approx \psi(k) - \frac{1}{k} - \langle \psi(n_x) + \psi(n_y) \rang
 
 
 En general ambas fórmulas dan resultados similares. Para un mismo $k$, $I^{(1)}$ da ligeramente menores errores estadísticos (porque $n_x(i)$ y $n_y(i)$ tienden a ser más grandes y tener menores variaciones relativas), pero tienen mayores errores sistemáticos. Este último es grave solo si estamos interesados en variables con dimensiones muy altas, donde $\varepsilon(i)$ tiende típicamente a ser más grande que la marginal $\varepsilon_x(i)$. En ese caso parece preferible el segundo algoritmo, de resto se pueden usar los dos.
+
+\section{Análisis de implementaciones}
+
+En esta sección estudiaremos un par de implementaciones de conceptos anteriores como la entropía o la estimación mutua. En general, dado un número finito de muestras de una variable aleatoria no podemos calcular de forma exacta la entropía o información mutua, ya que no conocemos su distribución. Para implementarlas es necesario usar algún estimador, como los estudiados en el apartado anterior.
+
+\subsection{Implementación 1 - GaelVaroquaux}
+
+Comenzaremos revisando la implementación \cite{estimating}. Para ello leeremos el código y nos formaremos una idea de qué hace y cómo cada una de las funciones.
+
+\begin{itemize}
+\item \texttt{nearest\_distances}: para cada punto de un vector \texttt{X}, devuelve la distancia a su $k$-ésimo vecino más cercano. Se implementa haciendo uso de las funciones de \texttt{scikit-learn}.
+
+\item \texttt{entropy\_gaussian}: entropía de una variable gaussiana, se utilizará para hacer \textit{tests}. Si la matriz de covarianzas \texttt{C} es escalar, se utiliza la siguiente fórmula para la entropía:\[
+  H(X) = \frac{1}{2}\left ( 1 + \log(2\pi) + \frac{1}{2} \log C\right ).
+  \]
+% REVIEW
+  En el Thomas dice que la entropía de la gaussiana con covarianza $\sigma^2$ es:\[
+h(X) = \frac{1}{2}\log (2\pi e \sigma^2 ).
+\]
+
+Sabemos que $cov(X,X) = \sigma^2$, entonces no me cuadra el 1/2 que utilliza en el cálculo.
+
+Para el caso en que la matriz \texttt{C} sea no degenerada, utiliza la expresión:\[
+H(X_1,\cdots, X_n) = \frac{n}{2} \left (1 + \log(2\pi) \right) + \frac{1}{2}\log |C|,
+\]
+
+Coincidiendo con la fórmula del Thomas salvo porque hace el valor absoluto del determinante.
+
+\item \texttt{entropy}: calcula la entropía de la variable \texttt{X} usando el estimador de Leonenko - Kozachenko \ref{eq:est_ent}. Comienza inicializando los elementos que se necesitan para aplicar la fórmula: vecinos más cercanos para todos los elementos del vector, dimensiones de \texttt{X}, volumen de la bola unidad ($c_d$). Notamos que en el cálculo de la constante $c_d$ (\texttt{volume\_unit\_ball}) falta un $\frac{1}{2^d}$. Otra diferencia es que en el estimador propuesto, $\varepsilon$ era dos veces la distancia del punto al vecino, mientras que en \texttt{r} tenemos la distancia del punto a su vecino más cercano una sola vez. Donde el estimador estudidado ponía $\varepsilon$ en esta implementación pone \texttt{r + eps}, donde \texttt{eps} es el menor valor que al ser sumado varía el resultado (de forma que  \texttt{1+eps $\neq$ 1}). Este detalle, presente en ambas implementaciones, se debe a que al tomar muestras empíricas se suelen usar pocos valores, lo que podría generar un conjunto en el que varios puntos tengan las mismas coordenadas y los números $n_x(i),\ n_y(i)$ no serían únicos (rompiendo la hipótesis de qe la muestra está distribuida de manera continua), para solucionarlo se añade un pequeñor error en los datos. Devuelve el resultado de sustituir estos valores en la fórmula \ref{eq:est_ent}.
+
+\item \texttt{mutual\_information}: devuelve la información mutua entre cualquier número de variables. Para ello suma las entropías marginales de cada una de ellas y les resta la entropía conjunta (usando el mismo valor $k$ para ambas estimaciones). % REVIEW: Referenciar lema correspondiente
+
+\item \texttt{mutual\_information\_2d}: calcula la información mutua entre dos variables unidimensionales a partir de su histograma conjunto. 
+
+\item \texttt{test\_entropy}: permite probar la entropía comparando la entropía de una variable aleatoria gaussiana, que conocemos teóricamente y se calcula en \texttt{entropy\_gaussian}, con la entropía estimada por \texttt{entropy}. Si ambos valores difieren demasiado, saltará un \textit{assert}.
+
+\item \texttt{test\_mutual\_information}: permite probar la información mutua de una variable aleatoria 2 dimensional estimando los resultados para una variable gaussiana y comparándolos con los resultados teóricos.
+
+\item \texttt{test\_degenerate}: comprueba que los estimadores no dan valores degenerados.
+
+\item \texttt{test\_mutual\_information\_2d}: es una función similar a \texttt{test\_mutual\_information}, pero para probar \texttt{mutual\_information\_2d}.
+\end{itemize} 
+
+% REVIEW
+Si ejecutamos el código tal cual está, se producen como salida dos parejas. La primera es la estimación de la información mutua entre 2 variables normales correladas usando la función \texttt{mutual\_information}. La segunda muestra lo mismos resultados para la función \texttt{mutual\_information\_2d}.
+Resultados: (0.1092329232318674, 0.11157177565710485)
+(2.1173231240729757, 2.2033596236321267)
+
+Añadimos a esta tupla la diferencia entre ambos valores:
+(0.1092329232318674, 0.11157177565710485, 0.0023388524252374587)
+(2.1173231240729757, 2.2033596236321267, 0.08603649955915094)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%       REFERENCIAS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\printbibliography
 
 \end{document}
