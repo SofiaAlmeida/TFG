@@ -31,6 +31,12 @@
 \usepackage{booktabs}
 \usepackage{diagbox}
 
+%%% Código
+\usepackage{listingsutf8}
+\lstset{
+  inputencoding=utf8/latin1
+}
+
 %%% Bibliografía
 \usepackage[backend=biber]{biblatex}
 \DefineBibliographyStrings{spanish}{
@@ -407,7 +413,7 @@ donde $S$ es el soporte de $X$.
 \end{definition}
 Como en el caso discreto, la entropía diferencial solo depende de la probabilidad de la variable aleatoria, no de los valores que toma. 
 
-\begin{example} Consideramos una variable aleatoria con una distribución uniforme sobre $[0,a]$, en este intervalo su densidad es $\frac{1}{a}$ y fuera de él es 0. La entropía es \[
+\begin{example}\label{ej:uni} Consideramos una variable aleatoria con una distribución uniforme sobre $[0,a]$, en este intervalo su densidad es $\frac{1}{a}$ y fuera de él es 0. La entropía es \[
 h(x) = - \int_0^a\frac{1}{a}\log\frac{1}{a} = \log a.
   \]
 Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo puede ser negativa, no como en el caso discreto.
@@ -595,9 +601,10 @@ Se verifica que $\int P_k =1$. Calculamos la esperanza de $\log p_i$:
 \]
 --- ¿Se cumple $pi\approx c_d\varepsilon^df(x)$ y podemos proceder de forma similar al caso anterior?---
 
-La información mutua se aproximaría por\[
-I^{(2)}(X,Y) \approx \psi(k) - \frac{1}{k} - \langle \psi(n_x) + \psi(n_y) \rangle + \psi(N).
-\]
+La información mutua se aproximaría por
+\begin{align}
+I^{(2)}(X,Y) \approx \psi(k) - \frac{1}{k} - \langle \psi(n_x) + \psi(n_y) \rangle + \psi(N). \label{eq:est2}
+\end{align}
 
 
 En general ambas fórmulas dan resultados similares. Para un mismo $k$, $I^{(1)}$ da ligeramente menores errores estadísticos (porque $n_x(i)$ y $n_y(i)$ tienden a ser más grandes y tener menores variaciones relativas), pero tienen mayores errores sistemáticos. Este último es grave solo si estamos interesados en variables con dimensiones muy altas, donde $\varepsilon(i)$ tiende típicamente a ser más grande que la marginal $\varepsilon_x(i)$. En ese caso parece preferible el segundo algoritmo, de resto se pueden usar los dos.
@@ -614,14 +621,14 @@ Comenzaremos revisando la implementación \cite{estimating}. Para ello leeremos 
 \item \texttt{nearest\_distances}: para cada punto de un vector \texttt{X}, devuelve la distancia a su $k$-ésimo vecino más cercano. Se implementa haciendo uso de las funciones de \texttt{scikit-learn}.
 
 \item \texttt{entropy\_gaussian}: entropía de una variable gaussiana, se utilizará para hacer \textit{tests}. Si la matriz de covarianzas \texttt{C} es escalar, se utiliza la siguiente fórmula para la entropía:\[
-  H(X) = \frac{1}{2}\left ( 1 + \log(2\pi) + \frac{1}{2} \log C\right ).
+  H(X) = \frac{1}{2}\left ( 1 + \log(2\pi) \right )+ \frac{1}{2} \log C.
   \]
 % REVIEW
   En el Thomas dice que la entropía de la gaussiana con covarianza $\sigma^2$ es:\[
 h(X) = \frac{1}{2}\log (2\pi e \sigma^2 ).
 \]
 
-Sabemos que $cov(X,X) = \sigma^2$, entonces no me cuadra el 1/2 que utilliza en el cálculo.
+Coinciden.
 
 Para el caso en que la matriz \texttt{C} sea no degenerada, utiliza la expresión:\[
 H(X_1,\cdots, X_n) = \frac{n}{2} \left (1 + \log(2\pi) \right) + \frac{1}{2}\log |C|,
@@ -646,12 +653,179 @@ Coincidiendo con la fórmula del Thomas salvo porque hace el valor absoluto del 
 
 % REVIEW
 Si ejecutamos el código tal cual está, se producen como salida dos parejas. La primera es la estimación de la información mutua entre 2 variables normales correladas usando la función \texttt{mutual\_information}. La segunda muestra lo mismos resultados para la función \texttt{mutual\_information\_2d}.
-Resultados: (0.1092329232318674, 0.11157177565710485)
+Resultados:
+
+(0.1092329232318674, 0.11157177565710485)
 (2.1173231240729757, 2.2033596236321267)
 
 Añadimos a esta tupla la diferencia entre ambos valores:
+
 (0.1092329232318674, 0.11157177565710485, 0.0023388524252374587)
 (2.1173231240729757, 2.2033596236321267, 0.08603649955915094)
+
+Observamos una pequeña diferencia entre los valores estimados y los teóricos.
+
+\subsection{Implementación 2 -  gregversteeg}
+
+Pasamos a revisar la segunda implementación, que encontramos en \cite{npeet}. Como en el caso anterior, comenzamos leyendo el código función por función. 
+\begin{itemize}
+\item \texttt{entropy}: Leonenko - Kozachenko \ref{eq:est_ent} basado en los $k$ vecinos. \texttt{x} debe see una lista de vectores. En primer lugar, hay un \textit{assert} para que el $k$ sea mayor que el número de muestras. Se convierte la \texttt{x} en un array, almacena el número de elementos y de características, se añade ruido a los elementos de \texttt{x} (en la función \texttt{add\_noise}), se obtiene el árbol de vecinos usando la función correspondiente de scikit-learn. Se obtienen los $k$ vecinos más cercanos de \texttt{x} usando este árbol y la función \texttt{query\_neighbors} que llama a la función \texttt{query} correspondiente de scikit-learn, esta función devolverá la distancia a los vecinos más cercanos y sus índices, pero nos quedamos solo con las distancias. La función devuelve el siguiente valor:\[
+  \frac{\psi(N) - \psi(k) + d \cdot \log 2 + \frac{d}{N}\sum \varepsilon(i)}{\log(base)}.
+  \]
+
+  Este $\log (base)$ se utiliza para que la fórmula pase a estar en base 2. La fórmula coincide con la estudiada salvo porque la constante $\log c_d$ es sustituida por $d \cdot \log 2$.
+
+\item \texttt{centropy}: estima la entropía de $X|Y$, para ello usa la función anterior para calcular las entropías de $(X,Y)$ e $Y$. Estima la entropía condicionada como $H(X|Y) = H(X,Y)-H(Y)$.
+\item \texttt{tc}: calcula la entropía de cada característica, devuelve la suma de las entropías de las características menos la entropía de la variable.
+\item \texttt{ctc}: similar al anterior peero con entropías condicionadas.
+\item \texttt{corex}: similar a \texttt{tc} pero en vez de entropías calcula la información mutua.
+\item \texttt{im}: calcula la información mutua entre \texttt{x, y}, utilizando el estimador \ref{eq:est2}. Comienza comprobando que ambos vectores tienen la misma longitud y que $k$ es menor que la misma. Hace las transformaciones con los datos correspondientes y les añade ruido. Si se ha pasado como parámetro también la  \texttt{z}, la información mutua a calcular será condicionada a este valor así que añadimos el valor z al conjunto de puntos. De forma similar a como lo hizo en \texttt{entropy}, construye el árbol de los vecinos y almacena la distancia de cada elemento al $k$-ésimo vecino más cercano. A continuación, utiliza la función \texttt{avgdigamma} para encontrar el número de puntos a distancia menor que el vecino $k$-ésimo (\texttt{num\_points}, en el espacio marginal) y devuelve la media de $\psi(num\_points)$. Si el parámetro \texttt{alpha $>$ 0} se suma a $\psi(N)$ el valor de \texttt{lnc\_correction} (estudiado más adelante). La función devuelve:\[
+\frac{- \langle \psi(n_x) \rangle - \langle \psi(n_y) \rangle + \psi(k) + \psi(N)}{\log (base)}.
+\]
+Para que la fórmula coincidiera de forma exacta con la de \ref{eq:est2} faltaría un $-\frac{1}{k}$.
+\item \texttt{cmi}: calcula la información mutua de \texttt{x} e \texttt{y} condicionado a \texttt{z}, hace uso de la anterior función, que en este caso devolvería \[
+  \frac{- \langle\psi(n_{xz})\rangle - \langle\psi(n_{yz})\rangle + \langle\psi(n_z)\rangle + \psi(k)}{\log(base)}.
+\]
+\item \texttt{kldiv}: devuelve la distancia de Kullback Leibler o entropía relativa entre \texttt{x} y \texttt{xp}. Comienza comprobando que las distribuciones tienen la misma dimensión y que el $k$ escogido no supera al número de muestras. La implementación es similar a las ya vistas. En este caso se devuelve\[
+\frac{\log len(xp) - \log(len(x) -1) + d \cdot (\mathbb{E}( nnp) - \mathbb{E} (nn))}{\log(base)},
+\]
+
+donde \texttt{nn} y \texttt{nnp} son las distancias a los vecinos más cercanos de los puntos de \texttt{x} y \texttt{xp} respectivamente.
+%En la fórmula anterior aparece $\log base$ en el denominador, además no me termica de cuadrar qué es exactamente \texttt{nnp}, entiendo que pretende ser la distancia del k-ésimo vecino de cada elemento de xp, pero utiliza el árbol de xp y le pasa el vector x, no entiendo por qué. Tampoco sé por qué en ese caso utiliza k-1.
+
+\item \texttt{lnc\_correction}: ---esta función no la entiendo bien---.
+
+\item \texttt{entropyd}: con esta comienza una serie de funciones para los estimadores discretos. Se estima la probabilidad contando el número de apariciones de un elemento y dividiendo entre el total de elementos. Se devuelve la suma de las probabilidades multiplicadas pore logaritmo de 1 partido por la probabilidad, todo ello dividido entre $\log base$:\[
+\frac{\sum p \log \frac{1}{p}}{log(base)}.
+\]
+
+Si las probabilidades son correctas, esta fórmula coincide con la entropía teórica.
+
+\item \texttt{midd}: calcula la información mutua en el caso discreto restando a la entropía de \texttt{x}, la entropía de $x|y$.
+
+\item \texttt{cmidd}: calcula la entropía de \texttt{x,y} condicionada a \texttt{z}. La implementación es similar a la del caso continuo pero llamando a las funciones correspondientes para variables discretas.
+
+\item \texttt{centropyd}: entropía de $x|y$ para variables discretas. Se calcula como entropía conjunta menos entropía de y.
+
+\item \texttt{tcd}: a la entropía por características le resta la entropía total.
+
+\item \texttt{ctcd}:  a la entropía condicionada por características le resta la entropía condicionada.
+
+\item \texttt{corexd}: la suma de la información mutua por columnas menos la información mutua.
+
+\item \texttt{micd}: con este empiezan los estimadores mixtos, calcula la información mutua cuando \texttt{x} sea continua e \texttt{y} discreta. Primero se asegura de que tengamos el mismo número de elementos de ambas variables. Calcula la entropía de \texttt{x} y la probabilidad de cada valor de \texttt{y} (como en el caso discreto, contando el número de veces que aparece cada elemento y dividiendo entre el total). A continuación, para cada valor que toma \texttt{y} se calcula la entropía de \texttt{x} dado \texttt{y} (este valor comienza siendo 0 y se le va sumando la entropía calculada). Para hacer este cálculo, en primer lugar se toma el vector de elementos de \texttt{x} dado un \texttt{y}, si tiene menos elementos que el $k$ considerado se suma la probabilidad de \texttt{y} por la entropía de \texttt{x}, añadiendo un \textit{warning} de que en este caso se está asumiendo la entropía máxima. Si el número de elementos es suficiente, se calcula la entropía de este vector y se multiplica por la probabilidad de \texttt{y}. La función devolverá el valor absoluto de la diferencia entre la entropía de \texttt{x} y la entropía de \texttt{x} dado \texttt{y}.
+
+\item \texttt{midc}: este estimador se utilizará cuando \texttt{x} sea discreta e \texttt{y} continua, consiste en llamar al anterior con los argumentos intercambiados.
+
+\item \texttt{centropycd}: calculamos la entropía de \texttt{x} (continua) condicionada a \texttt{y} (discreta). Devuelve la entropía de \texttt{x} menos la informaciónm mutua (utilizando el estimador mixto corresepondiente) de \texttt{x, y}.
+
+\item \texttt{centropydc}: utiliza la función anterior con los parámetros intercambiados.
+
+\item \texttt{ctcdc}: devuelve la suma de la entropía condicionada por columnas menos la entropía condicionada cuando \texttt{x} es discreta e \texttt{y} continua.
+
+\item \texttt{ctccd}: llama a la función anterior para \texttt{x} continua e \texttt{y} discreta.
+
+\item \texttt{corexcd}: devuelve el valor de \texttt{corexdc} intercambiando los parámetros.
+
+\item \texttt{corexdc}: devuelve la diferencia entre \texttt{tcd(xs)} y \texttt{ctcdc(xs, ys, k)}.
+
+\item Las funciones auxiliares \texttt{add\_noise}, \texttt{query\_neighbors}, \texttt{count\_neighbors}, \texttt{avgdigamma} y \texttt{build\_tree} se han ido comentando a medida que aparecían.
+
+\item \texttt{shuffle\_test}: es una función a la que pasamos la medida a utilizar (entropía, información mutua, condicionadas, \dots) y los vectores \texttt{x} e \texttt{y}. Repite \texttt{ns} veces la medida barajando el vector \texttt{x}, devuelve la media y el intervalo de confianza de los resultados. Dice en un comentario que la información mutua (y la información mutua condicionada) deberían tener una media cercana a cero, ---¿esto por qué?---
+\end{itemize}
+
+Además del archivo con los estimadores, en esta implementación se incluye un segundo archivo \texttt{test.py} en el que se realizan varias pruebas sobre los mismos. Si lo ejecutamos devuelve:
+
+\begin{lstlisting}
+For a uniform distribution with width alpha, the differential entropy is log_2 alpha, setting alpha = 2
+and using k=1, 2, 3, 4, 5
+result: [0.9675938258710816, 1.0283110450873976, 0.9611523946690828, 0.9875186838882535, 1.0917394218821124]
+
+Gaussian random variables
+
+Conditional Mutual Information
+covariance matrix
+[[4 3 1]
+ [3 4 1]
+ [1 1 2]]
+true CMI(x:y|x) 0.5148736716970265
+samples used [10, 25, 50, 100, 200]
+estimated CMI [0.2253106080187056, 0.3892879127835147, 0.4398035226533797, 0.49760670969901555, 0.512074966143492]
+95% conf int. (a, b) means (mean - a, mean + b)is interval
+ [(0.297216360850314, 0.4346078735815755), (0.3998450496742388, 0.41093314959735017), (0.32034107567533604, 0.34254631457985824), (0.23963575516458396, 0.2875658611969877), (0.17492887513865663, 0.18358453574822897)]
+Mutual Information
+true MI(x:y) 0.5963225389711981
+samples used [10, 25, 50, 100, 200]
+estimated MI [0.36751110421959715, 0.508806849561461, 0.5987137761055255, 0.6182090681075484, 0.6174309289477204]
+95% conf int.
+ [(0.39751000110157275, 0.5830073784740326), (0.46139075928905027, 0.43094430206983014), (0.31222200485617396, 0.3922391298958362), (0.250926144320218, 0.35084718632752154), (0.18857541697637004, 0.19108560308455347)]
+
+IF you permute the indices of x, e.g., MI(X:Y) = 0
+samples used [10, 25, 50, 100, 200]
+estimated MI [-0.005738147775725934, -0.02720997970818474, 0.0010112811193075707, -0.008517516095735011, 0.0015400222685101536]
+95% conf int.
+ [(0.24707698319910223, 0.43997790512266205), (0.26641749338269727, 0.2214406621687565), (0.1889408437170837, 0.21236801559420707), (0.18470276983064027, 0.19294766099193206), (0.14993655857703755, 0.16121527948941508)]
+
+
+Test of the discrete entropy estimators
+
+For z = y xor x, w/x, y uniform random binary, we should get H(x)=H(y)=H(z) = 1, H(x:y) etc = 0, H(x:y|z) = 1
+H(x), H(y), H(z) 1.0 1.0 1.0
+H(x:y), etc 0.0 0.0 0.0
+H(x:y|z), etc 1.0 1.0 1.0
+
+
+Kl divergence estimator (not symmetric, not required to have same num samples in each sample set
+should be 0 for same distribution
+result: -0.03587664487774093
+should be infinite for totally disjoint distributions (but this estimator has an upper bound like log(dist) between disjoint prob. masses)
+result: 7.818662829432822
+
+Test discrete.
+random: I(X; Y) = 0.0279 +- 0.0048 (maximum possible 2.3194)
+deterministic: I(X; Y) = 3.3168 +- 0.0019 (maximum possible 3.3168)
+noisy: I(X; Y) = 2.7575 +- 0.0264 (maximum possible 3.3168)
+\end{lstlisting}
+
+\subsection{Análisis comparativo}
+
+Pasamos a implementar el programa \texttt{prueba.py} para poder comparar ambas implementaciones y realizar las modificaciones que consideremos.
+
+Comenzaremos comparando las estimaciones de la entropía. Para ello, creamos la función \texttt{rd\_ent} en la que obtenemos dos variables aleatorias y calculamos su entropía a partir de los estimadores dados por las dos implementaciones.
+
+\begin{lstlisting}
+Entropía de X:
+Estimador 1:  29.423303907819346
+Estimador 2:  43.499531309829294
+Entropía de Y:
+Estimador 1:  4.232705400287453
+Estimador 2:  6.084047562318489
+\end{lstlisting}
+
+Los estimadores obtienen resultados notablemente diferente. Esto se debe a que uno de ellos nos está dando la entropía en bits (al pasarlo a base 2) y el otro en nats. Modificaremos el primer estimador, dividiendo su resultado entre $\log(2)$, para que los dos estén en las mismas unidades.
+
+Pasamos a comparar estas entropías con una que conozcamos teóricamente, la distribución uniforme, vista en el Ejemplo \ref{ej:uni}, cuya entropía teórica es $\log(a)$. El código utilizado se encuentra en la función \texttt{example\_entu}, los resultados obtenidos son los siguientes:
+
+%REVIEW: AÑADIR TILDES A LAS O
+\begin{lstlisting}
+Entropía x: (a = 2)
+Terica:  1.0
+Estimador 1:  1.0261633399126422
+Estimador 2:  1.0261633406219435
+
+Entropía x: (a = 100)
+Terica:   6.643856189774725
+Estimador 1:   6.683574884777654
+Estimador 2:   6.68357488477827
+\end{lstlisting}
+
+Las estimaciones son parecidas, coincidiendo con la entropía teórica en un decimal y entre ellas unos 11. Notamos que en este caso la variable aleatoria $X$ es unidimensional.
+
+Para comprar las estimaciones de la entropía en una variable multidimensional, aprovechamos la función \texttt{test\_entropy} de la primera implementació y la adaptamos para calcular también la entropía con la segunda implementación. Comenzamos a estudiar el caso d = 2, las estimaciones son muy parecidas entre sí (suelen coincidir en varios decimales), si ejecutamos la función en bucle  en general se obtiene una pequeña diferencia con el estimador real, pero no llega a saltar el \textit{assert}. Este salta algunas veces, cuando la entropía es negativa, si los estimadores dan un resultado menor que la entropía real.
+
+Queremos ser realmente conscientes de la magnitud del error que se está cometiendo, para ello, implementamos la función \texttt{err\_entropy}. Esta función no es más que una modificación de \texttt{test\_entropy} en la que se eliminan los \textit{assert} y se calcula la diferencia entre la entropía gaussiana teórica y las estimadas. Notamos que si aumentamos el valor de $d$, ambas estimaciones obtienen valores parecidos, difiriendo de la entropía teórica.
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %       REFERENCIAS
