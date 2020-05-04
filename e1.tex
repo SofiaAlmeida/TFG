@@ -37,6 +37,10 @@
   inputencoding=utf8/latin1
 }
 
+%%% Gráficas
+\usepackage{graphicx} % Required for including pictures
+\graphicspath{{./fig/}}
+
 %%% Bibliografía
 \usepackage[backend=biber]{biblatex}
 \DefineBibliographyStrings{spanish}{
@@ -821,9 +825,49 @@ Estimador 2:   6.68357488477827
 
 Las estimaciones son parecidas, coincidiendo con la entropía teórica en un decimal y entre ellas unos 11. Notamos que en este caso la variable aleatoria $X$ es unidimensional.
 
-Para comprar las estimaciones de la entropía en una variable multidimensional, aprovechamos la función \texttt{test\_entropy} de la primera implementació y la adaptamos para calcular también la entropía con la segunda implementación. Comenzamos a estudiar el caso d = 2, las estimaciones son muy parecidas entre sí (suelen coincidir en varios decimales), si ejecutamos la función en bucle  en general se obtiene una pequeña diferencia con el estimador real, pero no llega a saltar el \textit{assert}. Este salta algunas veces, cuando la entropía es negativa, si los estimadores dan un resultado menor que la entropía real.
+Para comprar las estimaciones de la entropía en una variable multidimensional, aprovechamos la función \texttt{test\_entropy} de la primera implementación y la adaptamos para calcular también la entropía con la segunda implementación. Además, añadimos el parámetro \texttt{d}, con el que podremos variar la dimensión de la variable considerada, y el parámetro \texttt{k} que marcará el número de vecinos a utilizar. La matriz \texttt{P} utilizada para generar la matriz de covarianzas ya no está definida de forma fija, sino que se define de forma aleatoria según la dimensión a utilizar. Comenzamos a estudiar el caso d = 2, las estimaciones son muy parecidas entre sí (suelen coincidir en varios decimales), si ejecutamos la función en bucle  en general se obtiene una pequeña diferencia con el estimador real, pero no llega a saltar el \textit{assert}. Este salta algunas veces, cuando la entropía es negativa, si los estimadores dan un resultado menor que la entropía real.
 
 Queremos ser realmente conscientes de la magnitud del error que se está cometiendo, para ello, implementamos la función \texttt{err\_entropy}. Esta función no es más que una modificación de \texttt{test\_entropy} en la que se eliminan los \textit{assert} y se calcula la diferencia entre la entropía gaussiana teórica y las estimadas. Notamos que si aumentamos el valor de $d$, ambas estimaciones obtienen valores parecidos, difiriendo de la entropía teórica.
+
+Creamos la función \texttt{exp\_err\_ent}. En ella, se pretende obtener un idea más precisa del error obtenido para cada dimensión con ambos estimadores. Para ello, se mide el error un número (\texttt{reps}) determinado de veces y se calcula la media del error obtenido para cada dimensión. Finalmente se dibuja una gráfica del error obtenido. Llamando a esta función con \texttt{reps = 20}, \texttt{k = 3}, \texttt{d = 2, ..., 10}, se obtienen los siguientes errores.
+
+Observamos los errores obtenidos en la Tabla \ref{tab:err_ent}.
+
+\begin{table}[H]
+\large
+\centering
+\caption{Errores obtenidos con ambas estimaciones al calcular la entropía de una variable aleatoria con distribución normal y compararla con la entropía teórica.}
+\label{tab:err_ent}
+\begin{tabular}{lrr}
+\toprule
+$d$ & Error estimador 1 & Error estimador 2\\ \midrule
+2 & 0.014212339128172302 & 0.014680402744924015\\
+3 & 0.11105323234117655 & 0.1228230352418274\\
+4 & 0.16456589959078247 & 0.1634349916264736\\
+5 & 0.699756197647123 & 0.7335137192470153\\
+6 & 1.11385415187634 & 1.1622332193590927\\
+7 & 1.2283705866481953 & 1.2922942070634487\\
+8 & 1.5855188720644953 & 1.6860491894433907\\
+9 & 2.262297509187 & 2.436619705610153\\
+10 & 2.433512217901498 & 2.660198051294997\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{err_ent}
+    \caption{Errores obtenidos con ambas estimaciones al calcular la entropía de una variable aleatoria con distribución normal y compararla con la entropía teórica.}
+    \label{fig:err_ent}
+\end{figure}
+
+Tratamos de mejorar la primera implementación añadiendo los detalles quela diferenciaban de la estimación estudiada teóricamente. En la función \texttt{entropy\_mod} se añade el $\frac{1}{2^d}$ que faltaba en el cálculo del volumen de la bola unidad y la distancia de cada punto a su vecino más cercano se multiplica por 2. Los resultados para $d = 2$ no son muy prometedores:
+
+\begin{lstlisting}
+k = 3, d = 2
+Error estimador 1:  0.013887003356169863
+Error estimador 1\_mod:  1.9861129966437974
+\end{lstlisting}
 
 
 
