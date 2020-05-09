@@ -1,9 +1,12 @@
 % article example for classicthesis.sty
 \documentclass[10pt,a4paper]{article} % KOMA-Script article scrartcl
 \usepackage[spanish]{babel}
-\usepackage[utf8]{inputenc}
-\usepackage{lipsum}
+%\usepackage[utf8]{inputenc}
+%\usepackage{lipsum}
 \usepackage{url}
+
+% Cargamos amsmath antes que classicthesis que si no tenemos fallos de compilación
+\usepackage{amsmath}
 \usepackage[nochapters]{./classicthesis} % nochapters
 
 %%% Matemáticas
@@ -11,18 +14,6 @@
 \usepackage{amsthm}
 \usepackage{enumitem}
 \usepackage[Symbol]{upgreek} %pi
-% WIDE HAT
-\usepackage{scalerel,stackengine}
-\stackMath
-\newcommand\reallywidehat[1]{%
-\savestack{\tmpbox}{\stretchto{%
-  \scaleto{%
-    \scalerel*[\widthof{\ensuremath{#1}}]{\kern.1pt\mathchar"0362\kern.1pt}%
-    {\rule{0ex}{\textheight}}%WIDTH-LIMITED CIRCUMFLEX
-  }{\textheight}% 
-}{2.4ex}}%
-\stackon[-6.9pt]{#1}{\tmpbox}%
-}
 
 %%% Tablas
 \usepackage{tabularx}
@@ -30,11 +21,16 @@
 \usepackage{adjustbox}
 \usepackage{booktabs}
 \usepackage{diagbox}
+\renewcommand\spanishtablename{Tabla}
 
 %%% Código
-\usepackage{listingsutf8}
+%\usepackage{listingsutf8}
+\usepackage{listings}
 \lstset{
-  inputencoding=utf8/latin1
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  %frame=single,
+  breaklines=true
 }
 
 %%% Gráficas
@@ -67,13 +63,13 @@
 
     La idea de relacionar el número de estados de un sistema con una medida física viene del siglo XIX, en el que Rudolph Clausius sugirió la denominación ``entropía'' para esta medida. En 1928, Ralph Vinton Lyon Hartley define el término en el contexto de la teoría de la información, básicamente como el logaritmo del tamaño del alfabeto. Aunque no es hasta 1948 cuando Claude Shannon da una definición matemática del concepto de información como lo conocemos hoy en día,  sentando las bases de la teoría de la información, que pasó a formar parte de la teoría de la probabilidad. En su concepto de entropía no todos los símbolos de un alfabeto tienen porqué ser equiprobables. Esto nos permite medir la capacidad de comunicación de un canal. Andrei N. Kolmogorov, en la década de los 60, desarrolló su teoría de la complejidad, otra forma de teoría de la información.\\
 
-Sea una variable aleatoria, $X$ que toma valores en el alfabeto $\mathcal{X} = \{x_1, \cdots, x_N \}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.
+Sea una variable aleatoria discreta, $X$ que toma valores en el alfabeto $\mathcal{X} = \{x_1, \cdots, x_N \}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.
 
 \begin{definition}[Entropía]
   La entropía de una variable aleatoria discreta $X$ viene dada por \[H(X) = - \sum_{x\in \mathcal{X}} p(x) \log p(x).\]
 \end{definition}
 
-En la fórmula anterior definiremos, por continuidad, $0 \log 0 = 0$. Así, la entropía queda definida por un funcional de la distribución de $X$,es decir, que no depende de los valores que tome la variable sino de sus probabilidades.
+En la fórmula anterior definiremos, por continuidad, $0 \log 0 = 0$. Así, la entropía queda definida por un funcional de la distribución de $X$, es decir, que no depende de los valores que tome la variable sino de sus probabilidades.
 
 Según cuál sea la base del logaritmo utilizado en la fórmula de la entropía utilizaremos unas unidades u otras. Notamos $H_b(X) = - \sum_{x\in \mathcal{X}} p(x) \log_b p(x)$. Si el logaritmo tiene base 2, la entropía se medirá en bits, mientras que si la base es $e$, las unidades serán \textit{nats} (unidad natural de información).\\
 
@@ -96,14 +92,14 @@ H(X) = E_p \log \frac{1}{p(X)} = \sum_{x\in \mathcal{X}}\left ( \log \frac{1}{p(
   %% El producto de ambos factores es negativo para cualquier $x \in \mathcal{X}$, luego el signo menos en la fórmula de la entropía nos permite concluir que $H(X) = - \sum_{x \in \mathcal{X}}p(x)\log p(x) \ge 0$.
 \end{proof}
 
-El siguiente lema, mediante propiedades del logaritmo, nos permitirá cambiar la base con la que calculemos la entropía.
+El siguiente lema, mediante propiedades del logaritmo, nos permitirá cambiar la base con la que calculemos la entropía.\\
 
 \begin{lemma}\[H_b(X) = (\log_ba) H_a(X).\]
 \end{lemma}
 \begin{proof}
   Partiremos de la definición alternativa de $H_b$ y usaremos que $\log_bp = \log_ba\ \log_ap$.
   \[
-  H_b(X) = E_p \left(\log_b \frac{1}{p(X)}\right ) = E_p \left ( \log_b a\ \log_a \frac{1}{p(X)} \right ) = \log_b{a}\ H_a(X).
+  H_b(X) = E_p \left(\log_b \frac{1}{p(X)}\right ) = E_p \left [ \left ( \log_b a \right )\log_a \frac{1}{p(X)} \right ] = \left ( \log_b{a} \right ) H_a(X).
   \]
 \end{proof}
 
@@ -421,6 +417,61 @@ Como en el caso discreto, la entropía diferencial solo depende de la probabilid
 h(x) = - \int_0^a\frac{1}{a}\log\frac{1}{a} = \log a.
   \]
 Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo puede ser negativa, no como en el caso discreto.
+\end{example}
+
+\begin{example}\label{ej:norm_uni}
+  Consideramos una variable aleatoria $X$ con ditribución normal univariante de media $\mu$ y varianza $\sigma$, su función de densidad es $f(x) = \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}$, queremos calcular su entropía.
+  \begin{align*}
+    h(X) &= - \int f(x) \log f(x) dx = - \int \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \log \left ( \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \right ) dx\\
+    &= -  \frac{1}{\sigma \sqrt{2\pi}} \int e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \left [ \log \left ( e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \right ) - \log \sigma \sqrt{2\pi} \right ] dx\\
+    &= -  \frac{1}{\sigma \sqrt{2\pi}}\left [ \int e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \left ( -\frac{(x-\mu)^2}{2\sigma ^2} \right )dx - \int e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \log \sigma \sqrt{2\pi} dx \right ].\\
+  \end{align*}
+
+  Ahora, utilizando la ley del estadístico incosciente ($E[g(X)]=  \int g(x)f(x)$), tenemos,
+  \begin{align*}
+    h(X) &= \frac{\mathbb{E}\left [ (X-\mu) ^2\right ] }{2\sigma^2} + \log \sigma\sqrt{2\pi} \underbrace{\int \frac{1}{\sigma\sqrt{2\pi}}e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}dx}_{1}\\
+    &= \frac{\sigma^2}{2\sigma^2} + \log \sqrt{\sigma^2 2 \pi} = \frac{1}{2} + \frac{1}{2}\log  \sigma^2 2 \pi\\
+    &= \frac{1}{2} \log e + \frac{1}{2} \log \sigma^2 2 \pi\\ &= \frac{1}{2}\log{2\pi e\sigma^2} \text{ nats,}
+  \end{align*}
+
+donde se ha utilizado que $\mathbb{E}[(X-\mu)^p] = \sigma^p(p-1))!!$ si $p$ es par.
+  
+\end{example}
+
+No siempre tendremos variables unidimensionales, es por ello que definimos también el concepto de entropía para un conjunto de variables.
+
+\begin{definition}[Entropía diferencial]
+  La entropía diferencial de un conjunto de variables aleatorias $X_1,\cdots,X_n$ con función de densidad $f(x_1,\cdots,x_n)$ se define como\[
+h(X_1,\cdots,X_n) = - \int f(x^n)\log f(x^n) dx^n.
+  \]
+\end{definition}
+
+\begin{example}\label{ej:norm_multi}
+  Tomamos una variable aleatoria $X = (X_1,\cdots,X_n)$ con distribución normal multivariante de vector de medias $\mu$ y matriz de covarianzas $\Sigma$. Su densidad viene dada por $f(x) = \frac{1}{\left (\sqrt{2\pi}\right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)}$.
+
+  \begin{align*}
+    h(X) &= - \int f(x)\log f(x) dx \\
+    &= - \int f(x) \log \left ( \frac{1}{\left ( \sqrt{2\pi} \right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)} \right )dx\\
+    &= - \int f(x) \left (- \frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu) - \log\left (\sqrt{2\pi} \right )^n |\Sigma|^{\frac{1}{2}}  \right )dx\\
+    &= \frac{1}{2} \mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ] + \frac{1}{2}\log(2\pi)^n|\Sigma|.
+  \end{align*}
+
+  Continuamos desarrollando la expresión $\mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ]$,
+
+  \begin{align*}
+    \mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ] &= \mathbb{E}\left [ \sum_{i,j}(X_i - \mu)(\Sigma^{-1})_{ij}(X_j-\mu)\right ]\\
+    &= \mathbb{E}\left[ \sum_{i,j}(X_j-\mu)(X_i-\mu)(\Sigma^{-1})_{ij}\right]\\
+    &= \sum_{i,j}\underbrace{\mathbb{E}\left[ \sum_{i,j}(X_j-\mu)(X_i-\mu)\right]}_{Cov(X_j,X_i)}(\Sigma^{-1})_{ij}\\
+    &= \sum_j\sum_i(\Sigma)_{ji}(\Sigma^{-1})_{ij} = \sum_j (\Sigma\Sigma^{-1})_{jj} = \sum_j (I_n)_{jj} = n.
+  \end{align*}
+
+  Sustituyendo este valor en la expresión de la entropía, obtenemos,
+
+  \begin{align*}
+    h(X) &= \frac{n}{2} + \frac{1}{2}\log(2\pi)^n|\Sigma| = \frac{1}{2} \left (\log e^n + \log (2\pi)^n|\Sigma| \right)\\
+    &= \frac{1}{2}\log(2\pi e)^n|\Sigma| \text{ nats.}
+  \end{align*}
+
   
 \end{example}
 
@@ -491,10 +542,10 @@ Estimaremos la entropía de una variable $X$ promediando la distancia media de l
 
 Sea $X$ una variable aleatoria continua con valores en un espacio métrico, es decir, hay definida una distancia, $\Vert x - x'\Vert$, entre dos realizaciones de $X$, y sea $f(x)$ la función de densidad una función $proper$. Nuestro objetivo es estimar la entropía $H(X)$ a partir de una muestra aleatoria simple $(x_1,\cdots,x_N)$ de $N$ realizaciones de $X$.
 
-La ecuación de la entropía, $H(X) = - \int f(x) \log f(x) dx$, se podría entender (salvo el signo menos) como una media de $\log f(x)$. Si tuviéramos un estimador insesgado, $\reallywidehat{\log f}(x)$, del mismo, podríamos obtener un estimador insesgado de la entropía:\[
-\widehat{H}(x) = - \frac{1}{N} \sum_{i=1}^N\reallywidehat{\log f}(x_i).\]
+La ecuación de la entropía, $H(X) = - \int f(x) \log f(x) dx$, se podría entender (salvo el signo menos) como una media de $\log f(x)$. Si tuviéramos un estimador insesgado, $\widehat{\log f}(x)$, del mismo, podríamos obtener un estimador insesgado de la entropía:\[
+\widehat{H}(x) = - \frac{1}{N} \sum_{i=1}^N\widehat{\log f}(x_i).\]
 
-Para obtener el estimador $\reallywidehat{\log f}(x_i)$ consideramos la distribución de probabilidad $P_k(\varepsilon)$ de la distancia entre $x_i$ y su $k$-ésimo vecino más cercano. La probabilidad $P_k(\varepsilon)d\varepsilon$ ---no entiendo por qué aquí añade el $d\varepsilon$--- es igual a la probabilidad de que haya un punto a distancia $r\in \left[ \frac{\varepsilon}{2}, \frac{\varepsilon}{2} + \frac{d\varepsilon}{2} \right ]$ de $x_i$, de que haya otros $k-1$ puntos a menor distancia; y de que $N-k-1$ puntos se encuentren a mayor distancia de $x_i$.
+Para obtener el estimador $\widehat{\log f}(x_i)$ consideramos la distribución de probabilidad $P_k(\varepsilon)$ de la distancia entre $x_i$ y su $k$-ésimo vecino más cercano. La probabilidad $P_k(\varepsilon)d\varepsilon$ ---no entiendo por qué aquí añade el $d\varepsilon$--- es igual a la probabilidad de que haya un punto a distancia $r\in \left[ \frac{\varepsilon}{2}, \frac{\varepsilon}{2} + \frac{d\varepsilon}{2} \right ]$ de $x_i$, de que haya otros $k-1$ puntos a menor distancia; y de que $N-k-1$ puntos se encuentren a mayor distancia de $x_i$.
 
 Llamamos $p_i$ a la función masa de probabilidad  de la bola centrada en $x_i$ y radio $\varepsilon$, $p_i(\varepsilon) = \int_{\Vert s - x_i \Vert < \frac{\varepsilon}{2}}f(s)ds$. 
 
@@ -527,9 +578,9 @@ Continuamos tomando esperanzas respecto de $\varepsilon$ y sustituyendo la esper
 \log f(x_i) \approx \mathbb{E}(\log p_i) - \log c_d  - d \mathbb{E} (\log \varepsilon) = \psi (k) - \psi (N) - \log c_d  - d \mathbb{E} (\log \varepsilon).
 \]
 
-Hemos calculado el estimador $\reallywidehat{\log f} (x_i)$, sustituiremos de la forma propuesta para obtener un estimador de la entropía:
+Hemos calculado el estimador $\widehat{\log f} (x_i)$, sustituiremos de la forma propuesta para obtener un estimador de la entropía:
 \begin{align}
-  \widehat{H}(X) &= - \frac{1}{N} \sum_{i=1}^N\reallywidehat{\log f} (x_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \psi (N) - \log c_d  - d\log \varepsilon \right ) \nonumber \\
+  \widehat{H}(X) &= - \frac{1}{N} \sum_{i=1}^N\widehat{\log f} (x_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \psi (N) - \log c_d  - d\log \varepsilon \right ) \nonumber \\
   &= - \psi (k) + \psi (N) + \log c_d + \frac{d}{N} \sum_{i=1}^N \log \varepsilon (i), \label{eq:est_ent}
 \end{align}
 donde $\varepsilon(i)$ es dos veces la distancia de $x_i$ a su $k$-ésimo vecino más cercano.
@@ -627,18 +678,16 @@ Comenzaremos revisando la implementación \cite{estimating}. Para ello leeremos 
 \item \texttt{entropy\_gaussian}: entropía de una variable gaussiana, se utilizará para hacer \textit{tests}. Si la matriz de covarianzas \texttt{C} es escalar, se utiliza la siguiente fórmula para la entropía:\[
   H(X) = \frac{1}{2}\left ( 1 + \log(2\pi) \right )+ \frac{1}{2} \log C.
   \]
-% REVIEW
-  En el Thomas dice que la entropía de la gaussiana con covarianza $\sigma^2$ es:\[
-h(X) = \frac{1}{2}\log (2\pi e \sigma^2 ).
+Vimos en \ref{ej:norm_uni} que la entropía de la gaussiana con covarianza $\sigma^2$ es:\[
+h(X) = \frac{1}{2}\log (2\pi e \sigma^2 ),
 \]
-
-Coinciden.
+coincidiendo con la implementación.
 
 Para el caso en que la matriz \texttt{C} sea no degenerada, utiliza la expresión:\[
 H(X_1,\cdots, X_n) = \frac{n}{2} \left (1 + \log(2\pi) \right) + \frac{1}{2}\log |C|,
 \]
 
-Coincidiendo con la fórmula del Thomas salvo porque hace el valor absoluto del determinante.
+Coincidiendo con la fórmula vista en \ref{ej:norm_multi} salvo porquese calcula el valor absoluto del determinante.
 
 \item \texttt{entropy}: calcula la entropía de la variable \texttt{X} usando el estimador de Leonenko - Kozachenko \ref{eq:est_ent}. Comienza inicializando los elementos que se necesitan para aplicar la fórmula: vecinos más cercanos para todos los elementos del vector, dimensiones de \texttt{X}, volumen de la bola unidad ($c_d$). Notamos que en el cálculo de la constante $c_d$ (\texttt{volume\_unit\_ball}) falta un $\frac{1}{2^d}$. Otra diferencia es que en el estimador propuesto, $\varepsilon$ era dos veces la distancia del punto al vecino, mientras que en \texttt{r} tenemos la distancia del punto a su vecino más cercano una sola vez. Donde el estimador estudidado ponía $\varepsilon$ en esta implementación pone \texttt{r + eps}, donde \texttt{eps} es el menor valor que al ser sumado varía el resultado (de forma que  \texttt{1+eps $\neq$ 1}). Este detalle, presente en ambas implementaciones, se debe a que al tomar muestras empíricas se suelen usar pocos valores, lo que podría generar un conjunto en el que varios puntos tengan las mismas coordenadas y los números $n_x(i),\ n_y(i)$ no serían únicos (rompiendo la hipótesis de qe la muestra está distribuida de manera continua), para solucionarlo se añade un pequeñor error en los datos. Devuelve el resultado de sustituir estos valores en la fórmula \ref{eq:est_ent}.
 
@@ -655,17 +704,17 @@ Coincidiendo con la fórmula del Thomas salvo porque hace el valor absoluto del 
 \item \texttt{test\_mutual\_information\_2d}: es una función similar a \texttt{test\_mutual\_information}, pero para probar \texttt{mutual\_information\_2d}.
 \end{itemize} 
 
-% REVIEW
-Si ejecutamos el código tal cual está, se producen como salida dos parejas. La primera es la estimación de la información mutua entre 2 variables normales correladas usando la función \texttt{mutual\_information}. La segunda muestra lo mismos resultados para la función \texttt{mutual\_information\_2d}.
-Resultados:
-
+Si ejecutamos el código como está, se producen como salida dos parejas. La primera es la estimación de la información mutua entre 2 variables normales correladas usando la función \texttt{mutual\_information}. La segunda muestra lo mismos resultados para la función \texttt{mutual\_information\_2d}. Se obtienen los siguientes resultados:
+\begin{lstlisting}
 (0.1092329232318674, 0.11157177565710485)
 (2.1173231240729757, 2.2033596236321267)
+\end{lstlisting}
 
 Añadimos a esta tupla la diferencia entre ambos valores:
-
+\begin{lstlisting}
 (0.1092329232318674, 0.11157177565710485, 0.0023388524252374587)
 (2.1173231240729757, 2.2033596236321267, 0.08603649955915094)
+\end{lstlisting}
 
 Observamos una pequeña diferencia entre los valores estimados y los teóricos.
 
@@ -786,10 +835,12 @@ should be infinite for totally disjoint distributions (but this estimator has an
 result: 7.818662829432822
 
 Test discrete.
-random: I(X; Y) = 0.0279 +- 0.0048 (maximum possible 2.3194)
-deterministic: I(X; Y) = 3.3168 +- 0.0019 (maximum possible 3.3168)
-noisy: I(X; Y) = 2.7575 +- 0.0264 (maximum possible 3.3168)
+random: I(X; Y) = 0.0279 ± 0.0048 (maximum possible 2.3194)
+deterministic: I(X; Y) = 3.3168 ± 0.0019 (maximum possible 3.3168)
+noisy: I(X; Y) = 2.7575 ± 0.0264 (maximum possible 3.3168)
 \end{lstlisting}
+
+En primer lugar se calcula la entropía de variables con una distribución uniforme en un intervalo $[0,\alpha]$. En el ejemplo \ref{ej:uni} calculamos la entropía teórica, $h(x) = \log \alpha$. En este caso se tomó $\alpha = 2$, luego la entropía teórica vale 1. Observamos que para los valores $k$ siempre hay una pequeña diferencia entre el valor obtenido y la entropía teórica. A continuación, calcula la información mutua (condicionada y sin condicionar) de una variable aleatoria con distribución normal, de forma teórica y usando el estimador. Por último, prueba los estimadores para el caso discreto. 
 
 \subsection{Análisis comparativo}
 
@@ -810,15 +861,14 @@ Los estimadores obtienen resultados notablemente diferente. Esto se debe a que u
 
 Pasamos a comparar estas entropías con una que conozcamos teóricamente, la distribución uniforme, vista en el Ejemplo \ref{ej:uni}, cuya entropía teórica es $\log(a)$. El código utilizado se encuentra en la función \texttt{example\_entu}, los resultados obtenidos son los siguientes:
 
-%REVIEW: AÑADIR TILDES A LAS O
 \begin{lstlisting}
 Entropía x: (a = 2)
-Terica:  1.0
+Teórica:  1.0
 Estimador 1:  1.0261633399126422
 Estimador 2:  1.0261633406219435
 
 Entropía x: (a = 100)
-Terica:   6.643856189774725
+Teórica:   6.643856189774725
 Estimador 1:   6.683574884777654
 Estimador 2:   6.68357488477827
 \end{lstlisting}
@@ -831,14 +881,14 @@ Queremos ser realmente conscientes de la magnitud del error que se está cometie
 
 Creamos la función \texttt{exp\_err\_ent}. En ella, se pretende obtener un idea más precisa del error obtenido para cada dimensión con ambos estimadores. Para ello, se mide el error un número (\texttt{reps}) determinado de veces y se calcula la media del error obtenido para cada dimensión. Finalmente se dibuja una gráfica del error obtenido. Llamando a esta función con \texttt{reps = 20}, \texttt{k = 3}, \texttt{d = 2, ..., 10}, se obtienen los siguientes errores.
 
-Observamos los errores obtenidos en la Tabla \ref{tab:err_ent}.
+Observamos los errores obtenidos en la Tabla \ref{tab:err_ent}, vemos como a medida que aumenta la dimensión, aumenta el error de forma similar para ambos estimadores.
 
 \begin{table}[H]
-\large
+%\large
 \centering
 \caption{Errores obtenidos con ambas estimaciones al calcular la entropía de una variable aleatoria con distribución normal y compararla con la entropía teórica.}
 \label{tab:err_ent}
-\begin{tabular}{lrr}
+\begin{tabular}{lll}
 \toprule
 $d$ & Error estimador 1 & Error estimador 2\\ \midrule
 2 & 0.014212339128172302 & 0.014680402744924015\\
@@ -854,26 +904,90 @@ $d$ & Error estimador 1 & Error estimador 2\\ \midrule
 \end{tabular}
 \end{table}
 
+Dibujando una gráfica de los valores anteriores compararemos más fácilmente el error obtenido con ambos estimadores. En la Figura \ref{fig:err_ent} encontramos esta representación. Vemos que los errores obtenidos con los dos estimadores eran prácticamente 0 para $d=2$ y que estos van aumentando con la dimensión, siendo ligeramente superior el error obtenido con el segundo estimador. 
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{err_ent}
+    \includegraphics[width=1\textwidth]{err_ent}
     \caption{Errores obtenidos con ambas estimaciones al calcular la entropía de una variable aleatoria con distribución normal y compararla con la entropía teórica.}
     \label{fig:err_ent}
 \end{figure}
 
-Tratamos de mejorar la primera implementación añadiendo los detalles quela diferenciaban de la estimación estudiada teóricamente. En la función \texttt{entropy\_mod} se añade el $\frac{1}{2^d}$ que faltaba en el cálculo del volumen de la bola unidad y la distancia de cada punto a su vecino más cercano se multiplica por 2. Los resultados para $d = 2$ no son muy prometedores:
+El tiempo de cómputo a medida que aumentamos la dimensión se incrementa considerablemente por lo que para hacernos una idea de qué ocurre si la aumentamos un poco más, repetimos el experimento con menos repeticiones por dimensión y llegamos hasta $d = 15$. Se obtienen los errores mostrados en la Figura \ref{fig:err_ent15}. Notamos que los errores no superan al anterior en todos los casos, se puede deber a que en las 10 repeticiones se obtengan estimaciones de la entropía que fueran mejores y ayuden a disminuir el error. Además es destacable cómo, a medida que aumenta la dimensión, crece la diferencia entre las dos estimaciones.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{err_ent_2_15_10reps}
+    \caption{Errores obtenidos con ambas estimaciones al calcular la entropía de una variable aleatoria con distribución normal y compararla con la entropía teórica, 10 repeticiones por iteración.}
+    \label{fig:err_ent15}
+\end{figure}
+
+
+Tratamos de mejorar la primera implementación añadiendo los detalles quela diferenciaban de la estimación estudiada teóricamente. En la función \texttt{entropy\_mod} se añade el $\frac{1}{2^d}$ que faltaba en el cálculo del volumen de la bola unidad y la distancia de cada punto a su vecino más cercano se multiplica por 2. Los resultados para $d = 2$ no son muy prometedores, por lo que abandonamos esta vía.
 
 \begin{lstlisting}
 k = 3, d = 2
 Error estimador 1:  0.013887003356169863
-Error estimador 1\_mod:  1.9861129966437974
+Error estimador 1_mod:  1.9861129966437974
 \end{lstlisting}
 
+Pasamos entonces a comparar los valores devueltos para la información mutua. Las implementaciones realizan la estimación de la información mutua de forma diferente. La implementación 1 utiliza la fórmula que calcula la información mutua como suma de las entropías marginales de las variables y resta de la entropía conjunta. Los errores encontrados en los cálculos individuales podrían afectar al cálculo total. La implementación 2 utiliza el estimador \ref{eq:est_ent} para realizar su estimación de la entropía, es posible que los errores cometidos al calcular la entropía no se vean arrastrados.
+
+Realizamos pruebas comparando los resultados de los estimadores con los de una gaussiana (en la función \texttt{test\_mutual\_information\_mod}) y calculamos el error como la diferencia entre información mutua teórica y estimada, calculamos la media tras repetir el experimento 100 veces, con $d=2$ y $k=3$. Se obtienen los siguientes resultados:
+
+\begin{lstlisting}
+Error estimador 1:  0.010671581846025138
+Error estimador 2:  0.007051668015342052
+\end{lstlisting}
+
+El error en el primer estimador es ligeramente superior al error en el segundo.
+
+Al pasar a dimensión 3, los estimadores comienzan a diferir notablemente de la entropía teórica. Revisando el código notamos que no se adapta la al cambio de dimensión directamente, el cálculo de la entropía teórica de la gaussiana se hace sumando las entropías marginales y restándosela a la conjunta (en este caso como la entropía se calcula correctamente no se arrastran errores), pero la función estaba hecha para el caso $d = 2$. Se modifica utilizando un bucle sobre la dimensión para que, efectivamente, sume todas las entropías marginales. Una vez hecha la modificación correspondiente, realizamos la prueba para $k = 3,\ d = 3$ y 100 repeticiones, con lo que obtenemos:
+
+\begin{lstlisting}
+Error estimador 1:  1.6417490587527461
+Error estimador 2:  1.6426795618610046
+\end{lstlisting}
+
+Al igual que en el caso anterior, crearemos una función, \texttt{exp\_err\_im}, en la que repetiremos la prueba para las dimensiones dadas. Repitiendo el experimento para $d=2,...,15$; 25 veces por dimensión (calculando la media del error), con $k=3$ se obtienen los errores mostrados en la Tabla \ref{tab:err_im}. Notamos que los errores van aumentando al ir añadiendo más dimensiones. Visualizamos los errores obtenidos en la Figura \ref{fig:err_im}. Destaca que los errores obtenidos con ambas estimaciones son tan similares que se superponen en la gráfica. El error en la estimación es creciente en la dimensión.
+
+\begin{table}[H]
+\centering
+\caption{Errores obtenidos con ambas estimaciones al calcular la información mutua de variables aleatorias con distribución normal y compararla con la información mutua teórica.}
+\label{tab:err_im}
+\begin{tabular}{lll}
+\toprule
+$d$ & Error estimador 1 & Error estimador 2\\ \midrule
+2 & 0.0077895466646103586 & 0.005879135481256652\\
+3 & 1.852406411791869 & 1.8495568835932743\\
+4 & 2.328067362081687 & 2.330375193324987\\
+5 & 4.022186430366867 & 4.022166466891652\\
+6 & 4.552915119298815 & 4.555859073764772\\
+7 & 5.325584640708861 & 5.327399887079806\\
+8 & 5.696270621561146 & 5.696928152061884\\
+9 & 6.86921976358911 & 6.871685971363305\\
+10 & 7.492106258014951 & 7.4935380268611915\\
+11 & 8.401680241357042 & 8.400306763900506\\
+12 & 9.010038140658828 & 9.011324360858382\\
+13 & 9.983816029579954 & 9.986518788178701\\
+14 & 10.470383330007241 & 10.468634751932003\\
+15 & 11.476246581716687 & 11.47645425484027\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{err_im_25reps}
+    \caption{Errores obtenidos con ambas estimaciones al calcular la información mutua de variables aleatorias con distribución normal y compararla con la información mutua teórica.}
+    \label{fig:err_im}
+\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %       REFERENCIAS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \printbibliography
 
 \end{document}
