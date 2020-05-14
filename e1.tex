@@ -49,10 +49,185 @@
 
 \newtheorem{theorem}{Teorema}[section]
 \newtheorem{lemma}[theorem]{Lema}
+\newtheorem{proposition}[theorem]{Proposición}
 \newtheorem{example}[theorem]{Ejemplo}
 \newtheorem{corollary}{Corolario}[theorem]
 
-\begin{document}     
+\begin{document}
+\section{Conceptos previos}
+
+Antes de entrar en materia, se recogen una serie de definiciones y resultados que se utilizarán a lo largo del trabajo.
+
+\begin{definition}[$\sigma$-álgebra]
+  Sea $\Omega$ un conjunto no vacío. Una $\sigma$-álgebra $\mathcal{A}$ sobre $\Omega$ es una familia de subconjuntos de $\Omega$ que verifica:
+  \begin{itemize}
+  \item  El conjunto vacío, $\emptyset$, pertenece a $\mathcal{A}$,
+  \item  si $A$ pertenece a $\mathcal{A}$, entonces su complementario $\Omega\ \backslash\ A$ también pertenece a $\mathcal{A}$,
+ \item si tomamos una serie de conjuntos $A_1,A_2,\cdots$ de $\mathcal{A}$, entonces su unión $A_1\cup A_2 \cup \cdots$ también pertenece a $\mathcal{A}$.
+  \end{itemize}
+  
+\end{definition}
+
+\begin{example}
+La familia de conjuntos Borel $\mathcal{A} = \mathcal{B}(\mathbb{R})$ es una $\sigma$-álgebra sobre $\mathbb{R}$. Un conjunto Borel sobre un espacio topológico es aquel formado por todos los conjuntos abiertos con las operaciones de unión numerable, intersección numerable y complementario relativo.
+\end{example}
+
+\begin{definition}[Medida de probabilidad]
+  Sea $\mathcal{A}$ una $\sigma$-álgebra sobre $\Omega$. Una medida de probabilidad $P$ es una función $P:\mathcal{A} \to [0,1]$ tal que
+  \begin{itemize}
+  \item $P(\Omega) = 1$,
+   \item si $A_1,A_2,\cdots$ son conjuntos de $\mathcal{A}$ disjuntos dos a dos, entonces $P(A_1\cup A_2 \cup \cdots) = P(A_1)+P(A_2)+\cdots$. 
+  \end{itemize}
+\end{definition}
+
+La tupla $(\Omega, \mathcal{A}, P)$ se llama espacio de probabilidad. Los conjuntos de $\mathcal{A}$ se llaman eventos. Se dice que un evento $A$ ocurrirá casi seguramente cuando $P(A)=1$.
+
+% REVIEW: ¿Definir espacio de probabilidad?
+\begin{definition}[Variable aleatoria]
+  Sea $(\Omega, \mathcal{A}, P)$ un espacio de probabilidad. Una variable aleatoria $X$ es una función medible \[
+X:(\Omega, \mathcal{A}) \to (\mathbb{R}, \mathcal{B}).
+\]
+La condición de medibilidad quiere decir que $X^{-1}(B) \in \mathcal{A}\quad \forall B\in \mathcal{B}$.\\
+\end{definition}
+
+Podemos extender esta definición y obtener el concepto de vector aleatorio.
+
+\begin{definition}[Vector aleatorio]
+    Sea $(\Omega, \mathcal{A}, P)$ un espacio de probabilidad. Un vector aleatorio $X=(X_1,\cdots, X_n)$ es una función medible \[
+X:(\Omega, \mathcal{A}) \to (\mathbb{R}^n, \mathcal{B}^n).
+\]
+La condición de medibilidad quiere decir que $X^{-1}(B) \in \mathcal{A}\quad \forall B\in \mathcal{B}^n$.\\
+\end{definition}
+
+Cada variable aleatoria nos da una medida de probabilidad, su probabilidad inducida.
+
+\begin{definition}[Probabilidad inducida]
+  La probabilidad inducida por un vector aleatorio $X=(X_1,\cdots, X_n)$, o distribución de $X$, se define como la función \[
+P_X[B]:= P[X^{-1}(B)],
+  \]
+para todo $B \in \mathcal{B}^n$.
+\end{definition}
+
+\begin{definition}[Función Borel]
+  Una función $f:\mathbb{R}^n\to \mathbb{R}^n$ será Borel si la imagen inversa $f^{-1}(B)$ de cualquier conjunto Borel $B\in \mathbb{R}^n$ es un conjunto Borel.
+\end{definition}
+
+\begin{definition}[Función de distribución]
+  La función de distribución del vector aleatorio $X=(X_1,\cdots,X_n)$ es $F_X:\mathbb{R}^n\to[0,1]$ y está dada por\[
+F_X(x_1,\cdots,x_n) = P[X_1\leq x_1,\cdots, X_n\leq x_n].
+  \]
+\end{definition}
+
+\begin{proposition}
+  La función de distribución $F_X$ es no decreciente, continua a la derecha y $\lim_{x\to - \infty}F_X(x) = 0$, $\lim_{x\to +\infty}F_X(x) = 1$.
+\end{proposition}
+
+%REVIEW
+\begin{definition}[Función de densidad y función masa de probabilidad]
+  Si hay una función Borel $f_X:\mathbb{R}^n\to \mathbb{R}$ tal que para cualquier conjunto Borel $B\subset \mathbb{R}$\[
+P[X\in B] = \int_B f_X(x) dx,
+\]
+se dice que $X$ es un vector aleatorio con distribución absolutamente continua y $f_X$ se llama función de densidad de $X$. Si hay una secuencia (finita o infinita) de vectores $x_1,x_2,\cdots$ tal que para cualquier conjunto Borel $B\subset \mathbb{R}^n$\[
+P[X\in B] = \sum_{x_i\in B}P[X = x_i],
+\]
+entonces decimos que $X$ tiene una distribución discreta con valores $x_1,x_2\cdots$ y función masa de probabilidad $P[X=x_i]$ en $x_i$.
+\end{definition}
+
+%% \begin{definition}[Probabilidad conjunta]
+%%   La probabilidad conjunta de varios vectores aleatorios $X_1,\cdots, X_n$ es una medida de probabilidad 
+  
+%% \end{definition}
+
+\begin{definition}[Probabilidad condicionada]
+  Para cualesquiera dos eventos $A,B \in \mathcal{A}$ tal que $P(B)\neq 0$, la probabilidad condicionada de A por B se define como\[
+P(A|B) = \frac{P(A\cap B)}{P(B)}.
+  \]
+\end{definition}
+
+\begin{definition}[Eventos independientes]
+  $n$ eventos $A_1,\cdots,A_n\in \mathcal{A}$ se dicen independientes si\[
+P(A_{i_1}\cap\cdots\cap A_{i_k}) = P(A_{i_1})\cdots P(A_{i_k}),
+\]
+para cualesquiera índices $1\leq i_1\leq \cdots \leq i_k\leq n$.
+\end{definition}
+
+\begin{definition}[Vectores aleatorios independientes]
+  Dos vectores aleatorios $X$ e $Y$ son independientes si para cualesquiera conjuntos de Borel $A, B \in \mathcal{B}(\mathbb{R}^n)$ los eventos $[X\in A]$ y $Y\in B$ son independientes. De forma general $k$ vectores aleatorios $X_1,\cdots,X_k$ serán independientes si para cualesquiera conjuntos de borel $B_1,\cdots,B_k \in \mathcal{B}(\mathbb{R}^n)$ los eventos $[X_1 \in B_1],\cdots,[X_k\in B_k]$ son independientes.
+  
+\end{definition}
+
+\begin{proposition}[Caracterizaciones de independencia]
+  Dado un vector aleatorio $X =(X_1,\cdots,X_n)$ sus componentes son independientes si, y solo si, se da alguna de las siguientes condiciones:
+  \begin{itemize}
+  \item La función de distribución verifica $F_X(x) = F_{X_1}(x_1)\cdots F_{X_n}(x_n)$ para todo $x \in \mathbb{R}^n$.
+  \item $X$ tiene función de densidad y $f_X(x) = f_{X_1}(x_1)\cdots f_{X_n}(x_n)$ para todo $x \in \mathbb{R}^n$, salvo, a lo sumo, en un conjunto de medida nula.
+  \end{itemize}
+\end{proposition}
+
+% REVIEW: DEFINIR ESPERANZA
+
+\begin{definition}[Vector de medias]
+  Sea $X=(X_1,\cdots,X_N)^T$ un vector aleatorio. Se define el vector de medias de $X$ como:\[
+\mu_X = \mathbb{E}[X] = \begin{bmatrix}
+           \mathbb{E}[X_1] \\
+          \vdots \\
+          \mathbb{E}[X_n]
+         \end{bmatrix}
+ = \begin{bmatrix}
+           \mu_1 \\
+          \vdots \\
+          \mu_n
+ \end{bmatrix},  \]
+ siempre que existan todas las esperanzas unidimensionales.
+\end{definition}
+
+\begin{definition}[Matriz de convarianzas]
+  Se define la matriz de covarianzas del vector $X= (X_1,\cdots,X_n)^T$ como\[
+\Sigma = Cov(X) = \mathbb{E}\left [(X-\mu)(X-\mu)^T \right ] =  \begin{bmatrix} \sigma_{11} & \dots & \sigma_{1n} \\ \vdots& \ddots & \vdots \\ \sigma_{n1} &  \dots & \sigma_{nn}\end{bmatrix}\,,
+\]
+donde $\sigma_{ij} = \mathbb{E}\left[(X_i-\mu_i)(X_j-\mu_j)\right]=\sigma_{ji}$ es la covarianza de las variables aleatorias $X_i$ y $X_j$. La podremos definir cuando existan todas las covarianzas.  
+\end{definition}
+
+\subsection{Algunas distribuciones}
+
+Durante el desarrollo del trabajo se utilizarán algunas distribuciones, se presentan a continuación.
+
+
+%--------------Multinomial - Principio----------------------------------
+La distribución multinomial modela la probabilidad de un número determinado de éxitos para $n$ sucesos independientes. Donde hay $k$ posibles éxitos, cada uno de ellos con probabilidad de éxito fija.
+
+\begin{definition}[Distribución multinomial]
+  Sea $k$ un número fijo y finito, tendremos $k$ posibles salidas mutuamente excluyentes con propabilidades $p_1\cdots p_k$. Si la variable aleatoria $X_i$ indica el número de veces que se observa la salida $i$ en los $n$ sucesos, entonces el vector $X = (X_1, \cdots, X_n)$ sigue una distribución multinomial con parámetros $n$ y $p = (p_1,\cdots, p_n)$. Su función masa de probabilidad viene dada por
+
+\begin{align*}
+f(x_1,\cdots,x_n; n, p_1,\cdots,p_n) &= P[X_1 = x_1\text{ y } \cdots \text{ y } X_k = x_k]\\ &=
+\begin{cases}
+    \frac{n!}{x_1!\cdots x_k!} p_1^{x_1} \cdots  p_k^{x_k},\quad\text{si } \sum_{i=1}^kx_i = n\\
+    0, \qquad \qquad \qquad\text{en otro caso,}
+\end{cases}
+\end{align*}
+donde $x_1,\cdots, x_k$ son enteros no negativos.
+\end{definition}
+
+%Notamos que aunque los sucesos sean independientes, sus salidas $X$ son dependientes, ya que deben sumar $n$.
+
+\begin{example}
+  Si tenemos un dado de $k$ lados y queremos calcular cuántas veces sale cada uno de ellos en $n$ lanzamientos, tendremos una distribución multinomial.
+\end{example}
+
+\begin{proposition}
+  El valor esperado de observar la salida $i$ en $n$ sucesos es $\mathbb{E}(X_i) = np_i$, luego $\mathbb{E}(X) = np$.
+\end{proposition}
+
+\begin{proposition}
+  Observamos cómo son los elementos de la matriz de covarianzas. Los elementos de la diagonal son la varianza de una variable aleatoria con distribución binomial, luego $Var(X_i) = np_i(1-p_i)$. Las covarianzas de $X_i, X_j$ para $i\neq j$ son $Cov(X_i, X_j) = - n p_i p_j$. Por tanto, $Var(X) = n [\text{diag}(p) - p p^T]$, donde diag$(p)$ representa la matriz diagonal que tiene el elemento $p_i$ en la posición $i,i$.
+\end{proposition}
+%----------------------MULTINOMIAL-FIN----------------------------------
+
+
+%-----------------------------------------------------------------------
+%-----------------------TEORÍA DE LA INFORMACIÓN------------------------
+%-----------------------------------------------------------------------
     \section{Teoría de la información}
 
     El concepto de información es demasiado amplio como para ser recogido en una única definición. Sin embargo, podemos definir el concepto de entropía, que mide la cantidad de información necesaria para describir una variable aleatoria, o el de información mutua, que refleja la información que una variable aleatoria contiene sobre otra.
@@ -63,7 +238,7 @@
 
     La idea de relacionar el número de estados de un sistema con una medida física viene del siglo XIX, en el que Rudolph Clausius sugirió la denominación ``entropía'' para esta medida. En 1928, Ralph Vinton Lyon Hartley define el término en el contexto de la teoría de la información, básicamente como el logaritmo del tamaño del alfabeto. Aunque no es hasta 1948 cuando Claude Shannon da una definición matemática del concepto de información como lo conocemos hoy en día,  sentando las bases de la teoría de la información, que pasó a formar parte de la teoría de la probabilidad. En su concepto de entropía no todos los símbolos de un alfabeto tienen porqué ser equiprobables. Esto nos permite medir la capacidad de comunicación de un canal. Andrei N. Kolmogorov, en la década de los 60, desarrolló su teoría de la complejidad, otra forma de teoría de la información.\\
 
-Sea una variable aleatoria discreta, $X$ que toma valores en el alfabeto $\mathcal{X} = \{x_1, \cdots, x_N \}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.
+Sea una variable aleatoria discreta, $X$, que toma valores en el alfabeto $\mathcal{X} = \{x_1, \cdots, x_N \}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.
 
 \begin{definition}[Entropía]
   La entropía de una variable aleatoria discreta $X$ viene dada por \[H(X) = - \sum_{x\in \mathcal{X}} p(x) \log p(x).\]
@@ -103,24 +278,7 @@ El siguiente lema, mediante propiedades del logaritmo, nos permitirá cambiar la
   \]
 \end{proof}
 
-\begin{example}
-  Sea \[X = 
-     \begin{cases}
-       1, \quad\text{con probabilidad } p\\
-       0, \quad\text{con probabilidad } 1-p \\
-     \end{cases}.\]
-     La entropía de la variable aleatoria $X$ la notaremos $H(p)$ y se calcula como sigue: $ H(p) := H(X) = - \left ( p \log p + (1-p) \log (1-p) \right )$.
-     Cuando $p=0$ o $p=1$, $H(p) = 0$, luego no hay incertidumbre, se conoce el valor que tomará la variable $X$. Calcularemos la primera y segunda derivada de $H(p)$ para conocer su comportamiento en el intervalo $(0,1)$.
-     \begin{align*}
-       H'(p) &= - \left ( \log p + \frac{p}{p} - \log(1-p) - \frac{1-p}{1-p} \right ) = - \left ( \log \left (\frac{p}{1-p} \right) \right ).\\
-     H''(p) &= - \left ( \frac{1}{p} + \frac{1}{1-p} \right ) \leq 0 \quad \forall p \in (0,1).
-     \end{align*}
-     
-     Hemos comprobado que la función $H(p)$ es cóncava. La incertidumbre máxima se alcanzará en $p=\frac{1}{2}$: \[H\left (\frac{1}{2}\right ) = - \left ( \frac{1}{2}\log\frac{1}{2} + \frac{1}{2} \log\frac{1}{2} \right ) = - \log \frac{1}{2} = 1.\]
-
-\end{example}
-
-Pasamos a un ejemplo en el que el valor de las probabilidades es uno concreto:
+En el siguiente ejemplo calculamos la entropía de una variable aleatoria con probabilidades fijadas.
 \begin{example}
   Sea  \[X = 
      \begin{cases}
@@ -130,8 +288,26 @@ Pasamos a un ejemplo en el que el valor de las probabilidades es uno concreto:
        d, \quad\text{con probabilidad } \frac{1}{8} \\
      \end{cases}.\]
 
-     Utilizamos la fórmula de la entropía y obtenemos \[H(X) = - \left (\frac{1}{2} \log \frac{1}{2} + \frac{1}{4} \log \frac{1}{4} + \frac{1}{4} \log \frac{1}{8} \right ) = - \left (-\frac{1}{2} - \frac{1}{2} - \frac{3}{4} \right ) = 1 + \frac{3}{4} = \frac{7}{4} \text{ bits}.\]
+     Utilizamos la fórmula de la entropía y obtenemos \[H(X) = - \left (\frac{1}{2} \log \frac{1}{2} + \frac{1}{4} \log \frac{1}{4} + \frac{1}{4} \log \frac{1}{8} \right ) = - \left (-\frac{1}{2} - \frac{1}{2} - \frac{3}{4} \right ) = 1 + \frac{3}{4} = \frac{7}{4} \text{ bits}.\]\\
 \end{example}
+
+\begin{example}
+  Sea \[X = 
+     \begin{cases}
+       1, \quad\text{con probabilidad } p\\
+       0, \quad\text{con probabilidad } 1-p \\
+     \end{cases}.\]
+     Vamos a analizar la entropía de la variable aleatoria $X$ como función de $p$, es decir, $H:[0,1]\to \mathbb{R}$ estará dada por $H(p)$. Se calcula como sigue: $ H(p) := H(X) = - \left ( p \log p + (1-p) \log (1-p) \right )$.
+     %La entropía de la variable aleatoria $X$ la notaremos $H(p)$
+     Cuando $p=0$ o $p=1$, $H(p) = 0$, luego no hay incertidumbre, se conoce el valor que tomará la variable $X$. Calcularemos la primera y segunda derivada de $H(p)$ para conocer su comportamiento en el intervalo $(0,1)$.
+     \begin{align*}
+       H'(p) &= - \left ( \log p + \frac{p}{p} - \log(1-p) - \frac{1-p}{1-p} \right ) = - \left ( \log \left (\frac{p}{1-p} \right) \right ).\\
+     H''(p) &= - \left ( \frac{1}{p} + \frac{1}{1-p} \right ) \leq 0 \quad \forall p \in (0,1).
+     \end{align*}
+     
+     Hemos comprobado que la función $H(p)$ es cóncava. La incertidumbre máxima se alcanzará en $p=\frac{1}{2}$: \[H\left (\frac{1}{2}\right ) = - \left ( \frac{1}{2}\log\frac{1}{2} + \frac{1}{2} \log\frac{1}{2} \right ) = - \log \frac{1}{2} = 1.\]\\
+\end{example}
+
 
 La definición de entropía de una variable aleatoria se puede aplicar a un par de variables aleatorias dando lugar a la entropía conjunta.
 
@@ -201,7 +377,7 @@ Al considerar dos distribuciones distintas, además de su entropía conjunta pod
   \end{align*}
 \end{definition}
 
-En la definición anterior, la probabilidad condicionada $p(y|x)$ viene dada por la función masa de probabilidad $p(y|x) = \frac{p(x,y)}{p(x)}$.
+%En la definición anterior, la probabilidad condicionada $p(y|x)$ viene dada por la función masa de probabilidad $p(y|x) = \frac{p(x,y)}{p(x)}$.
 
 \begin{theorem}[Regla de la cadena]\label{t:regla_cadena}
   Si $(X,Y)$ sigue una distribución $p(x,y)$, entonces se verifica:\[
@@ -249,18 +425,23 @@ Sea $(X,Y)$ una variable aleatoria con distribución conjunta:
 \centering
 %\caption{}
 \label{}
-\begin{tabular}{r|llll}
-  \toprule
-\backslashbox{$Y$}{$X$} & 1 & 2 & 3 & 4\\ \hline\\[-10pt]
-1 & $\frac{1}{8}$ & $\frac{1}{16}$ & $\frac{1}{32}$ & $\frac{1}{32}$\\[5pt]
-2 & $\frac{1}{16}$ & $\frac{1}{8}$ & $\frac{1}{32}$ & $\frac{1}{32}$\\[5pt]
-3 & $\frac{1}{16}$ & $\frac{1}{16}$ & $\frac{1}{16}$ & $\frac{1}{16}$\\[5pt]
-4 & $\frac{1}{4}$ & 0 & 0 & 0\\[5pt]
+\begin{tabular}{r|llll|l}
+ \toprule
+ \backslashbox{$Y$}{$X$} & 1 & 2 & 3 & 4&\\ %\hline\\[-10pt]
+ \cline{1-5} \\[-10pt]
+1 & $\frac{1}{8}$ & $\frac{1}{16}$ & $\frac{1}{32}$ & $\frac{1}{32}$  & $\frac{1}{4}$ \\[5pt]
+2 & $\frac{1}{16}$ & $\frac{1}{8}$ & $\frac{1}{32}$ & $\frac{1}{32}$ & $\frac{1}{4}$ \\[5pt]
+3 & $\frac{1}{16}$ & $\frac{1}{16}$ & $\frac{1}{16}$ & $\frac{1}{16}$ & $\frac{1}{4}$ \\[5pt]
+4 & $\frac{1}{4}$ & 0 & 0 & 0 & $\frac{1}{4}$ \\[5pt]
+%\hline\\[-10pt]
+\cline{2-5}\\[-10pt]
+& $\frac{1}{2}$ &  $\frac{1}{4}$ &  $\frac{1}{8}$ &  $\frac{1}{8}$ \\[5pt]   
 \bottomrule
 \end{tabular}
 \end{table}
 
-  La distribución marginal de $X$ es $\left ( \frac{1}{2}, \frac{1}{4}, \frac{1}{8}, \frac{1}{8} \right )$ y la distribución marginal de $Y$ es $\left ( \frac{1}{4}, \frac{1}{4}, \frac{1}{4}, \frac{1}{4} \right )$. Calculamos las entropías de las variables marginales:
+  %  La distribución marginal de $X$ es $\left ( \frac{1}{2}, \frac{1}{4}, \frac{1}{8}, \frac{1}{8} \right )$ y la distribución marginal de $Y$ es $\left ( \frac{1}{4}, \frac{1}{4}, \frac{1}{4}, \frac{1}{4} \right )$.
+  Calculamos las entropías de las variables marginales:
   \begin{align*}
     H(X) &= - \frac{1}{2} \log \frac{1}{2} - \frac{1}{4} \log \frac{1}{4} - 2 \frac{1}{8} \log \frac{1}{8} = -\frac{1}{2} - \frac{1}{2} - \frac{6}{8} = \frac{7}{4} \text{ bits}.\\
     H(Y) &= - 4 \frac{1}{4} \log \frac{1}{4} = 2 \text{ bits}.
@@ -283,11 +464,11 @@ Sea $(X,Y)$ una variable aleatoria con distribución conjunta:
   Observamos que las entropías condicionales son positivas y menores que las entropías individuales, además $H(Y|X) \neq H(X|Y)$. Comprobamos que se verifica el Teorema \ref{t:regla_cadena}:
   \begin{align*}
     H(X,Y) &= H(X) + H(Y|X) = \frac{7}{4} + \frac{13}{8} = \frac{27}{8} \text{ bits}.\\
-    H(X,Y) &= H(Y) + H(X|Y) = 2 + \frac{11}{8} = \frac{27}{8} \text{ bits}.
+    H(X,Y) &= H(Y) + H(X|Y) = 2 + \frac{11}{8} = \frac{27}{8} \text{ bits}.\\
   \end{align*}
 \end{example}
 
-Pasamos a definir otra medida de información, la entropía relativa, esta será una medida de la distancia entre dos distribuciones. La podemos ver como una medida de ineficiencia al asumir que la distribución es $q$ cuando en realidad es $p$.
+Pasamos a definir otra medida de información, la entropía relativa, esta será una medida de la distancia entre dos distribuciones. La podemos ver como una medida de inteficiencia al asumir que la distribución es $q$ cuando en realidad es $p$. Será una medida de ineficiencia en el sentido de cuánta información perderíamos si utilizáramos la distribución $q$ para aproximar a la distribución $p$.
 
 \begin{definition}[Entropía relativa]
   La entropía relativa (o ``distancia'' Kullback Leibler) entre dos funciones masa de probabilidad $p(x)$ y $q(x)$ se define como\[
@@ -320,7 +501,7 @@ La entropía relativa no es realmente una distancia, ya que no es simétrica ni 
     D(p \Vert q) &= \frac{1}{2} \log \frac{1/2}{3/4} + \frac{1}{2} \log \frac{1/2}{1/4} = 1 - \frac{1}{2} \log 6 + \frac{1}{2} = 1 - \frac{1}{2} \log 3 = 0.2075 \text{ bits}.\\
     D(q \Vert p) &= \frac{3}{4} \log \frac{3/4}{1/2} + \frac{1}{4} \log \frac{1/4}{1/2} = \frac{3}{4} \log 6 - \frac{3}{2} - \frac{1}{4} = -1 + \frac{3}{4} \log 3 = 0.1887 \text{ bits}. % \frac{2}{4} - \frac{3}{2} + \frac{3}{4} \log 3 =
   \end{align*}
-Luego, $D(p\Vert q) \ne D(q \Vert p)$.
+Luego, $D(p\Vert q) \ne D(q \Vert p)$.\\
 \end{example}
 
 \begin{lemma}
@@ -345,7 +526,7 @@ donde $\left\Vert\mathcal{X}\right\Vert$ representa al cardinal de $\mathcal{X}$
 
 \subsection{Información mutua}
 
-La información mutua es una medida de la cantidad de información que una variable aleatoria contiene sobre otra. Se define como sigue.
+La información mutua es una medida de la dependencia entre dos variables aleatorias. Mide la cantidad de información que tenemos sobre una de ellas si hemos observado la otra. Se define como sigue.
 
 \begin{definition}[Información mutua]
   Dadas dos variables aleatorias $X$ e $Y$ discretas con función masa de probabilidad conjunta $p(x,y)$ y funciones masa de probabilidad marginales $p(x)$ y $p(y)$. La información mutua, representada por $I(X;Y)$, es la entropía relativa entre la distribución conjunta y la distribución producto $p(x)p(y)$.
@@ -420,29 +601,27 @@ Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo pued
 \end{example}
 
 \begin{example}\label{ej:norm_uni}
-  Consideramos una variable aleatoria $X$ con ditribución normal univariante de media $\mu$ y varianza $\sigma$, su función de densidad es $f(x) = \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}$, queremos calcular su entropía.
+  Consideramos una variable aleatoria $X$ con distribución normal univariante de media $\mu$ y varianza $\sigma^2$, su función de densidad es $f(x) = \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}$, queremos calcular su entropía.
   \begin{align*}
     h(X) &= - \int f(x) \log f(x) dx = - \int \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \log \left ( \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \right ) dx\\
-    &= -  \frac{1}{\sigma \sqrt{2\pi}} \int e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \left [ \log \left ( e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \right ) - \log \sigma \sqrt{2\pi} \right ] dx\\
-    &= -  \frac{1}{\sigma \sqrt{2\pi}}\left [ \int e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \left ( -\frac{(x-\mu)^2}{2\sigma ^2} \right )dx - \int e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \log \sigma \sqrt{2\pi} dx \right ].\\
+    &= -  \frac{1}{\sigma \sqrt{2\pi}} \int e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \left [ \log \left ( e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \right ) - \log \left(\sigma \sqrt{2\pi}\right ) \right ] dx\\
+    &= -  \frac{1}{\sigma \sqrt{2\pi}}\left [ \int e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \left ( -\frac{(x-\mu)^2}{2\sigma ^2} \right )dx - \int e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \log \left ( \sigma \sqrt{2\pi}\right ) dx \right ].\\
   \end{align*}
 
-  Ahora, utilizando la ley del estadístico incosciente ($E[g(X)]=  \int g(x)f(x)$), tenemos,
+  Ahora, utilizando la ley del estadístico inconsciente ($E[g(X)]=  \int g(x)f(x)$), tenemos,
   \begin{align*}
-    h(X) &= \frac{\mathbb{E}\left [ (X-\mu) ^2\right ] }{2\sigma^2} + \log \sigma\sqrt{2\pi} \underbrace{\int \frac{1}{\sigma\sqrt{2\pi}}e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}dx}_{1}\\
-    &= \frac{\sigma^2}{2\sigma^2} + \log \sqrt{\sigma^2 2 \pi} = \frac{1}{2} + \frac{1}{2}\log  \sigma^2 2 \pi\\
-    &= \frac{1}{2} \log e + \frac{1}{2} \log \sigma^2 2 \pi\\ &= \frac{1}{2}\log{2\pi e\sigma^2} \text{ nats,}
+    h(X) &= \frac{\mathbb{E}\left [ (X-\mu) ^2\right ] }{2\sigma^2} + \log\left( \sigma\sqrt{2\pi} \right )\underbrace{\int \frac{1}{\sigma\sqrt{2\pi}}e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}dx}_{1}\\
+    &= \frac{\sigma^2}{2\sigma^2} + \log \sqrt{\sigma^2 2 \pi} = \frac{1}{2} + \frac{1}{2}\log\left(  \sigma^2 2 \pi\right)\\
+    &= \frac{1}{2} \log e + \frac{1}{2} \log\left( \sigma^2 2 \pi\right)\\ &= \frac{1}{2}\log\left({2\pi e\sigma^2} \right) \text{ nats.}
   \end{align*}
-
-donde se ha utilizado que $\mathbb{E}[(X-\mu)^p] = \sigma^p(p-1))!!$ si $p$ es par.
   
 \end{example}
 
 No siempre tendremos variables unidimensionales, es por ello que definimos también el concepto de entropía para un conjunto de variables.
 
 \begin{definition}[Entropía diferencial]
-  La entropía diferencial de un conjunto de variables aleatorias $X_1,\cdots,X_n$ con función de densidad $f(x_1,\cdots,x_n)$ se define como\[
-h(X_1,\cdots,X_n) = - \int f(x^n)\log f(x^n) dx^n.
+  La entropía diferencial de un conjunto de variables aleatorias $X_1,\cdots,X_n = X$ con función de densidad $f(x_1,\cdots,x_n) = f(x)$ se define como\[
+h(X_1,\cdots,X_n) = h(X) = - \int f(x)\log f(x) dx.
   \]
 \end{definition}
 
@@ -452,8 +631,8 @@ h(X_1,\cdots,X_n) = - \int f(x^n)\log f(x^n) dx^n.
   \begin{align*}
     h(X) &= - \int f(x)\log f(x) dx \\
     &= - \int f(x) \log \left ( \frac{1}{\left ( \sqrt{2\pi} \right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)} \right )dx\\
-    &= - \int f(x) \left (- \frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu) - \log\left (\sqrt{2\pi} \right )^n |\Sigma|^{\frac{1}{2}}  \right )dx\\
-    &= \frac{1}{2} \mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ] + \frac{1}{2}\log(2\pi)^n|\Sigma|.
+    &= - \int f(x) \left (- \frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu) - \log\left [ \left (\sqrt{2\pi} \right )^n |\Sigma|^{\frac{1}{2}} \right ]  \right )dx\\
+    &= \frac{1}{2} \mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ] + \frac{1}{2}\log\left [(2\pi)^n|\Sigma|\right ].
   \end{align*}
 
   Continuamos desarrollando la expresión $\mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ]$,
@@ -468,8 +647,8 @@ h(X_1,\cdots,X_n) = - \int f(x^n)\log f(x^n) dx^n.
   Sustituyendo este valor en la expresión de la entropía, obtenemos,
 
   \begin{align*}
-    h(X) &= \frac{n}{2} + \frac{1}{2}\log(2\pi)^n|\Sigma| = \frac{1}{2} \left (\log e^n + \log (2\pi)^n|\Sigma| \right)\\
-    &= \frac{1}{2}\log(2\pi e)^n|\Sigma| \text{ nats.}
+    h(X) &= \frac{n}{2} + \frac{1}{2}\log\left [ (2\pi)^n|\Sigma|\right ] = \frac{1}{2} \left (\log e^n + \log \left[(2\pi)^n|\Sigma|\right] \right)\\
+    &= \frac{1}{2}\log\left[(2\pi e)^n|\Sigma|\right] \text{ nats.}
   \end{align*}
 
   
@@ -687,11 +866,11 @@ Para el caso en que la matriz \texttt{C} sea no degenerada, utiliza la expresió
 H(X_1,\cdots, X_n) = \frac{n}{2} \left (1 + \log(2\pi) \right) + \frac{1}{2}\log |C|,
 \]
 
-Coincidiendo con la fórmula vista en \ref{ej:norm_multi} salvo porquese calcula el valor absoluto del determinante.
+Coincidiendo con la fórmula vista en \ref{ej:norm_multi}.
 
-\item \texttt{entropy}: calcula la entropía de la variable \texttt{X} usando el estimador de Leonenko - Kozachenko \ref{eq:est_ent}. Comienza inicializando los elementos que se necesitan para aplicar la fórmula: vecinos más cercanos para todos los elementos del vector, dimensiones de \texttt{X}, volumen de la bola unidad ($c_d$). Notamos que en el cálculo de la constante $c_d$ (\texttt{volume\_unit\_ball}) falta un $\frac{1}{2^d}$. Otra diferencia es que en el estimador propuesto, $\varepsilon$ era dos veces la distancia del punto al vecino, mientras que en \texttt{r} tenemos la distancia del punto a su vecino más cercano una sola vez. Donde el estimador estudidado ponía $\varepsilon$ en esta implementación pone \texttt{r + eps}, donde \texttt{eps} es el menor valor que al ser sumado varía el resultado (de forma que  \texttt{1+eps $\neq$ 1}). Este detalle, presente en ambas implementaciones, se debe a que al tomar muestras empíricas se suelen usar pocos valores, lo que podría generar un conjunto en el que varios puntos tengan las mismas coordenadas y los números $n_x(i),\ n_y(i)$ no serían únicos (rompiendo la hipótesis de qe la muestra está distribuida de manera continua), para solucionarlo se añade un pequeñor error en los datos. Devuelve el resultado de sustituir estos valores en la fórmula \ref{eq:est_ent}.
+\item \texttt{entropy}: calcula la entropía de la variable \texttt{X} usando el estimador de Leonenko - Kozachenko \ref{eq:est_ent}. Comienza inicializando los elementos que se necesitan para aplicar la fórmula: vecinos más cercanos para todos los elementos del vector, dimensiones de \texttt{X}, volumen de la bola unidad ($c_d$). Notamos que en el cálculo de la constante $c_d$ (\texttt{volume\_unit\_ball}) falta un $\frac{1}{2^d}$. Otra diferencia es que en el estimador propuesto, $\varepsilon$ era dos veces la distancia del punto al vecino, mientras que en \texttt{r} tenemos la distancia del punto a su vecino más cercano una sola vez. Donde el estimador estudiado ponía $\varepsilon$ en esta implementación pone \texttt{r + eps}, donde \texttt{eps} es el menor valor que al ser sumado varía el resultado (de forma que  \texttt{1+eps $\neq$ 1}). En ambas implementaciones se añade un ínfimo ruido a los datos, para evitar que varios puntos tengan exactamente las mismas coordenadas. Devuelve el resultado de sustituir estos valores en la fórmula \ref{eq:est_ent}.
 
-\item \texttt{mutual\_information}: devuelve la información mutua entre cualquier número de variables. Para ello suma las entropías marginales de cada una de ellas y les resta la entropía conjunta (usando el mismo valor $k$ para ambas estimaciones). % REVIEW: Referenciar lema correspondiente
+\item \texttt{mutual\_information}: devuelve la información mutua entre cualquier número de variables. Para ello suma las entropías marginales de cada una de ellas y les resta la entropía conjunta (usando el mismo valor $k$ para ambas estimaciones).---Esta fórmula habría que probarla y añadirla a la parte de teoría (la tenemos para 2 variables)--- % REVIEW: Referenciar lema correspondiente
 
 \item \texttt{mutual\_information\_2d}: calcula la información mutua entre dos variables unidimensionales a partir de su histograma conjunto. 
 
@@ -704,7 +883,7 @@ Coincidiendo con la fórmula vista en \ref{ej:norm_multi} salvo porquese calcula
 \item \texttt{test\_mutual\_information\_2d}: es una función similar a \texttt{test\_mutual\_information}, pero para probar \texttt{mutual\_information\_2d}.
 \end{itemize} 
 
-Si ejecutamos el código como está, se producen como salida dos parejas. La primera es la estimación de la información mutua entre 2 variables normales correladas usando la función \texttt{mutual\_information}. La segunda muestra lo mismos resultados para la función \texttt{mutual\_information\_2d}. Se obtienen los siguientes resultados:
+Si ejecutamos el código como está, se producen como salida dos parejas. La primera es la estimación de la información mutua entre 2 variables normales correladas usando la función \texttt{mutual\_information}. La segunda muestra lo mismos resultados para la función \texttt{mutual\_information\_2d}. En ambos casos a la izquierda está el valor obtenido y a la derecha el valor teórico. Se obtienen los siguientes resultados:
 \begin{lstlisting}
 (0.1092329232318674, 0.11157177565710485)
 (2.1173231240729757, 2.2033596236321267)
@@ -722,7 +901,7 @@ Observamos una pequeña diferencia entre los valores estimados y los teóricos.
 
 Pasamos a revisar la segunda implementación, que encontramos en \cite{npeet}. Como en el caso anterior, comenzamos leyendo el código función por función. 
 \begin{itemize}
-\item \texttt{entropy}: Leonenko - Kozachenko \ref{eq:est_ent} basado en los $k$ vecinos. \texttt{x} debe see una lista de vectores. En primer lugar, hay un \textit{assert} para que el $k$ sea mayor que el número de muestras. Se convierte la \texttt{x} en un array, almacena el número de elementos y de características, se añade ruido a los elementos de \texttt{x} (en la función \texttt{add\_noise}), se obtiene el árbol de vecinos usando la función correspondiente de scikit-learn. Se obtienen los $k$ vecinos más cercanos de \texttt{x} usando este árbol y la función \texttt{query\_neighbors} que llama a la función \texttt{query} correspondiente de scikit-learn, esta función devolverá la distancia a los vecinos más cercanos y sus índices, pero nos quedamos solo con las distancias. La función devuelve el siguiente valor:\[
+\item \texttt{entropy}: Leonenko - Kozachenko \ref{eq:est_ent} basado en los $k$ vecinos. \texttt{x} debe ser una lista de vectores. En primer lugar, hay un \textit{assert} para que el $k$ sea mayor que el número de muestras. Se convierte la lista \texttt{x} en un \textit{array}, almacena el número de elementos y de características, se añade ruido a los elementos de \texttt{x} (en la función \texttt{add\_noise}), se obtiene el árbol de vecinos usando la función correspondiente de scikit-learn. Se obtienen los $k$ vecinos más cercanos de \texttt{x} usando este árbol y la función \texttt{query\_neighbors} que llama a la función \texttt{query} correspondiente de scikit-learn, esta función devolverá la distancia a los vecinos más cercanos y sus índices, pero nos quedamos solo con las distancias. La función devuelve el siguiente valor:\[
   \frac{\psi(N) - \psi(k) + d \cdot \log 2 + \frac{d}{N}\sum \varepsilon(i)}{\log(base)}.
   \]
 
@@ -730,7 +909,7 @@ Pasamos a revisar la segunda implementación, que encontramos en \cite{npeet}. C
 
 \item \texttt{centropy}: estima la entropía de $X|Y$, para ello usa la función anterior para calcular las entropías de $(X,Y)$ e $Y$. Estima la entropía condicionada como $H(X|Y) = H(X,Y)-H(Y)$.
 \item \texttt{tc}: calcula la entropía de cada característica, devuelve la suma de las entropías de las características menos la entropía de la variable.
-\item \texttt{ctc}: similar al anterior peero con entropías condicionadas.
+\item \texttt{ctc}: similar al anterior pero con entropías condicionadas.
 \item \texttt{corex}: similar a \texttt{tc} pero en vez de entropías calcula la información mutua.
 \item \texttt{im}: calcula la información mutua entre \texttt{x, y}, utilizando el estimador \ref{eq:est2}. Comienza comprobando que ambos vectores tienen la misma longitud y que $k$ es menor que la misma. Hace las transformaciones con los datos correspondientes y les añade ruido. Si se ha pasado como parámetro también la  \texttt{z}, la información mutua a calcular será condicionada a este valor así que añadimos el valor z al conjunto de puntos. De forma similar a como lo hizo en \texttt{entropy}, construye el árbol de los vecinos y almacena la distancia de cada elemento al $k$-ésimo vecino más cercano. A continuación, utiliza la función \texttt{avgdigamma} para encontrar el número de puntos a distancia menor que el vecino $k$-ésimo (\texttt{num\_points}, en el espacio marginal) y devuelve la media de $\psi(num\_points)$. Si el parámetro \texttt{alpha $>$ 0} se suma a $\psi(N)$ el valor de \texttt{lnc\_correction} (estudiado más adelante). La función devuelve:\[
 \frac{- \langle \psi(n_x) \rangle - \langle \psi(n_y) \rangle + \psi(k) + \psi(N)}{\log (base)}.
@@ -748,7 +927,7 @@ donde \texttt{nn} y \texttt{nnp} son las distancias a los vecinos más cercanos 
 
 \item \texttt{lnc\_correction}: ---esta función no la entiendo bien---.
 
-\item \texttt{entropyd}: con esta comienza una serie de funciones para los estimadores discretos. Se estima la probabilidad contando el número de apariciones de un elemento y dividiendo entre el total de elementos. Se devuelve la suma de las probabilidades multiplicadas pore logaritmo de 1 partido por la probabilidad, todo ello dividido entre $\log base$:\[
+\item \texttt{entropyd}: con esta comienza una serie de funciones para los estimadores discretos. Se estima la probabilidad contando el número de apariciones de un elemento y dividiendo entre el total de elementos. Se devuelve la suma de las probabilidades multiplicadas por el logaritmo de 1 partido por la probabilidad, todo ello dividido entre $\log base$:\[
 \frac{\sum p \log \frac{1}{p}}{log(base)}.
 \]
 
@@ -766,11 +945,11 @@ Si las probabilidades son correctas, esta fórmula coincide con la entropía te�
 
 \item \texttt{corexd}: la suma de la información mutua por columnas menos la información mutua.
 
-\item \texttt{micd}: con este empiezan los estimadores mixtos, calcula la información mutua cuando \texttt{x} sea continua e \texttt{y} discreta. Primero se asegura de que tengamos el mismo número de elementos de ambas variables. Calcula la entropía de \texttt{x} y la probabilidad de cada valor de \texttt{y} (como en el caso discreto, contando el número de veces que aparece cada elemento y dividiendo entre el total). A continuación, para cada valor que toma \texttt{y} se calcula la entropía de \texttt{x} dado \texttt{y} (este valor comienza siendo 0 y se le va sumando la entropía calculada). Para hacer este cálculo, en primer lugar se toma el vector de elementos de \texttt{x} dado un \texttt{y}, si tiene menos elementos que el $k$ considerado se suma la probabilidad de \texttt{y} por la entropía de \texttt{x}, añadiendo un \textit{warning} de que en este caso se está asumiendo la entropía máxima. Si el número de elementos es suficiente, se calcula la entropía de este vector y se multiplica por la probabilidad de \texttt{y}. La función devolverá el valor absoluto de la diferencia entre la entropía de \texttt{x} y la entropía de \texttt{x} dado \texttt{y}.
+\item \texttt{micd}: con este empiezan los estimadores mixtos, calcula la información mutua cuando \texttt{x} sea continua e \texttt{y} discreta. Primero se asegura de que tengamos el mismo número de elementos de ambas variables. Calcula la entropía de \texttt{x} y la probabilidad de cada valor de \texttt{y} (como en el caso discreto, contando el número de veces que aparece cada elemento y dividiendo entre el total). A continuación, para cada valor que toma \texttt{y} se calcula la entropía de \texttt{x} dado \texttt{y} (este valor comienza siendo 0 y se le va sumando la entropía calculada). Para hacer este cálculo, en primer lugar, se toma el vector de elementos de \texttt{x} dado un \texttt{y}, si tiene menos elementos que el $k$ considerado se suma la probabilidad de \texttt{y} por la entropía de \texttt{x}, añadiendo un \textit{warning} de que en este caso se está asumiendo la entropía máxima. Si el número de elementos es suficiente, se calcula la entropía de este vector y se multiplica por la probabilidad de \texttt{y}. La función devolverá el valor absoluto de la diferencia entre la entropía de \texttt{x} y la entropía de \texttt{x} dado \texttt{y}.
 
 \item \texttt{midc}: este estimador se utilizará cuando \texttt{x} sea discreta e \texttt{y} continua, consiste en llamar al anterior con los argumentos intercambiados.
 
-\item \texttt{centropycd}: calculamos la entropía de \texttt{x} (continua) condicionada a \texttt{y} (discreta). Devuelve la entropía de \texttt{x} menos la informaciónm mutua (utilizando el estimador mixto corresepondiente) de \texttt{x, y}.
+\item \texttt{centropycd}: calculamos la entropía de \texttt{x} (continua) condicionada a \texttt{y} (discreta). Devuelve la entropía de \texttt{x} menos la información mutua (utilizando el estimador mixto correspondiente) de \texttt{x, y}.
 
 \item \texttt{centropydc}: utiliza la función anterior con los parámetros intercambiados.
 
@@ -840,7 +1019,7 @@ deterministic: I(X; Y) = 3.3168 ± 0.0019 (maximum possible 3.3168)
 noisy: I(X; Y) = 2.7575 ± 0.0264 (maximum possible 3.3168)
 \end{lstlisting}
 
-En primer lugar se calcula la entropía de variables con una distribución uniforme en un intervalo $[0,\alpha]$. En el ejemplo \ref{ej:uni} calculamos la entropía teórica, $h(x) = \log \alpha$. En este caso se tomó $\alpha = 2$, luego la entropía teórica vale 1. Observamos que para los valores $k$ siempre hay una pequeña diferencia entre el valor obtenido y la entropía teórica. A continuación, calcula la información mutua (condicionada y sin condicionar) de una variable aleatoria con distribución normal, de forma teórica y usando el estimador. Por último, prueba los estimadores para el caso discreto. 
+En primer lugar, se calcula la entropía de variables con una distribución uniforme en un intervalo $[0,\alpha]$. En el ejemplo \ref{ej:uni} calculamos la entropía teórica, $h(x) = \log \alpha$. En este caso se tomó $\alpha = 2$, luego la entropía teórica vale 1. Observamos que para los valores $k$ siempre hay una pequeña diferencia entre el valor obtenido y la entropía teórica. A continuación, calcula la información mutua (condicionada y sin condicionar) de una variable aleatoria con distribución normal, de forma teórica y usando el estimador. Por último, prueba los estimadores para el caso discreto. 
 
 \subsection{Análisis comparativo}
 
@@ -857,7 +1036,7 @@ Estimador 1:  4.232705400287453
 Estimador 2:  6.084047562318489
 \end{lstlisting}
 
-Los estimadores obtienen resultados notablemente diferente. Esto se debe a que uno de ellos nos está dando la entropía en bits (al pasarlo a base 2) y el otro en nats. Modificaremos el primer estimador, dividiendo su resultado entre $\log(2)$, para que los dos estén en las mismas unidades.
+Los estimadores obtienen resultados notablemente diferentes. Esto se debe a que uno de ellos nos está dando la entropía en bits (al pasarlo a base 2) y el otro en nats. Modificaremos el primer estimador, dividiendo su resultado entre $\log(2)$, para que los dos estén en las mismas unidades.
 
 Pasamos a comparar estas entropías con una que conozcamos teóricamente, la distribución uniforme, vista en el Ejemplo \ref{ej:uni}, cuya entropía teórica es $\log(a)$. El código utilizado se encuentra en la función \texttt{example\_entu}, los resultados obtenidos son los siguientes:
 
@@ -875,13 +1054,11 @@ Estimador 2:   6.68357488477827
 
 Las estimaciones son parecidas, coincidiendo con la entropía teórica en un decimal y entre ellas unos 11. Notamos que en este caso la variable aleatoria $X$ es unidimensional.
 
-Para comprar las estimaciones de la entropía en una variable multidimensional, aprovechamos la función \texttt{test\_entropy} de la primera implementación y la adaptamos para calcular también la entropía con la segunda implementación. Además, añadimos el parámetro \texttt{d}, con el que podremos variar la dimensión de la variable considerada, y el parámetro \texttt{k} que marcará el número de vecinos a utilizar. La matriz \texttt{P} utilizada para generar la matriz de covarianzas ya no está definida de forma fija, sino que se define de forma aleatoria según la dimensión a utilizar. Comenzamos a estudiar el caso d = 2, las estimaciones son muy parecidas entre sí (suelen coincidir en varios decimales), si ejecutamos la función en bucle  en general se obtiene una pequeña diferencia con el estimador real, pero no llega a saltar el \textit{assert}. Este salta algunas veces, cuando la entropía es negativa, si los estimadores dan un resultado menor que la entropía real.
+Para comparar las estimaciones de la entropía en una variable multidimensional, aprovechamos la función \texttt{test\_entropy} de la primera implementación y la adaptamos para calcular también la entropía con la segunda implementación. Además, añadimos el parámetro \texttt{d}, con el que podremos variar la dimensión de la variable considerada, y el parámetro \texttt{k} que marcará el número de vecinos a utilizar. La matriz \texttt{P}, utilizada para generar la matriz de covarianzas, ya no está definida de forma fija, sino que se define de forma aleatoria según la dimensión a utilizar. Comenzamos a estudiar el caso d = 2, las estimaciones son muy parecidas entre sí (suelen coincidir en varios decimales), si ejecutamos la función en bucle, en general se obtiene una pequeña diferencia con el estimador real, pero no llega a saltar el \textit{assert}. Este salta algunas veces, cuando la entropía es negativa, si los estimadores dan un resultado menor que la entropía real.
 
 Queremos ser realmente conscientes de la magnitud del error que se está cometiendo, para ello, implementamos la función \texttt{err\_entropy}. Esta función no es más que una modificación de \texttt{test\_entropy} en la que se eliminan los \textit{assert} y se calcula la diferencia entre la entropía gaussiana teórica y las estimadas. Notamos que si aumentamos el valor de $d$, ambas estimaciones obtienen valores parecidos, difiriendo de la entropía teórica.
 
-Creamos la función \texttt{exp\_err\_ent}. En ella, se pretende obtener un idea más precisa del error obtenido para cada dimensión con ambos estimadores. Para ello, se mide el error un número (\texttt{reps}) determinado de veces y se calcula la media del error obtenido para cada dimensión. Finalmente se dibuja una gráfica del error obtenido. Llamando a esta función con \texttt{reps = 20}, \texttt{k = 3}, \texttt{d = 2, ..., 10}, se obtienen los siguientes errores.
-
-Observamos los errores obtenidos en la Tabla \ref{tab:err_ent}, vemos como a medida que aumenta la dimensión, aumenta el error de forma similar para ambos estimadores.
+Creamos la función \texttt{exp\_err\_ent}. En ella, se pretende obtener un idea más precisa del error obtenido para cada dimensión con ambos estimadores. Para ello, se mide el error un número (\texttt{reps}) determinado de veces y se calcula la media del error obtenido para cada dimensión. Finalmente, se dibuja una gráfica del error obtenido. Llamando a esta función con \texttt{reps = 20}, \texttt{k = 3}, \texttt{d = 2, ..., 10}, se obtienen los errores que podemos observar en la Tabla \ref{tab:err_ent}, vemos cómo a medida que aumenta la dimensión, aumenta el error de forma similar para ambos estimadores.
 
 \begin{table}[H]
 %\large
@@ -923,13 +1100,14 @@ El tiempo de cómputo a medida que aumentamos la dimensión se incrementa consid
 \end{figure}
 
 
-Tratamos de mejorar la primera implementación añadiendo los detalles quela diferenciaban de la estimación estudiada teóricamente. En la función \texttt{entropy\_mod} se añade el $\frac{1}{2^d}$ que faltaba en el cálculo del volumen de la bola unidad y la distancia de cada punto a su vecino más cercano se multiplica por 2. Los resultados para $d = 2$ no son muy prometedores, por lo que abandonamos esta vía.
+Tratamos de mejorar la primera implementación añadiendo los detalles que la diferenciaban de la estimación estudiada teóricamente. En la función \texttt{entropy\_mod} se añade el $\frac{1}{2^d}$ que faltaba en el cálculo del volumen de la bola unidad y la distancia de cada punto a su vecino más cercano se multiplica por 2. Los resultados para $d = 2$ no son muy prometedores, por lo que abandonamos esta vía.
 
 \begin{lstlisting}
 k = 3, d = 2
 Error estimador 1:  0.013887003356169863
 Error estimador 1_mod:  1.9861129966437974
 \end{lstlisting}
+
 
 Pasamos entonces a comparar los valores devueltos para la información mutua. Las implementaciones realizan la estimación de la información mutua de forma diferente. La implementación 1 utiliza la fórmula que calcula la información mutua como suma de las entropías marginales de las variables y resta de la entropía conjunta. Los errores encontrados en los cálculos individuales podrían afectar al cálculo total. La implementación 2 utiliza el estimador \ref{eq:est_ent} para realizar su estimación de la entropía, es posible que los errores cometidos al calcular la entropía no se vean arrastrados.
 
