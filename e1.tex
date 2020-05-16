@@ -9,6 +9,13 @@
 \usepackage{amsmath}
 \usepackage[nochapters]{./classicthesis} % nochapters
 
+% fuente del mathbb
+\AtBeginDocument{%
+  \let\mathbb\relax
+  \DeclareMathAlphabet{\mathbb}{U}{msb}{m}{n}%
+}
+
+
 %%% Matemáticas
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -69,7 +76,7 @@ Antes de entrar en materia, se recogen una serie de definiciones y resultados qu
 \end{definition}
 
 \begin{example}
-La familia de conjuntos Borel $\mathcal{A} = \mathcal{B}(\mathbb{R})$ es una $\sigma$-álgebra sobre $\mathbb{R}$. Un conjunto Borel sobre un espacio topológico es aquel formado por todos los conjuntos abiertos con las operaciones de unión numerable, intersección numerable y complementario relativo.
+La familia de conjuntos Borel $\mathcal{A} = \mathcal{B}(\mathbb{R}^n)$ es una $\sigma$-álgebra sobre $\mathbb{R}^n$. Un conjunto Borel sobre un espacio topológico es aquel formado por todos los conjuntos abiertos con las operaciones de unión numerable, intersección numerable y complementario relativo.
 \end{example}
 
 \begin{definition}[Medida de probabilidad]
@@ -80,36 +87,33 @@ La familia de conjuntos Borel $\mathcal{A} = \mathcal{B}(\mathbb{R})$ es una $\s
   \end{itemize}
 \end{definition}
 
-La tupla $(\Omega, \mathcal{A}, P)$ se llama espacio de probabilidad. Los conjuntos de $\mathcal{A}$ se llaman eventos. Se dice que un evento $A$ ocurrirá casi seguramente cuando $P(A)=1$.
+La tupla $(\Omega, \mathcal{A}, P)$ se llama espacio de probabilidad. Los conjuntos de $\mathcal{A}$ se llaman eventos. Se dice que un evento $A$ ocurrirá casi seguramente cuando $P(A)=1$.\\
 
-% REVIEW: ¿Definir espacio de probabilidad?
+%% \begin{definition}[Variable aleatoria]
+%%   Sea $(\Omega, \mathcal{A}, P)$ un espacio de probabilidad. Una variable aleatoria $X$ es una función medible \[
+%% X:(\Omega, \mathcal{A}) \to (\mathbb{R}, \mathcal{B}).
+%% \]
+%% La condición de medibilidad quiere decir que $X^{-1}(B) \in \mathcal{A}\quad \forall B\in \mathcal{B}$.\\
+%% \end{definition}
+
+%% Podemos extender esta definición y obtener el concepto de vector aleatorio.
+
 \begin{definition}[Variable aleatoria]
-  Sea $(\Omega, \mathcal{A}, P)$ un espacio de probabilidad. Una variable aleatoria $X$ es una función medible \[
-X:(\Omega, \mathcal{A}) \to (\mathbb{R}, \mathcal{B}).
-\]
-La condición de medibilidad quiere decir que $X^{-1}(B) \in \mathcal{A}\quad \forall B\in \mathcal{B}$.\\
-\end{definition}
-
-Podemos extender esta definición y obtener el concepto de vector aleatorio.
-
-\begin{definition}[Vector aleatorio]
-    Sea $(\Omega, \mathcal{A}, P)$ un espacio de probabilidad. Un vector aleatorio $X=(X_1,\cdots, X_n)$ es una función medible \[
+    Sea $(\Omega, \mathcal{A}, P)$ un espacio de probabilidad. Un variable aleatoria $X=(X_1,\cdots, X_n)$ es una función medible \[
 X:(\Omega, \mathcal{A}) \to (\mathbb{R}^n, \mathcal{B}^n).
 \]
 La condición de medibilidad quiere decir que $X^{-1}(B) \in \mathcal{A}\quad \forall B\in \mathcal{B}^n$.\\
 \end{definition}
 
+---¿Debería poner que llegan a un espacio de medida en vez de a $R^n$?---
+
 Cada variable aleatoria nos da una medida de probabilidad, su probabilidad inducida.
 
 \begin{definition}[Probabilidad inducida]
-  La probabilidad inducida por un vector aleatorio $X=(X_1,\cdots, X_n)$, o distribución de $X$, se define como la función \[
+  La probabilidad inducida por un variable aleatoria $X=(X_1,\cdots, X_n)$, o distribución de $X$, se define como la función \[
 P_X[B]:= P[X^{-1}(B)],
   \]
 para todo $B \in \mathcal{B}^n$.
-\end{definition}
-
-\begin{definition}[Función Borel]
-  Una función $f:\mathbb{R}^n\to \mathbb{R}^n$ será Borel si la imagen inversa $f^{-1}(B)$ de cualquier conjunto Borel $B\in \mathbb{R}^n$ es un conjunto Borel.
 \end{definition}
 
 \begin{definition}[Función de distribución]
@@ -118,16 +122,22 @@ F_X(x_1,\cdots,x_n) = P[X_1\leq x_1,\cdots, X_n\leq x_n].
   \]
 \end{definition}
 
+La distribución de $X$ queda completamente determinada por su distribución.
+
 \begin{proposition}
   La función de distribución $F_X$ es no decreciente, continua a la derecha y $\lim_{x\to - \infty}F_X(x) = 0$, $\lim_{x\to +\infty}F_X(x) = 1$.
 \end{proposition}
 
 %REVIEW
+\begin{definition}[Función Borel]
+  Una función $f:\mathbb{R}^n\to \mathbb{R}^n$ será Borel si la imagen inversa $f^{-1}(B)$ de cualquier conjunto Borel $B\in \mathbb{R}^n$ es un conjunto Borel.
+\end{definition}
+
 \begin{definition}[Función de densidad y función masa de probabilidad]
   Si hay una función Borel $f_X:\mathbb{R}^n\to \mathbb{R}$ tal que para cualquier conjunto Borel $B\subset \mathbb{R}$\[
 P[X\in B] = \int_B f_X(x) dx,
 \]
-se dice que $X$ es un vector aleatorio con distribución absolutamente continua y $f_X$ se llama función de densidad de $X$. Si hay una secuencia (finita o infinita) de vectores $x_1,x_2,\cdots$ tal que para cualquier conjunto Borel $B\subset \mathbb{R}^n$\[
+se dice que $X$ es una variable aleatoria con distribución absolutamente continua y $f_X$ se llama función de densidad de $X$. Si hay una secuencia (finita o infinita) de vectores $x_1,x_2,\cdots$ tal que para cualquier conjunto Borel $B\subset \mathbb{R}^n$\[
 P[X\in B] = \sum_{x_i\in B}P[X = x_i],
 \]
 entonces decimos que $X$ tiene una distribución discreta con valores $x_1,x_2\cdots$ y función masa de probabilidad $P[X=x_i]$ en $x_i$.
@@ -151,13 +161,12 @@ P(A_{i_1}\cap\cdots\cap A_{i_k}) = P(A_{i_1})\cdots P(A_{i_k}),
 para cualesquiera índices $1\leq i_1\leq \cdots \leq i_k\leq n$.
 \end{definition}
 
-\begin{definition}[Vectores aleatorios independientes]
-  Dos vectores aleatorios $X$ e $Y$ son independientes si para cualesquiera conjuntos de Borel $A, B \in \mathcal{B}(\mathbb{R}^n)$ los eventos $[X\in A]$ y $Y\in B$ son independientes. De forma general $k$ vectores aleatorios $X_1,\cdots,X_k$ serán independientes si para cualesquiera conjuntos de borel $B_1,\cdots,B_k \in \mathcal{B}(\mathbb{R}^n)$ los eventos $[X_1 \in B_1],\cdots,[X_k\in B_k]$ son independientes.
-  
+\begin{definition}[Variables aleatorias independientes]
+  Dos variables aleatorias $X$ e $Y$ son independientes si para cualesquiera conjuntos de Borel $A, B \in \mathcal{B}(\mathbb{R}^n)$ los eventos $[X\in A]$ y $Y\in B$ son independientes. De forma general, $k$ variables aleatorias $X_1,\cdots,X_k$ serán independientes si para cualesquiera conjuntos de Borel $B_1,\cdots,B_k \in \mathcal{B}(\mathbb{R}^n)$ los eventos $[X_1 \in B_1],\cdots,[X_k\in B_k]$ son independientes.
 \end{definition}
 
 \begin{proposition}[Caracterizaciones de independencia]
-  Dado un vector aleatorio $X =(X_1,\cdots,X_n)$ sus componentes son independientes si, y solo si, se da alguna de las siguientes condiciones:
+  Dado un variable aleatoria $X =(X_1,\cdots,X_n)$ sus componentes son independientes si, y solo si, se da alguna de las siguientes condiciones:
   \begin{itemize}
   \item La función de distribución verifica $F_X(x) = F_{X_1}(x_1)\cdots F_{X_n}(x_n)$ para todo $x \in \mathbb{R}^n$.
   \item $X$ tiene función de densidad y $f_X(x) = f_{X_1}(x_1)\cdots f_{X_n}(x_n)$ para todo $x \in \mathbb{R}^n$, salvo, a lo sumo, en un conjunto de medida nula.
@@ -165,9 +174,20 @@ para cualesquiera índices $1\leq i_1\leq \cdots \leq i_k\leq n$.
 \end{proposition}
 
 % REVIEW: DEFINIR ESPERANZA
+\begin{definition}[Esperanza]
+  La esperanza de una variable aleatoria $X$ unidimensional se define como:\[
+\mu = \mathbb{E}[X] = \int_{\Omega}X(\omega)dP(\omega) = \int_{\mathbb{R}}xdF(x).
+\]
 
-\begin{definition}[Vector de medias]
-  Sea $X=(X_1,\cdots,X_N)^T$ un vector aleatorio. Se define el vector de medias de $X$ como:\[
+En el caso discreto, si la variable aleatoria $X$ tiene un número finito de posibles salidas $x_1,\cdots,x_k$ cada una con probabilidad $p_1,\cdots, p_k$ respectivamente, la esperanza es\[
+\mathbb{E}[X] = \sum_{i=1}^kx_ip_i.
+\]
+
+En el caso de que $X$ sea una variable aleatoria absolutamente continua y admita función de densidad, $f(x)$, la esperanza se calcula\[
+\mathbb{E}[X] = \int_{\mathbb{R}}xf(x)dx.
+\]
+  
+  Si  $X=(X_1,\cdots,X_n)^T$ es una variable aleatoria multidimensional. Se define la esperanza de $X$ como:\[
 \mu_X = \mathbb{E}[X] = \begin{bmatrix}
            \mathbb{E}[X_1] \\
           \vdots \\
@@ -181,8 +201,33 @@ para cualesquiera índices $1\leq i_1\leq \cdots \leq i_k\leq n$.
  siempre que existan todas las esperanzas unidimensionales.
 \end{definition}
 
-\begin{definition}[Matriz de convarianzas]
-  Se define la matriz de covarianzas del vector $X= (X_1,\cdots,X_n)^T$ como\[
+\begin{proposition}[Propiedades de la esperanza]
+  Sea $X$ una variable aleatoria  (---unidimensional---) con función de densidad $f(x)$, entonces se cumplen las siguientes propiedades de la esperanza:
+---¿Esto se cumple para más dimensiones?---
+  \begin{itemize}
+  \item Para una función $g(x)$, $g(X)$ será también una variable aleatoria y su esperanza será\[
+\mathbb{E}[g(X)] = \int g(x)f(x)dx.
+\]
+Esta propiedad se conoce como \textit{ley del estadístico inconsciente}.
+\item $\mathbb{E}\left [\sum_{j=1}^kc_jg_j(X) \right] = \sum_{j=1}^k c_j \mathbb{E} \left [ g_j(X_i) \right ]$.
+
+\item Si $X_1,\cdots,X_n$ son variables aleatorias independientes, entonces\[
+\mathbb{E} \left [ X_1 \cdots X_n \right ] = \mathbb{E}[X_1] \cdots \mathbb{E}[X_n].
+  \]
+  \end{itemize}
+  
+\end{proposition}
+\begin{definition}[Esperanza condicionada]
+  Se define la esperanza condicionada de la variable aleatoria $Y$ dado $X$ como la variable aleatoria $\mathbb{E}[Y|X] = g(X)$ tal que \[
+\mathbb{E} [ Y | X = x ] = \int y f_Y(y| X = x) dy.
+  \] 
+  
+\end{definition}
+\begin{definition}[Varianza y matriz de covarianzas]
+  Sea $X$ una variable aleatoria unidimensional de esperanza $\mu$, definimos su varianza como\[
+\sigma^2 = Var(X) = \mathbb{E}\left [ (X- \mu)^2 \right ].
+  \]
+  Se define la matriz de covarianzas de una variable aleatoria multidimensional $X= (X_1,\cdots,X_n)^T$ como\[
 \Sigma = Cov(X) = \mathbb{E}\left [(X-\mu)(X-\mu)^T \right ] =  \begin{bmatrix} \sigma_{11} & \dots & \sigma_{1n} \\ \vdots& \ddots & \vdots \\ \sigma_{n1} &  \dots & \sigma_{nn}\end{bmatrix}\,,
 \]
 donde $\sigma_{ij} = \mathbb{E}\left[(X_i-\mu_i)(X_j-\mu_j)\right]=\sigma_{ji}$ es la covarianza de las variables aleatorias $X_i$ y $X_j$. La podremos definir cuando existan todas las covarianzas.  
@@ -191,13 +236,47 @@ donde $\sigma_{ij} = \mathbb{E}\left[(X_i-\mu_i)(X_j-\mu_j)\right]=\sigma_{ji}$ 
 \subsection{Algunas distribuciones}
 
 Durante el desarrollo del trabajo se utilizarán algunas distribuciones, se presentan a continuación.
+%--------------------------------- Uniforme unidimensional--------------
 
+\begin{definition}[Distribución uniforme discreta]
+Si $X$ es una variable aleatoria con distribución uniforme discreta sobre el intervalo $[a,b]$. $X$ tomará $n$ posibles valores (en este intervalo) con igual probabilidad $\frac{1}{n}$. La función masa de probabilidad será $f(x) = \frac{1}{n}$. ---NO sé decir dónde tendría que estar el $x$---.
+\end{definition}
+
+\begin{example}
+  Si tiramos un dado no cargado hay seis posibles valores: 1, 2, 3, 4, 5 y 6; cada vez que lanzamos el dado hay probabilidad $\frac{1}{6}$ de que salga cualquiera de ellos.
+\end{example}
+
+\begin{definition}[Distribución uniforme continua]
+  Una variable aleatoria $X$ que puede obtener cualquier valor en el intervalo $[a,b]$ con la misma probabilidad tendrá una distribución uniforme. Su función de densidad vendrá dada por \[
+f(x) = 
+\begin{cases}
+  \frac{1}{b-a},\quad \text{si } x\in [a,b]\\
+  0,\quad\quad \text{en otro caso}
+\end{cases}.\\
+  \]
+\end{definition}
+% ----------------------------- FIN uniforme----------------------------
+
+%---------------------------------Distribución normal-------------------
+\begin{definition}[Distribución normal]
+  Una variable aleatoria seguirá una distribución normal, o distribución gaussiana, es un tipo de distribución continua para variables aleatorias reales. Su función de densidad es \[
+f(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}\left( \frac{x-\mu}{\sigma}\right ) ^2}.
+\]\\
+\end{definition}
+
+Generalizamos esta definición para el caso multivariante.
+\begin{definition}[Distribución normal multivariante]
+  Una variable aleatoria sigue una distribución normal multivariante si cualquier combinación de sus componentes tiene una distribución normal univariante. Su función de densidad es \[
+f(x) = \frac{1}{\left (\sqrt{2\pi}\right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)},
+  \] cuando $\Sigma$ sea definida positiva.\\
+\end{definition}
+%--------------------------------Fin - normal---------------------------
 
 %--------------Multinomial - Principio----------------------------------
-La distribución multinomial modela la probabilidad de un número determinado de éxitos para $n$ sucesos independientes. Donde hay $k$ posibles éxitos, cada uno de ellos con probabilidad de éxito fija.
+La distribución multinomial modela la probabilidad de un número determinado de éxitos para $n$ experimentos independientes, donde hay $k$ posibles éxitos, cada uno de ellos con probabilidad de éxito fija.
 
 \begin{definition}[Distribución multinomial]
-  Sea $k$ un número fijo y finito, tendremos $k$ posibles salidas mutuamente excluyentes con propabilidades $p_1\cdots p_k$. Si la variable aleatoria $X_i$ indica el número de veces que se observa la salida $i$ en los $n$ sucesos, entonces el vector $X = (X_1, \cdots, X_n)$ sigue una distribución multinomial con parámetros $n$ y $p = (p_1,\cdots, p_n)$. Su función masa de probabilidad viene dada por
+  Sea $k$ un número fijo y finito, tendremos $k$ posibles salidas mutuamente excluyentes con probabilidades $p_1\cdots p_k$. Si la variable aleatoria $X_i$ indica el número de veces que se observa la salida $i$ en los $n$ experimentos, entonces el vector $X = (X_1, \cdots, X_n)$ sigue una distribución multinomial con parámetros $n$ y $p = (p_1,\cdots, p_n)$. Su función masa de probabilidad viene dada por
 
 \begin{align*}
 f(x_1,\cdots,x_n; n, p_1,\cdots,p_n) &= P[X_1 = x_1\text{ y } \cdots \text{ y } X_k = x_k]\\ &=
