@@ -122,7 +122,7 @@ F_X(x_1,\cdots,x_n) = P[X_1\leq x_1,\cdots, X_n\leq x_n].
   \]
 \end{definition}
 
-La distribución de $X$ queda completamente determinada por su distribución.
+%La distribución de $X$ queda completamente determinada por su distribución.
 
 \begin{proposition}
   La función de distribución $F_X$ es no decreciente, continua a la derecha y $\lim_{x\to - \infty}F_X(x) = 0$, $\lim_{x\to +\infty}F_X(x) = 1$.
@@ -173,7 +173,6 @@ para cualesquiera índices $1\leq i_1\leq \cdots \leq i_k\leq n$.
   \end{itemize}
 \end{proposition}
 
-% REVIEW: DEFINIR ESPERANZA
 \begin{definition}[Esperanza]
   La esperanza de una variable aleatoria $X$ unidimensional se define como:\[
 \mu = \mathbb{E}[X] = \int_{\Omega}X(\omega)dP(\omega) = \int_{\mathbb{R}}xdF(x).
@@ -224,14 +223,41 @@ Esta propiedad se conoce como \textit{ley del estadístico inconsciente}.
   
 \end{definition}
 \begin{definition}[Varianza y matriz de covarianzas]
-  Sea $X$ una variable aleatoria unidimensional de esperanza $\mu$, definimos su varianza como\[
-\sigma^2 = Var(X) = \mathbb{E}\left [ (X- \mu)^2 \right ].
+  Sea $X$ una variable aleatoria unidimensional de esperanza $\mu_X$, definimos su varianza como\[
+\sigma_X^2 = Var(X) = \mathbb{E}\left [ (X- \mu_X)^2 \right ].
   \]
   Se define la matriz de covarianzas de una variable aleatoria multidimensional $X= (X_1,\cdots,X_n)^T$ como\[
-\Sigma = Cov(X) = \mathbb{E}\left [(X-\mu)(X-\mu)^T \right ] =  \begin{bmatrix} \sigma_{11} & \dots & \sigma_{1n} \\ \vdots& \ddots & \vdots \\ \sigma_{n1} &  \dots & \sigma_{nn}\end{bmatrix}\,,
+\Sigma = Cov(X) = \mathbb{E}\left [(X-\mu_X)(X-\mu_X)^T \right ] =  \begin{bmatrix} \sigma_{11} & \dots & \sigma_{1n} \\ \vdots& \ddots & \vdots \\ \sigma_{n1} &  \dots & \sigma_{nn}\end{bmatrix}\,,
 \]
-donde $\sigma_{ij} = \mathbb{E}\left[(X_i-\mu_i)(X_j-\mu_j)\right]=\sigma_{ji}$ es la covarianza de las variables aleatorias $X_i$ y $X_j$. La podremos definir cuando existan todas las covarianzas.  
+donde $\sigma_{ij} = Cov(X_i, X_j) = \mathbb{E}\left[(X_i-\mu_i)(X_j-\mu_j)\right]=\sigma_{ji}$ es la covarianza de las variables aleatorias $X_i$ y $X_j$. La podremos definir cuando existan todas las covarianzas.  
 \end{definition}
+
+\begin{definition}[Muestra aleatoria simple]
+  Una muestra aleatoria simple de tamaño $n$ de una variable aleatoria $X$ con distribución teórica $F$, son $n$ variables aleatorias $(X_1,\cdots,X_n)$, independientes e idénticamente distribuidas, con distribución común $F$.
+%Consecuentemente la función de distribución conjunta de una muestra aleatoria simple $(X_1,\cdots, X_m)$, correspondiente a una distribución de la población $F$, es $F(x_1,\cdots,x_n)=F(x_1)\cdots F(x_n)$.
+\end{definition}
+
+Llamamos distribución teórica $F$ de la variable aleatoria a estudiar a la distribución de la variable aleatoria que, en principio, es desconocida. Notamos $\mathcal{F}$ a la familia de distribuciones candidatas a ser realmente la distribución (se obtiene a partir de información previa). A menudo es posible conocer la forma funcional de $F$ pero se desconocen uno o algunos parámetros de la misma. Para tratar de obtener información sobre este parámetro desconocido a partir de una muestra utilizaremos los \textit{estimadores}.
+
+\begin{definition}[Estadístico]
+  Se denomina estadístico a cualquier función $\widehat{\theta}$ de una muestra aleatoria simple $X_1,\cdots,X_n$  que sea medible.
+\end{definition}
+
+\begin{definition}[Estimador]
+Un estimador es un estadístico $\widehat{\theta}(X_1,\cdots,X_n)$, independiente del parámetro, cuyos valores se utilizan para obtener la estimación puntual de un parámetro desconocido $\theta$.
+\end{definition}
+
+\begin{definition}[Estimador insesgado]
+  Si $\widehat{\theta}$ es un estimador del parámetro $\theta$, la diferencia \[
+bias\left( \widehat{\theta}\right) = \mathbb{E}\left [\widehat{\theta} \right ] - \theta
+\]
+se denomina sesgo del estimador $\widehat{\theta}$ como estimador de $\theta$. Cuando el sesgo es nulo para cualquier valor del parámetro, es decir, si\[
+\mathbb{E} \left [\widehat{\theta}\right] = \theta\quad \forall\theta \in\Theta,
+\]
+el estimador $\widehat{\theta}$ se dice insesgado para $\theta$.
+\end{definition}
+
+% REVIEW: Añadir ejemplos de estimador de la media y la varianza
 
 \subsection{Algunas distribuciones}
 
@@ -303,6 +329,17 @@ donde $x_1,\cdots, x_k$ son enteros no negativos.
 \end{proposition}
 %----------------------MULTINOMIAL-FIN----------------------------------
 
+%--------------------------Estudio de la dependencia--------------------
+\subsection{Estudio de la dependencia}
+
+Dadas dos variables aleatorias nos podemos preguntar si son o no independientes, es decir, si la realización de una de ellas afecta o no a la realización de la otra. En caso de ser dependientes nos gustaría medir qué tipo de relación hay entre ellas. Existen numerosos métodos que nos permiten realizar esta medida. Entre los no paramétricos (que no dependen de las distribuciones marginales), encontramos por ejemplo, el \textit{coeficiente de correlación de Pearson} o el \textit{coeficiente de correlación de Spearman}.
+
+\begin{definition}[Coeficiente de correlación de Pearson]
+  Se define el coeficiente de correlación de Pearson para un par de variables aleatorias $(X,Y)$ como\[
+\rho_{X,Y} = \frac{Cov(X,Y)}{\sigma_X\sigma_Y} = \frac{\mathbb{E}\left [ (X- \mu_X)(Y-\mu_Y)\right ]}{\sigma_X\sigma_Y}.
+\]
+El mismo coeficiente para una muestra se define como
+\end{definition}
 
 %-----------------------------------------------------------------------
 %-----------------------TEORÍA DE LA INFORMACIÓN------------------------
