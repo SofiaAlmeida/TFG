@@ -332,14 +332,34 @@ donde $x_1,\cdots, x_k$ son enteros no negativos.
 %--------------------------Estudio de la dependencia--------------------
 \subsection{Estudio de la dependencia}
 
-Dadas dos variables aleatorias nos podemos preguntar si son o no independientes, es decir, si la realización de una de ellas afecta o no a la realización de la otra. En caso de ser dependientes nos gustaría medir qué tipo de relación hay entre ellas. Existen numerosos métodos que nos permiten realizar esta medida. Entre los no paramétricos (que no dependen de las distribuciones marginales), encontramos por ejemplo, el \textit{coeficiente de correlación de Pearson} o el \textit{coeficiente de correlación de Spearman}.
+Dadas dos variables aleatorias nos podemos preguntar si son o no independientes, es decir, si la realización de una de ellas afecta o no a la realización de la otra. En caso de ser dependientes nos gustaría medir qué tipo de relación existe entre ellas. Hay numerosos métodos que nos permiten realizar esta medida. Entre los no paramétricos (que no dependen de las distribuciones marginales), encontramos, por ejemplo, el \textit{coeficiente de correlación de Pearson} o el \textit{coeficiente de correlación de Spearman}.
 
 \begin{definition}[Coeficiente de correlación de Pearson]
   Se define el coeficiente de correlación de Pearson para un par de variables aleatorias $(X,Y)$ como\[
 \rho_{X,Y} = \frac{Cov(X,Y)}{\sigma_X\sigma_Y} = \frac{\mathbb{E}\left [ (X- \mu_X)(Y-\mu_Y)\right ]}{\sigma_X\sigma_Y}.
 \]
-El mismo coeficiente para una muestra se define como
+El mismo coeficiente para una muestra $\{(x_1,y_1),\dots,(x_n,y_n)\}$ se define como\[
+r_{xy}=\frac{\sum_{i=1}^n(x_i-\overline{x})(y_i-\overline{y})}{\sqrt{\sum_{i=1}^n(x_i-\overline{x})^2(y_i-\overline{y})^2}},
+\] donde $\overline{x} = \frac{1}{n}\sum_{i=1}^nx_i$ la media muestral, de forma análoga para $\overline{y}$.
 \end{definition}
+
+Este coeficiente mide la correlación lineal entre las variables $X,Y$. Su valor se encuentra entre +1 y -1, donde +1 indica una correlación lineal positiva total, 0 que no hay correlación lineal y -1 correlación lineal total negativa. Si el coeficiente de correlación de Pearson de dos variables aleatorias es 0, sabremos que no existe una dependencia lineal entre ellas, pero no podremos asegurar nada acerca de la independencia, pues podría existir otro tipo de dependencia entre ellas.
+
+El coeficiente de correlación de Spearman mide la relación entre dos variables más allá de si es lineal o no. Atiende a si ambas variables tienen la misma monotonía, esto es, si a medida que los valores de una de las variables crecen, los de la otra también lo hacen (o al revés). Para ello, tendremos que ordenar los datos de cada variable de menor a mayor.
+
+\begin{definition}[Coeficiente de correlación de Spearman]
+  Para una muestra $r_s$ de tamaño $n$ de dos variables aleatorias $X$ e $Y$, ordenamos los datos de ambas variables de forma que $r_x$ es la ordenación de los $x_i$ y $r_y$ la de los $y_i$. El coeficiente de correlación de Spearman entre $X$ e $Y$ viene dado por\[
+r_{XY}=\rho_{r_xr_y}=\frac{Cov(r_x,r_y)}{\sigma_{r_x}\sigma_{r_y}},
+\] donde $\rho$ denota el coeficiente de correlación de Pearson. Si todos los puntos son distintos, se puede utilizar la fórmula:\[
+r_{XY} = 1 - \frac{6\sum_i d_i^2}{n(n^2-1)},
+\]donde $d_i$ es la diferencia entre el puesto de $x_i$ e $y_i$ al realizar la ordenación.
+\end{definition}
+
+Este coeficiente también toma valores entre -1 y +1. Si los valores son cercanos a cero la correlación monótona será muy débil, mientras que si son cercanos a +1 o -1 será muy fuerte, el signo nos indicará si a medida que una crece la otra decrece o viceversa. Como en el caso anterior, obtener un valor de 0, no indica que no haya dependencia entre las variables.
+
+Así, hemos visto un par de ejemplos de medidas de dependencia que caracterizan adecuadamente tipos concretos de dependencia, pero no caracterizan la independencia.
+
+La información mutua es otra forma de medir la dependencia entre dos variables aleatorias capaz de determinar otros tipos de dependencias, además de las lineales o monótonas. Podríamos decir que es una medida de la dependencia global. Además, esta medida también nos dará información sobre la independencia. ---Lo probé en el caso discreto, faltaría comprobar que en el continuo también se da---
 
 %-----------------------------------------------------------------------
 %-----------------------TEORÍA DE LA INFORMACIÓN------------------------
@@ -692,6 +712,15 @@ Notamos que la información mutua, al estar definida como una entropía relativa
   \end{align*}
   
 \end{example}
+
+\begin{theorem}
+  Sean $X$, $Y$ variables aleatorias discretas con alfabeto $\mathcal{X}, \mathcal{Y}$ respectivamente. Entonces se verifica que $I(X;Y)=0$ si, y solo si, $X,Y$ son independientes.
+\end{theorem}
+\begin{proof}
+%  Supongamos que $I(X;Y)=0$, entonces, por el apartado c) del Teorema \ref{t:ent_im}, tenemos que $0 = H(X)+H(Y)-H(X,Y)$, esto es, $H(X,Y) =H(X)+H(Y)$, en el Lema \ref{l:prop_ent_conj} probamos que esto ocurre si, y solo si, $X,Y$ son independientes.
+
+El apartado c) del Teorema \ref{t:ent_im} nos dice que $I(X;Y) = H(X)+H(Y)-H(X,Y)$, usando el Lema \ref{l:prop_ent_conj}.2 tendremos que $I(X;Y)=0$ si, y solo si, $X,Y$ son independientes.
+\end{proof}
 
 \subsection{Caso continuo}
 --- Este apartado se puede agrandar si fuera de interés para incluir todas las definiciones del apartado anterior y algunas propiedades. Me limito a definir las definiciones utilizadas en el apartado de estimación.
