@@ -21,6 +21,7 @@
 \usepackage{amsthm}
 \usepackage{enumitem}
 \usepackage[Symbol]{upgreek} %pi
+\usepackage{mathtools}
 
 %%% Tablas
 \usepackage{tabularx}
@@ -143,6 +144,10 @@ P[X\in B] = \sum_{x_i\in B}P[X = x_i],
 entonces decimos que $X$ tiene una distribución discreta con valores $x_1,x_2\cdots$ y función masa de probabilidad $P[X=x_i]$ en $x_i$.
 \end{definition}
 
+\begin{definition}[Soporte]
+Llamamos soporte de una variable aleatoria $X$ al conjunto de puntos donde $f(x)>0$.
+\end{definition}
+
 %% \begin{definition}[Probabilidad conjunta]
 %%   La probabilidad conjunta de varios vectores aleatorios $X_1,\cdots, X_n$ es una medida de probabilidad 
   
@@ -231,6 +236,15 @@ Esta propiedad se conoce como \textit{ley del estadístico inconsciente}.
 \]
 donde $\sigma_{ij} = Cov(X_i, X_j) = \mathbb{E}\left[(X_i-\mu_i)(X_j-\mu_j)\right]=\sigma_{ji}$ es la covarianza de las variables aleatorias $X_i$ y $X_j$. La podremos definir cuando existan todas las covarianzas.  
 \end{definition}
+
+\begin{theorem}[Ley (débil) de los grandes números]\label{t:lgn}
+  Sean $X_1,\cdots,X_n$ variables aleatorias con distribución $F$ y $\mu =\mathbb{E}\left [X_1 \right]$. Si $\mu =\mathbb{E}\left [X_1 \right] < \infty$, entonces la media muestral\[
+\overline{X}_n = \frac{1}{n}\sum_{i=1}^nX_i
+\]converge en probabilidad a $\mu$, esto es,\[
+\overline{X}_n\xrightarrow[]{P} \mu.
+\]
+  
+\end{theorem}
 
 \begin{definition}[Muestra aleatoria simple]
   Una muestra aleatoria simple de tamaño $n$ de una variable aleatoria $X$ con distribución teórica $F$, son $n$ variables aleatorias $(X_1,\cdots,X_n)$, independientes e idénticamente distribuidas, con distribución común $F$.
@@ -723,26 +737,25 @@ El apartado c) del Teorema \ref{t:ent_im} nos dice que $I(X;Y) = H(X)+H(Y)-H(X,Y
 \end{proof}
 
 \subsection{Caso continuo}
---- Este apartado se puede agrandar si fuera de interés para incluir todas las definiciones del apartado anterior y algunas propiedades. Me limito a definir las definiciones utilizadas en el apartado de estimación.
-
-Hasta ahora las definiciones dadas eran para variables aleatorias discretas, que solo tomaban un conjunto finito de valores. Podemos extender las definiciones estudiadas al caso continuo, para aplicarlas en variables aleatorias continuas. Trabajaremos en este caso con una variable aleatoria $X$ con función de distribución $F(x) = Pr[X \leq x]$, si $F$ es continua, la variable aleatoria se dice continua. Sea $f(x) = F'(x)$, cuando la derivada esté definida. Si $\int_{-\infty}^{\infty}f(x)=1,\ f(x)$ se llama la función de densidad de $X$. El conjunto donde $f(x) > 0$ es el soporte de $X$.
+Hasta ahora las definiciones dadas eran para variables aleatorias discretas, que solo tomaban un conjunto finito de valores. Podemos extender las definiciones estudiadas al caso continuo, para aplicarlas en variables aleatorias continuas. Trabajaremos en este apartado con una variable aleatoria $X$ absolutamente continua con función de distribución $F$, función de densidad $f$ y conjunto soporte $S$.
+%Trabajaremos en este caso con una variable aleatoria $X$ con función de distribución $F(x) = Pr[X \leq x]$, si $F$ es continua, la variable aleatoria se dice continua. Sea $f(x) = F'(x)$, cuando la derivada esté definida. Si $\int_{-\infty}^{\infty}f(x)=1,\ f(x)$ se llama la función de densidad de $X$. El conjunto donde $f(x) > 0$ es el soporte de $X$.
 
 Las definiciones a continuación incluyen integrales, por lo que deberíamos añadirles un \textit{si existe} a todas ellas. Se pueden construir ejemplos de variables aleatorias cuya función de densidad no exista, o para la que no exista la integral a calcular.
 
 La entropía pasa a llamarse entropía diferencial y podemos definirla como sigue.
 
 \begin{definition}[Entropía diferencial]
-  La entropía diferencial $h(X)$ de una variable aleatoria continua $X$ con función de densidad $f(x)$ se define como\[
+  La entropía diferencial $h(X)$ de una variable aleatoria continua $X$ \[
 h(X) = - \int_Sf(x)\log f(x)dx,
 \]
 donde $S$ es el soporte de $X$.
 \end{definition}
 Como en el caso discreto, la entropía diferencial solo depende de la probabilidad de la variable aleatoria, no de los valores que toma. 
 
-\begin{example}\label{ej:uni} Consideramos una variable aleatoria con una distribución uniforme sobre $[0,a]$, en este intervalo su densidad es $\frac{1}{a}$ y fuera de él es 0. La entropía es \[
+\begin{example}\label{ej:uni} Consideramos una variable aleatoria absolutamente continua con una distribución uniforme sobre $[0,a]$. En este intervalo su densidad es $f(x) = \frac{1}{a}$ para $x\in[0,a]$ y para el resto de puntos es 0. La entropía es \[
 h(x) = - \int_0^a\frac{1}{a}\log\frac{1}{a} = \log a.
   \]
-Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo puede ser negativa, no como en el caso discreto.
+Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo puede ser negativa, no como en el caso discreto.\\
 \end{example}
 
 \begin{example}\label{ej:norm_uni}
@@ -762,8 +775,21 @@ Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo pued
   
 \end{example}
 
-No siempre tendremos variables unidimensionales, es por ello que definimos también el concepto de entropía para un conjunto de variables.
+\begin{theorem}
+  Sean $X_1,\cdots, X_n$ una serie de variables aleatorias independientes e idénticamente distribuidas con función de densidad $f(x)$. Entonces\[
+-\frac{1}{n}\log f(X_1,\cdots, X_n) \to \mathbb{E}\left [ - \log f(X) \right ] = h(X) \text{ en probabilidad.}
+  \]
+\end{theorem}
 
+\begin{proof}
+  Como las variables son independientes tenemos\[
+-\frac{1}{n}\log f(X_1,\cdots, X_n) = - \frac{1}{n} \sum_{i=1}^n \log f(X_i),
+\]
+por el Teorema \ref{t:lgn} tenemos que la expresión anterior converge en probabilidad a $\mathbb{E}\left [ - \log f(X) \right ] = h(X)$.
+\end{proof}
+
+No siempre tendremos variables unidimensionales, es por ello que definimos también el concepto de entropía para un conjunto de variables.
+--- No se si hace falta esta definición o si con la anterior sería suficiente.---
 \begin{definition}[Entropía diferencial]
   La entropía diferencial de un conjunto de variables aleatorias $X_1,\cdots,X_n = X$ con función de densidad $f(x_1,\cdots,x_n) = f(x)$ se define como\[
 h(X_1,\cdots,X_n) = h(X) = - \int f(x)\log f(x) dx.
@@ -799,6 +825,25 @@ h(X_1,\cdots,X_n) = h(X) = - \int f(x)\log f(x) dx.
   
 \end{example}
 
+\begin{definition}[Entropía diferencial condicionada]
+  Si $X,Y$ son variables aleatorias con función de densidad conjunta $f(x,y$, definimos la entropía diferencial condicionada $h(X|Y)$ como\[
+h(X|Y) = -\int\int f(x,y) \log f(x|y) dxdy.
+\]
+Como $f(x|y) = \frac{f(x,y)}{f(y)}$, también podemos definirla como\[
+h(X|Y) = h(X,Y) - h(Y).
+\]
+Siempre que las entropías diferenciales sean finitas.
+\end{definition}
+
+\begin{definition}[Entropía relativa]
+  La entropía relativa (o ``distancia'' de Kullback-Leibler) $D(f||g)$ entre dos densidades $f$ y $g$ se define como \[
+D(f||g) = \int f \log \frac{f}{g}.
+  \]
+\end{definition}
+
+Notamos que $D(f||g)$ es finita si, y solo si, el conjunto soporte de $f$ está contenido en el conjunto soporte de $g$. ---Esto no sé por qué---
+Al igual que en el caso discreto y motivados por la continuidad utilizaremos $0\log\frac{0}{0} = 0$.
+
 \begin{definition}[Información mutua]
   La información mutua, $I(X;Y)$ entre dos variables aleatorias con función de densidad conjunta $f(x,y)$ viene dada por\[
 I(X;Y) = \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy.
@@ -816,10 +861,27 @@ I(X;Y) = \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy.
   \begin{align*}
     I(X;Y) &= \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy \\
     &= \int \int f(x,y) \log f(x,y)dxdy - \int \int f(x,y) \log f(x)f(y)dxdy\\
-    &= -h(x,y)-\int\int f(x,y) \log f(x) dy dx - \int \int f(x,y)\log f(y)dxdy\\
-    &= -\int f(x) \log f(x)dx - \int f(y)\log f(y) dy -h(x,y)\\
-    &= h(x) + h(y) - h(x,y).
+    &= -h(X,Y)-\int\int f(x,y) \log f(x) dy dx - \int \int f(x,y)\log f(y)dxdy\\
+    &= -\int f(x) \log f(x)dx - \int f(y)\log f(y) dy -h(X,Y)\\
+    &= h(X) + h(Y) - h(X,Y).
   \end{align*}
+\end{proof}
+
+\begin{lemma}
+  La información mutua de dos variables aleatorias $X$, $Y$ con funciones de densidad $f(x)$, $f(y)$ y función de densidad conjunta $f(x,y)$ se relacionan con la entropía condicional de la siguiente forma:\[
+I(X;Y) = h(X) - h(X|Y) = h(Y) - h(Y|X).
+  \]
+\end{lemma}
+
+\begin{proof}
+  De manera similar al Lema anterior, partiremos de la definición de información mutua y utlizaremos propiedades del logaritmo, el teorema de Fubini y la definición de función de densidad condicionada.
+  \begin{align*}
+    I(X;Y)&= \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy \\
+    &= - \int\int f(x,y) \log f(x) dx dy + \int\int f(x,y)\log \frac{f(x,y)}{f(y)} dx dy\\
+    &= - \int f(x) \log f(x) dx + \int\int f(x,y)\log f(x|y) dx dy\\  
+    &= h(X) - h(X|Y).
+  \end{align*}
+De manera análoga se obtiene la segunda igualdad.
 \end{proof}
 
 \subsection{Estimación de la información mutua}
