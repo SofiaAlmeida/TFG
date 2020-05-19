@@ -728,12 +728,12 @@ Notamos que la información mutua, al estar definida como una entropía relativa
 \end{example}
 
 \begin{theorem}
-  Sean $X$, $Y$ variables aleatorias discretas con alfabeto $\mathcal{X}, \mathcal{Y}$ respectivamente. Entonces se verifica que $I(X;Y)=0$ si, y solo si, $X,Y$ son independientes.
+  Sean $X$, $Y$ variables aleatorias discretas con alfabeto $\mathcal{X}, \mathcal{Y}$ respectivamente. Entonces se verifica que $I(X;Y)\ge 0$, dádonse la igualdad si, y solo si, $X,Y$ son independientes.
 \end{theorem}
 \begin{proof}
 %  Supongamos que $I(X;Y)=0$, entonces, por el apartado c) del Teorema \ref{t:ent_im}, tenemos que $0 = H(X)+H(Y)-H(X,Y)$, esto es, $H(X,Y) =H(X)+H(Y)$, en el Lema \ref{l:prop_ent_conj} probamos que esto ocurre si, y solo si, $X,Y$ son independientes.
 
-El apartado c) del Teorema \ref{t:ent_im} nos dice que $I(X;Y) = H(X)+H(Y)-H(X,Y)$, usando el Lema \ref{l:prop_ent_conj}.2 tendremos que $I(X;Y)=0$ si, y solo si, $X,Y$ son independientes.
+El apartado c) del Teorema \ref{t:ent_im} nos dice que $I(X;Y) = H(X)+H(Y)-H(X,Y)$, usando el Lema \ref{l:prop_ent_conj}.2 tendremos que $I(X;Y)\ge 0$, dándose la igualdad si, y solo si, $X,Y$ son independientes.
 \end{proof}
 
 \subsection{Caso continuo}
@@ -851,12 +851,13 @@ I(X;Y) = \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy.
 \end{definition}
 
 \begin{lemma}\label{l:ent_im}
-  La información mutua de dos variables aleatorias $X$, $Y$ con funciones de densidad $f(x)$, $f(y)$ y función de densidad $f(x,y)$ conjunta verifican:\[
+  La información mutua de dos variables aleatorias $X$, $Y$ verifica:\[
   I(X;Y) = h(X) + h(Y) - h(X,Y).
   \]
 \end{lemma}
 
 \begin{proof}
+  Supongamos que las funciones de densidad marginales son $f(x)$, $f(y)$ y la conjunta es $f(x,y)$.
   Para realizar la prueba partiremos de la definición de información mutua y utilizaremos propiedades del logaritmo y el Teorema de Fubini para llegar al resultado.
   \begin{align*}
     I(X;Y) &= \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy \\
@@ -883,6 +884,81 @@ I(X;Y) = h(X) - h(X|Y) = h(Y) - h(Y|X).
   \end{align*}
 De manera análoga se obtiene la segunda igualdad.
 \end{proof}
+
+\begin{theorem}\[
+D\left ( f || g \right ) \ge 0
+\]
+con igualdad si, y solo si, $f = g$ en casi todo punto.
+\end{theorem}
+% REVIEW
+
+\begin{corollary}
+$I(X;Y)\ge 0$ con igualdad si, y solo si, $X$ e $Y$ son independientes.
+\end{corollary}
+
+\begin{corollary}
+$h(X|Y) \le 0$ con igualdad si, y solo si, $X$ e $Y$ son independientes.
+\end{corollary}
+
+\begin{theorem}[Regla de la cadena para la entropía diferencial]
+  \[
+h(X_1,\cdots,X_n) = \sum_{i=1}^n h(X_i|X_1,\cdots, X_{i-1}).
+  \]
+\end{theorem}
+
+\begin{proof}
+  %REVIEW
+\end{proof}
+
+\begin{corollary}
+  \[h(X_1,\cdots, X_n) \leq \sum_i h(X_i),\]
+  dándose la igualdad si, y solo si, $X_1,\cdots, X_n$ son independientes.
+\end{corollary}
+
+\begin{theorem}
+  Sea $X$ una variable aleatoria absolutamente continua y $c$ un escalar, entonces
+  \[
+  h(X+c) = h(X).
+  \]
+  La entropía diferencial no cambia por traslaciones.
+\end{theorem}
+
+\begin{proof}
+  \begin{align*}
+    h(X+c) &= - \int f(x + c)\log(f(x+c))
+  \end{align*}
+\end{proof}
+
+\begin{theorem}
+  Sea $X$ una variable aleatoria absolutamente continua y $a$ un escalar, entonces\[
+h(aX) = h(X) + \log |a|.
+  \]
+\end{theorem}
+
+\begin{proof}
+  Llamemos $Y = aX$, entonces $f_Y(y) = \frac{1}{|a|}f_X\left (\frac{y}{a} \right )$. Usaremos la definición de entropía, la función de densidad recién calculada y un cambio de variables ($x = \frac{y}{a}$):
+  \begin{align*}
+    h(aX) &= h(Y) = -\int f_Y(y)\log \left(f_Y(y)\right) dy\\
+    &=  -\int \frac{1}{|a|}f_X\left (\frac{y}{a} \right ) \log \left ( \frac{1}{|a|}f_X\left (\frac{y}{a} \right ) \right ) dy\\
+    &= -\int \frac{a}{|a|}f_X\left (x \right ) \log \left ( \frac{1}{|a|}f_X\left (x \right ) \right ) dx\\
+    &= -\int \frac{a}{|a|}f_X\left (x \right ) \log \left (f_X\left (x \right ) \right ) dx + \int \frac{a}{|a|}f_X(x)\log{|a|}dx\\%REVIEW
+    &= h(X) + \log{|a|}.
+  \end{align*}
+\end{proof}
+
+\begin{corollary}
+  Si $X$ es una variable aleatoria y $A$ una matriz entonces,\[
+h(AX) = h(X) + \log|det(A)|.
+  \]
+\end{corollary}
+
+Veremos que la distribución normal multivariante maximiza la entropía sobre todas las distribuciones con la misma covarianza.
+
+\begin{theorem}
+  Sea una variable aleatoria $X\in \mathbb{R}^n$ con media cero y covarianza $\Sigma = \mathbb{E}\left[XX^T\right ]$ (esto es, $\Sigma_{ij} = \mathbb{E}\left[X_iX_j\right ],\ 1\leq i,j \leq n$). Entonces \[
+  h(X) \leq \frac{1}{2}\log\left(2\pi e\right ) ^n |\Sigma |,\]
+  con igualdad si, y solo si, $X \sim \mathcal{N}(0,\Sigma)$.
+\end{theorem}
 
 \subsection{Estimación de la información mutua}
 
