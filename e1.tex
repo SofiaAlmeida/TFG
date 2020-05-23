@@ -22,6 +22,7 @@
 \usepackage{enumitem}
 \usepackage[Symbol]{upgreek} %pi
 \usepackage{mathtools}
+%\allowdisplaybreaks
 
 %%% Tablas
 \usepackage{tabularx}
@@ -71,24 +72,25 @@ Antes de entrar en materia, se recogen una serie de definiciones y resultados qu
   \begin{itemize}
   \item  El conjunto vacío, $\emptyset$, pertenece a $\mathcal{A}$,
   \item  si $A$ pertenece a $\mathcal{A}$, entonces su complementario $\Omega\ \backslash\ A$ también pertenece a $\mathcal{A}$,
- \item si tomamos una serie de conjuntos $A_1,A_2,\cdots$ de $\mathcal{A}$, entonces su unión $A_1\cup A_2 \cup \cdots$ también pertenece a $\mathcal{A}$.
+ \item si tomamos una serie de conjuntos $\{A_i\}_{i\in \mathbb{N}}$ de $\mathcal{A}$, entonces su unión numerable $\cup_{i\in \mathbb{N}}A_i$ también pertenece a $\mathcal{A}$.
   \end{itemize}
   
 \end{definition}
 
 \begin{example}
-La familia de conjuntos Borel $\mathcal{A} = \mathcal{B}(\mathbb{R}^n)$ es una $\sigma$-álgebra sobre $\mathbb{R}^n$. Un conjunto Borel sobre un espacio topológico es aquel formado por todos los conjuntos abiertos con las operaciones de unión numerable, intersección numerable y complementario relativo.
+  La familia de conjuntos Borel $\mathcal{A} = \mathcal{B}(\mathbb{R}^n)$ es una $\sigma$-álgebra sobre $\mathbb{R}^n$.
+  %Un conjunto Borel sobre un espacio topológico es aquel formado por todos los conjuntos abiertos con las operaciones de unión numerable, intersección numerable y complementario relativo.
 \end{example}
 
 \begin{definition}[Medida de probabilidad]
   Sea $\mathcal{A}$ una $\sigma$-álgebra sobre $\Omega$. Una medida de probabilidad $P$ es una función $P:\mathcal{A} \to [0,1]$ tal que
   \begin{itemize}
   \item $P(\Omega) = 1$,
-   \item si $A_1,A_2,\cdots$ son conjuntos de $\mathcal{A}$ disjuntos dos a dos, entonces $P(A_1\cup A_2 \cup \cdots) = P(A_1)+P(A_2)+\cdots$. 
+   \item si  $\{A_i\}_{i\in \mathbb{N}}$ son conjuntos de $\mathcal{A}$ disjuntos dos a dos, entonces $P(\cup_{i\in \mathbb{N}}A_i) = \sum_{i\in\mathbb{N}}P(A_i)$. 
   \end{itemize}
 \end{definition}
 
-La tupla $(\Omega, \mathcal{A}, P)$ se llama espacio de probabilidad. Los conjuntos de $\mathcal{A}$ se llaman eventos. Se dice que un evento $A$ ocurrirá casi seguramente cuando $P(A)=1$.\\
+La tupla $(\Omega, \mathcal{A}, P)$ se llama espacio de probabilidad. Los conjuntos de $\mathcal{A}$ se llaman sucesos.\\% Se dice que un suceso$A$ ocurrirá casi seguramente cuando $P(A)=1$.\\
 
 %% \begin{definition}[Variable aleatoria]
 %%   Sea $(\Omega, \mathcal{A}, P)$ un espacio de probabilidad. Una variable aleatoria $X$ es una función medible \[
@@ -101,12 +103,12 @@ La tupla $(\Omega, \mathcal{A}, P)$ se llama espacio de probabilidad. Los conjun
 
 \begin{definition}[Variable aleatoria]
     Sea $(\Omega, \mathcal{A}, P)$ un espacio de probabilidad. Un variable aleatoria $X=(X_1,\cdots, X_n)$ es una función medible \[
-X:(\Omega, \mathcal{A}) \to (\mathbb{R}^n, \mathcal{B}^n).
+X:(\Omega, \mathcal{A}) \to (\mathbb{R}^n, \mathcal{B}(\mathbb{R})^n).
 \]
-La condición de medibilidad quiere decir que $X^{-1}(B) \in \mathcal{A}\quad \forall B\in \mathcal{B}^n$.\\
+La condición de medibilidad quiere decir que $X^{-1}(B) \in \mathcal{A}\quad \forall B\in \mathcal{B}(\mathbb{R}^n)$.
 \end{definition}
 
----¿Debería poner que llegan a un espacio de medida en vez de a $R^n$?---
+Cuando $n=1$ diremos que la variable aleatoria unidimensional, mientras que cuando $n >1$ diremo que la variable aleatoria es multidimensional, en ocasiones también denominada, vector aleatorio.---¿Se te ocurre algo más que poner aquí?--- En el caso de la variable aleatoria multidimensional podremos querer información sobre ella misma, $X=(X_1,\cdots, X_n)$, lo que llamaramos variable aleatoria conjunta, o sobre alguna de las variables aleatoria $X_i$, que denominaremos variable aleatoria marginal.---Esto me suena raro...lo dejarías ahí o en otro lado...¿quizás donde lo de la función de distribución?---\\ %REVIEW
 
 Cada variable aleatoria nos da una medida de probabilidad, su probabilidad inducida.
 
@@ -114,11 +116,14 @@ Cada variable aleatoria nos da una medida de probabilidad, su probabilidad induc
   La probabilidad inducida por un variable aleatoria $X=(X_1,\cdots, X_n)$, o distribución de $X$, se define como la función \[
 P_X[B]:= P[X^{-1}(B)],
   \]
-para todo $B \in \mathcal{B}^n$.
+para todo $B \in \mathcal{B}(\mathbb{R}^n)$.
 \end{definition}
 
 \begin{definition}[Función de distribución]
-  La función de distribución del vector aleatorio $X=(X_1,\cdots,X_n)$ es $F_X:\mathbb{R}^n\to[0,1]$ y está dada por\[
+  La función de distribución de la variable aleatoria unidimensional $X$ es la aplicación $F_X:\mathbb{R}\to[0,1]$ definida como:\[
+F_X(x) = P[X\leq x].
+  \]
+Para una variable aleatoria multidimensional,  $X=(X_1,\cdots,X_n)$, la función de distribución es $F_X:\mathbb{R}^n\to[0,1]$ y está dada por\[
 F_X(x_1,\cdots,x_n) = P[X_1\leq x_1,\cdots, X_n\leq x_n].
   \]
 \end{definition}
@@ -129,7 +134,6 @@ F_X(x_1,\cdots,x_n) = P[X_1\leq x_1,\cdots, X_n\leq x_n].
   La función de distribución $F_X$ es no decreciente, continua a la derecha y $\lim_{x\to - \infty}F_X(x) = 0$, $\lim_{x\to +\infty}F_X(x) = 1$.
 \end{proposition}
 
-%REVIEW
 \begin{definition}[Función Borel]
   Una función $f:\mathbb{R}^n\to \mathbb{R}^n$ será Borel si la imagen inversa $f^{-1}(B)$ de cualquier conjunto Borel $B\in \mathbb{R}^n$ es un conjunto Borel.
 \end{definition}
@@ -141,7 +145,7 @@ P[X\in B] = \int_B f_X(x) dx,
 se dice que $X$ es una variable aleatoria con distribución absolutamente continua y $f_X$ se llama función de densidad de $X$. Si hay una secuencia (finita o infinita) de vectores $x_1,x_2,\cdots$ tal que para cualquier conjunto Borel $B\subset \mathbb{R}^n$\[
 P[X\in B] = \sum_{x_i\in B}P[X = x_i],
 \]
-entonces decimos que $X$ tiene una distribución discreta con valores $x_1,x_2\cdots$ y función masa de probabilidad $P[X=x_i]$ en $x_i$.
+entonces decimos que $X$ tiene una distribución discreta con valores $x_1,x_2\cdots$ y función masa de probabilidad $P[X=x_i]=p(x_i)$ en $x_i$.
 \end{definition}
 
 \begin{definition}[Soporte]
@@ -154,20 +158,26 @@ Llamamos soporte de una variable aleatoria $X$ al conjunto de puntos donde $f(x)
 %% \end{definition}
 
 \begin{definition}[Probabilidad condicionada]
-  Para cualesquiera dos eventos $A,B \in \mathcal{A}$ tal que $P(B)\neq 0$, la probabilidad condicionada de A por B se define como\[
+  Para cualesquiera dos sucesos $A,B \in \mathcal{A}$ tal que $P(B)\neq 0$, la probabilidad condicionada de A por B se define como\[
 P(A|B) = \frac{P(A\cap B)}{P(B)}.
   \]
 \end{definition}
 
-\begin{definition}[Eventos independientes]
-  $n$ eventos $A_1,\cdots,A_n\in \mathcal{A}$ se dicen independientes si\[
-P(A_{i_1}\cap\cdots\cap A_{i_k}) = P(A_{i_1})\cdots P(A_{i_k}),
+\begin{definition}[Función de densidad condicionada]
+  Para cualesquiera dos variables aleatorias $X$,$Y$ con función de densidad $f_X$ y $f_Y$ respectivamente y función de densidad conjunta $f$, la densidad de $X$ condicionada a que $Y=y$ viene dada por\[
+??? = \frac{???}{???}. %REVIEW
+  \]---Se me ocurre que puede ser $f_X(x|Y=y) = \frac{f(x,y)}{f_Y(y)}$---
+\end{definition}
+
+\begin{definition}[Sucesos independientes]
+  Los sucesos $A_1,\cdots,A_n\in \mathcal{A}$ se dicen independientes si\[
+P\left (\cap_{j=1}^kA_{i_j} \right ) = \prod_{j=1}^kP\left (A_{i_j} \right),
 \]
 para cualesquiera índices $1\leq i_1\leq \cdots \leq i_k\leq n$.
 \end{definition}
 
 \begin{definition}[Variables aleatorias independientes]
-  Dos variables aleatorias $X$ e $Y$ son independientes si para cualesquiera conjuntos de Borel $A, B \in \mathcal{B}(\mathbb{R}^n)$ los eventos $[X\in A]$ y $Y\in B$ son independientes. De forma general, $k$ variables aleatorias $X_1,\cdots,X_k$ serán independientes si para cualesquiera conjuntos de Borel $B_1,\cdots,B_k \in \mathcal{B}(\mathbb{R}^n)$ los eventos $[X_1 \in B_1],\cdots,[X_k\in B_k]$ son independientes.
+  Dos variables aleatorias $X$ e $Y$ son independientes si para cualesquiera conjuntos de Borel $A, B \in \mathcal{B}(\mathbb{R}^n)$ los sucesos $[X\in A]$ e $[Y\in B]$ son independientes. De forma general, $k$ variables aleatorias $X_1,\cdots,X_k$ serán independientes si para cualesquiera conjuntos de Borel $B_1,\cdots,B_k \in \mathcal{B}(\mathbb{R}^n)$ los sucesos $[X_1 \in B_1],\cdots,[X_k\in B_k]$ son independientes.
 \end{definition}
 
 \begin{proposition}[Caracterizaciones de independencia]
@@ -206,8 +216,7 @@ En el caso de que $X$ sea una variable aleatoria absolutamente continua y admita
 \end{definition}
 
 \begin{proposition}[Propiedades de la esperanza]
-  Sea $X$ una variable aleatoria  (---unidimensional---) con función de densidad $f(x)$, entonces se cumplen las siguientes propiedades de la esperanza:
----¿Esto se cumple para más dimensiones?---
+  Sea $X$ una variable aleatoria con función de densidad $f(x)$, entonces se cumplen las siguientes propiedades de la esperanza:
   \begin{itemize}
   \item Para una función $g(x)$, $g(X)$ será también una variable aleatoria y su esperanza será\[
 \mathbb{E}[g(X)] = \int g(x)f(x)dx.
@@ -216,7 +225,7 @@ Esta propiedad se conoce como \textit{ley del estadístico inconsciente}.
 \item $\mathbb{E}\left [\sum_{j=1}^kc_jg_j(X) \right] = \sum_{j=1}^k c_j \mathbb{E} \left [ g_j(X_i) \right ]$.
 
 \item Si $X_1,\cdots,X_n$ son variables aleatorias independientes, entonces\[
-\mathbb{E} \left [ X_1 \cdots X_n \right ] = \mathbb{E}[X_1] \cdots \mathbb{E}[X_n].
+\mathbb{E} \left [ \prod_{i=1}^n X_i \right ] = \prod_{i=1}^k\mathbb{E}[X_i].
   \]
   \end{itemize}
   
@@ -237,14 +246,7 @@ Esta propiedad se conoce como \textit{ley del estadístico inconsciente}.
 donde $\sigma_{ij} = Cov(X_i, X_j) = \mathbb{E}\left[(X_i-\mu_i)(X_j-\mu_j)\right]=\sigma_{ji}$ es la covarianza de las variables aleatorias $X_i$ y $X_j$. La podremos definir cuando existan todas las covarianzas.  
 \end{definition}
 
-\begin{theorem}[Ley (débil) de los grandes números]\label{t:lgn}
-  Sean $X_1,\cdots,X_n$ variables aleatorias con distribución $F$ y $\mu =\mathbb{E}\left [X_1 \right]$. Si $\mu =\mathbb{E}\left [X_1 \right] < \infty$, entonces la media muestral\[
-\overline{X}_n = \frac{1}{n}\sum_{i=1}^nX_i
-\]converge en probabilidad a $\mu$, esto es,\[
-\overline{X}_n\xrightarrow[]{P} \mu.
-\]
-  
-\end{theorem}
+\subsection{Estimadores}
 
 \begin{definition}[Muestra aleatoria simple]
   Una muestra aleatoria simple de tamaño $n$ de una variable aleatoria $X$ con distribución teórica $F$, son $n$ variables aleatorias $(X_1,\cdots,X_n)$, independientes e idénticamente distribuidas, con distribución común $F$.
@@ -272,14 +274,32 @@ el estimador $\widehat{\theta}$ se dice insesgado para $\theta$.
 \end{definition}
 
 % REVIEW: Añadir ejemplos de estimador de la media y la varianza
+Existen diferentes nociones de convergencia de variables aleatorias, presentamos a continuación una de ellas, la convergencia en probabilidad.
+\begin{definition}[Convergencia en probabilidad]
+  Una sucesión de variables aleatorias $\{X_n\}$ converge en probabilidad a la variable $X$ si para todo $\varepsilon > 0$,\[
+\lim_{n\to\infty}P\left[|X_n-X|>\varepsilon \right] = 0. 
+  \] Lo notaremos $X_n\xrightarrow[]{P}X$.
+\end{definition}
 
-\subsection{Algunas distribuciones}
+Como ejemplo de los conceptos anteriores podemos considerar la media muestral como estimador de la media teórica de una variable aleatoria $X$, la ley (débil) de los grandes números ...---no sé cómo quiero redactar eso---
+
+\begin{theorem}[Ley (débil) de los grandes números]\label{t:lgn}
+  Sean $X_1,\cdots,X_n$ variables aleatorias con distribución $F$ y $\mu =\mathbb{E}\left [X_1 \right]$. Si $\mu =\mathbb{E}\left [X_1 \right] < \infty$, entonces la media muestral\[
+\overline{X}_n = \frac{1}{n}\sum_{i=1}^nX_i
+\]converge en probabilidad a $\mu$, esto es,\[
+\overline{X}_n\xrightarrow[]{P} \mu.
+\]
+  
+\end{theorem}
+
+
+\subsection{Algunas distribuciones discretas y continuas}
 
 Durante el desarrollo del trabajo se utilizarán algunas distribuciones, se presentan a continuación.
 %--------------------------------- Uniforme unidimensional--------------
 
 \begin{definition}[Distribución uniforme discreta]
-Si $X$ es una variable aleatoria con distribución uniforme discreta sobre el intervalo $[a,b]$. $X$ tomará $n$ posibles valores (en este intervalo) con igual probabilidad $\frac{1}{n}$. La función masa de probabilidad será $f(x) = \frac{1}{n}$. ---NO sé decir dónde tendría que estar el $x$---.
+Si $X$ es una variable aleatoria con distribución uniforme discreta sobre el intervalo $[a,b]$. $X$ tomará $n$ posibles valores, $x_1,\cdots,x_n$ ($x_i\in [a,b]$ para $i=1,\cdots,n$), con igual probabilidad $\frac{1}{n}$. La función masa de probabilidad será $f(x_i) = \frac{1}{n}$ para todo $i = 1,\cdots, n$. 
 \end{definition}
 
 \begin{example}
@@ -298,24 +318,24 @@ f(x) =
 % ----------------------------- FIN uniforme----------------------------
 
 %---------------------------------Distribución normal-------------------
-\begin{definition}[Distribución normal]
-  Una variable aleatoria seguirá una distribución normal, o distribución gaussiana, es un tipo de distribución continua para variables aleatorias reales. Su función de densidad es \[
+\begin{definition}[Distribución normal unidimensional]
+  Una variable aleatoria unidimensional seguirá una distribución normal, o distribución gaussiana,si su función de densidad es \[
 f(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}\left( \frac{x-\mu}{\sigma}\right ) ^2}.
-\]\\
+\]
 \end{definition}
 
 Generalizamos esta definición para el caso multivariante.
 \begin{definition}[Distribución normal multivariante]
   Una variable aleatoria sigue una distribución normal multivariante si cualquier combinación de sus componentes tiene una distribución normal univariante. Su función de densidad es \[
 f(x) = \frac{1}{\left (\sqrt{2\pi}\right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)},
-  \] cuando $\Sigma$ sea definida positiva.\\
+  \] donde $\Sigma$ es una matriz definida positiva.\\
 \end{definition}
 %--------------------------------Fin - normal---------------------------
 
 %--------------Multinomial - Principio----------------------------------
-La distribución multinomial modela la probabilidad de un número determinado de éxitos para $n$ experimentos independientes, donde hay $k$ posibles éxitos, cada uno de ellos con probabilidad de éxito fija.
+La siguiente distribución, la distribución multinomial modela la probabilidad de un número determinado de éxitos para $n$ experimentos independientes, donde hay $k$ posibles éxitos, cada uno de ellos con probabilidad de éxito fija.
 
-\begin{definition}[Distribución multinomial]
+\begin{definition}[Distribución multinomial] %REVIEW
   Sea $k$ un número fijo y finito, tendremos $k$ posibles salidas mutuamente excluyentes con probabilidades $p_1\cdots p_k$. Si la variable aleatoria $X_i$ indica el número de veces que se observa la salida $i$ en los $n$ experimentos, entonces el vector $X = (X_1, \cdots, X_n)$ sigue una distribución multinomial con parámetros $n$ y $p = (p_1,\cdots, p_n)$. Su función masa de probabilidad viene dada por
 
 \begin{align*}
@@ -331,22 +351,21 @@ donde $x_1,\cdots, x_k$ son enteros no negativos.
 %Notamos que aunque los sucesos sean independientes, sus salidas $X$ son dependientes, ya que deben sumar $n$.
 
 \begin{example}
-  Si tenemos un dado de $k$ lados y queremos calcular cuántas veces sale cada uno de ellos en $n$ lanzamientos, tendremos una distribución multinomial.
+  Si tenemos un dado de $k$ lados y queremos calcular cuántas veces sale cada uno de ellos en $n$ lanzamientos, tendremos una distribución multinomial.\\
 \end{example}
 
-\begin{proposition}
-  El valor esperado de observar la salida $i$ en $n$ sucesos es $\mathbb{E}(X_i) = np_i$, luego $\mathbb{E}(X) = np$.
-\end{proposition}
+El valor esperado de observar la salida $i$ en $n$ sucesos es $\mathbb{E}(X_i) = np_i$, luego $\mathbb{E}(X) = np$.
 
-\begin{proposition}
-  Observamos cómo son los elementos de la matriz de covarianzas. Los elementos de la diagonal son la varianza de una variable aleatoria con distribución binomial, luego $Var(X_i) = np_i(1-p_i)$. Las covarianzas de $X_i, X_j$ para $i\neq j$ son $Cov(X_i, X_j) = - n p_i p_j$. Por tanto, $Var(X) = n [\text{diag}(p) - p p^T]$, donde diag$(p)$ representa la matriz diagonal que tiene el elemento $p_i$ en la posición $i,i$.
-\end{proposition}
+Veamos cómo son los elementos de la matriz de covarianzas. Los elementos de la diagonal son la varianza de una variable aleatoria con distribución binomial, luego $Var(X_i) = np_i(1-p_i)$. Las covarianzas de $X_i, X_j$ para $i\neq j$ son $Cov(X_i, X_j) = - n p_i p_j$. Por tanto, $Var(X) = n [\text{diag}(p) - p p^T]$, donde diag$(p)$ representa la matriz diagonal que tiene el elemento $p_i$ en la posición $i,i$.
 %----------------------MULTINOMIAL-FIN----------------------------------
 
 %--------------------------Estudio de la dependencia--------------------
 \subsection{Estudio de la dependencia}
 
-Dadas dos variables aleatorias nos podemos preguntar si son o no independientes, es decir, si la realización de una de ellas afecta o no a la realización de la otra. En caso de ser dependientes nos gustaría medir qué tipo de relación existe entre ellas. Hay numerosos métodos que nos permiten realizar esta medida. Entre los no paramétricos (que no dependen de las distribuciones marginales), encontramos, por ejemplo, el \textit{coeficiente de correlación de Pearson} o el \textit{coeficiente de correlación de Spearman}.
+Dadas dos variables aleatorias nos podemos preguntar si son o no independientes, es decir, si la realización de una de ellas afecta o no a la realización de la otra. En caso de ser dependientes nos gustaría medir qué tipo de relación existe entre ellas. Hay numerosos métodos que nos permiten realizar esta medida, por ejemplo, el \textit{coeficiente de correlación de Pearson} o el \textit{coeficiente de correlación de Spearman}.
+
+Medir la dependencia entre variables puede ser útil porque nos indica relaciones predecibles entre las variables que pueden ser aprovechadas en la práctica. Encontramos infinidad de aplicaciones en el mundo real a conocer una dependencia entre variables. Conocer qué efecto tiene un fenómeno sobre otro...---¿Ejemplos?---
+
 
 \begin{definition}[Coeficiente de correlación de Pearson]
   Se define el coeficiente de correlación de Pearson para un par de variables aleatorias $(X,Y)$ como\[
@@ -358,6 +377,8 @@ r_{xy}=\frac{\sum_{i=1}^n(x_i-\overline{x})(y_i-\overline{y})}{\sqrt{\sum_{i=1}^
 \end{definition}
 
 Este coeficiente mide la correlación lineal entre las variables $X,Y$. Su valor se encuentra entre +1 y -1, donde +1 indica una correlación lineal positiva total, 0 que no hay correlación lineal y -1 correlación lineal total negativa. Si el coeficiente de correlación de Pearson de dos variables aleatorias es 0, sabremos que no existe una dependencia lineal entre ellas, pero no podremos asegurar nada acerca de la independencia, pues podría existir otro tipo de dependencia entre ellas.
+
+Entre los no paramétricos (que no dependen de las distribuciones marginales)
 
 El coeficiente de correlación de Spearman mide la relación entre dos variables más allá de si es lineal o no. Atiende a si ambas variables tienen la misma monotonía, esto es, si a medida que los valores de una de las variables crecen, los de la otra también lo hacen (o al revés). Para ello, tendremos que ordenar los datos de cada variable de menor a mayor.
 
@@ -373,7 +394,7 @@ Este coeficiente también toma valores entre -1 y +1. Si los valores son cercano
 
 Así, hemos visto un par de ejemplos de medidas de dependencia que caracterizan adecuadamente tipos concretos de dependencia, pero no caracterizan la independencia.
 
-La información mutua es otra forma de medir la dependencia entre dos variables aleatorias capaz de determinar otros tipos de dependencias, además de las lineales o monótonas. Podríamos decir que es una medida de la dependencia global. Además, esta medida también nos dará información sobre la independencia. ---Lo probé en el caso discreto, faltaría comprobar que en el continuo también se da---
+La información mutua es otra forma de medir la dependencia entre dos variables aleatorias capaz de determinar otros tipos de dependencias, además de las lineales o monótonas. Podríamos decir que es una medida de la dependencia global. Además, esta medida también nos dará información sobre la independencia de las variables aleatorias en estudio (véanse Teorema \ref{t:im_indd} y \ref{c:im_indc}).
 
 %-----------------------------------------------------------------------
 %-----------------------TEORÍA DE LA INFORMACIÓN------------------------
@@ -727,7 +748,7 @@ Notamos que la información mutua, al estar definida como una entropía relativa
   
 \end{example}
 
-\begin{theorem}
+\begin{theorem}\label{t:im_indd}
   Sean $X$, $Y$ variables aleatorias discretas con alfabeto $\mathcal{X}, \mathcal{Y}$ respectivamente. Entonces se verifica que $I(X;Y)\ge 0$, dádonse la igualdad si, y solo si, $X,Y$ son independientes.
 \end{theorem}
 \begin{proof}
@@ -752,8 +773,8 @@ donde $S$ es el soporte de $X$.
 \end{definition}
 Como en el caso discreto, la entropía diferencial solo depende de la probabilidad de la variable aleatoria, no de los valores que toma. 
 
-\begin{example}\label{ej:uni} Consideramos una variable aleatoria absolutamente continua con una distribución uniforme sobre $[0,a]$. En este intervalo su densidad es $f(x) = \frac{1}{a}$ para $x\in[0,a]$ y para el resto de puntos es 0. La entropía es \[
-h(x) = - \int_0^a\frac{1}{a}\log\frac{1}{a} = \log a.
+\begin{example}\label{ej:uni} Consideramos una variable aleatoria $X$ absolutamente continua con una distribución uniforme sobre $[0,a]$. En este intervalo su densidad es $f(x) = \frac{1}{a}$ para $x\in[0,a]$ y para el resto de puntos es 0. La entropía es \[
+h(X) = - \int_0^a\frac{1}{a}\log\frac{1}{a} = \log a.
   \]
 Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo puede ser negativa, no como en el caso discreto.\\
 \end{example}
@@ -767,11 +788,14 @@ Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo pued
   \end{align*}
 
   Ahora, utilizando la ley del estadístico inconsciente ($E[g(X)]=  \int g(x)f(x)$), tenemos,
+  \begingroup
+\allowdisplaybreaks
   \begin{align*}
     h(X) &= \frac{\mathbb{E}\left [ (X-\mu) ^2\right ] }{2\sigma^2} + \log\left( \sigma\sqrt{2\pi} \right )\underbrace{\int \frac{1}{\sigma\sqrt{2\pi}}e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}dx}_{1}\\
     &= \frac{\sigma^2}{2\sigma^2} + \log \sqrt{\sigma^2 2 \pi} = \frac{1}{2} + \frac{1}{2}\log\left(  \sigma^2 2 \pi\right)\\
-    &= \frac{1}{2} \log e + \frac{1}{2} \log\left( \sigma^2 2 \pi\right)\\ &= \frac{1}{2}\log\left({2\pi e\sigma^2} \right) \text{ nats.}
+    &= \frac{1}{2} \log e + \frac{1}{2} \log\left( \sigma^2 2 \pi\right)\\ &= \frac{1}{2}\log\left({2\pi e\sigma^2} \right) \text{ nats.}\\
   \end{align*}
+  \endgroup
   
 \end{example}
 
@@ -789,7 +813,7 @@ por el Teorema \ref{t:lgn} tenemos que la expresión anterior converge en probab
 \end{proof}
 
 No siempre tendremos variables unidimensionales, es por ello que definimos también el concepto de entropía para un conjunto de variables.
---- No se si hace falta esta definición o si con la anterior sería suficiente.---
+--- No se si hace falta esta definición o si con la anterior sería suficiente al estar considerando variables aleatorias multidimensionales.---
 \begin{definition}[Entropía diferencial]
   La entropía diferencial de un conjunto de variables aleatorias $X_1,\cdots,X_n = X$ con función de densidad $f(x_1,\cdots,x_n) = f(x)$ se define como\[
 h(X_1,\cdots,X_n) = h(X) = - \int f(x)\log f(x) dx.
@@ -837,7 +861,7 @@ Siempre que las entropías diferenciales sean finitas.
 
 \begin{definition}[Entropía relativa]
   La entropía relativa (o ``distancia'' de Kullback-Leibler) $D(f||g)$ entre dos densidades $f$ y $g$ se define como \[
-D(f||g) = \int f \log \frac{f}{g}.
+D(f||g) = \int_{\mathbb{R}^n} f(x) \log \frac{f(x)}{g(x)}.
   \]
 \end{definition}
 
@@ -846,7 +870,7 @@ Al igual que en el caso discreto y motivados por la continuidad utilizaremos $0\
 
 \begin{definition}[Información mutua]
   La información mutua, $I(X;Y)$ entre dos variables aleatorias con función de densidad conjunta $f(x,y)$ viene dada por\[
-I(X;Y) = \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy.
+I(X;Y) = \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy = D(f(x,y)||f(x)f(y)).
   \]
 \end{definition}
 
@@ -869,12 +893,13 @@ I(X;Y) = \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy.
 \end{proof}
 
 \begin{lemma}
-  La información mutua de dos variables aleatorias $X$, $Y$ con funciones de densidad $f(x)$, $f(y)$ y función de densidad conjunta $f(x,y)$ se relacionan con la entropía condicional de la siguiente forma:\[
+  La información mutua de dos variables aleatorias $X$, $Y$ se relaciona con la entropía condicional de la siguiente forma:\[
 I(X;Y) = h(X) - h(X|Y) = h(Y) - h(Y|X).
   \]
 \end{lemma}
 
 \begin{proof}
+  Sean $f(x)$, $f(y)$ las funciones de densidad de $X$ e $Y$ y $f(x,y)$ la función de densidad conjunta.
   De manera similar al Lema anterior, partiremos de la definición de información mutua y utlizaremos propiedades del logaritmo, el teorema de Fubini y la definición de función de densidad condicionada.
   \begin{align*}
     I(X;Y)&= \int \int f(x,y) \log \frac{f(x,y)}{f(x)f(y)}dxdy \\
@@ -890,9 +915,11 @@ D\left ( f || g \right ) \ge 0
 \]
 con igualdad si, y solo si, $f = g$ en casi todo punto.
 \end{theorem}
-% REVIEW
+\begin{proof}
+  
+\end{proof}
 
-\begin{corollary}
+\begin{corollary}\label{c:im_indc}
 $I(X;Y)\ge 0$ con igualdad si, y solo si, $X$ e $Y$ son independientes.
 \end{corollary}
 
@@ -916,7 +943,7 @@ h(X_1,\cdots,X_n) = \sum_{i=1}^n h(X_i|X_1,\cdots, X_{i-1}).
 \end{corollary}
 
 \begin{theorem}
-  Sea $X$ una variable aleatoria absolutamente continua y $c$ un escalar, entonces
+  Sea $X$ una variable aleatoria absolutamente continua y $c$ un vector de escalares, entonces
   \[
   h(X+c) = h(X).
   \]
@@ -924,8 +951,11 @@ h(X_1,\cdots,X_n) = \sum_{i=1}^n h(X_i|X_1,\cdots, X_{i-1}).
 \end{theorem}
 
 \begin{proof}
+  Sea $f_X$ la función de densidad de $X$. Llamemos $Y = X+ c$, esta será una variable aleatoria con función de densidad $f_Y(y)=f_X(y-c)$. Calculamos su entropía diferencial usando su definición y aplicando el cambio de variable $y = x + c$.
   \begin{align*}
-    h(X+c) &= - \int f(x + c)\log(f(x+c))
+    h(X+c) &= h(Y) = - \int f_Y(y)\log f_Y(y) dy\\
+    &= - \int f_X(y-c) \log f_X(y-c) dy\\
+    &= - \int f_X(x) \log f_X(x) dx = h(X).
   \end{align*}
 \end{proof}
 
@@ -952,13 +982,13 @@ h(AX) = h(X) + \log|det(A)|.
   \]
 \end{corollary}
 
-Veremos que la distribución normal multivariante maximiza la entropía sobre todas las distribuciones con la misma covarianza.
+%% Veremos que la distribución normal multivariante maximiza la entropía sobre todas las distribuciones con la misma covarianza.
 
-\begin{theorem}
-  Sea una variable aleatoria $X\in \mathbb{R}^n$ con media cero y covarianza $\Sigma = \mathbb{E}\left[XX^T\right ]$ (esto es, $\Sigma_{ij} = \mathbb{E}\left[X_iX_j\right ],\ 1\leq i,j \leq n$). Entonces \[
-  h(X) \leq \frac{1}{2}\log\left(2\pi e\right ) ^n |\Sigma |,\]
-  con igualdad si, y solo si, $X \sim \mathcal{N}(0,\Sigma)$.
-\end{theorem}
+%% \begin{theorem}
+%%   Sea una variable aleatoria $X\in \mathbb{R}^n$ con media cero y covarianza $\Sigma = \mathbb{E}\left[XX^T\right ]$ (esto es, $\Sigma_{ij} = \mathbb{E}\left[X_iX_j\right ],\ 1\leq i,j \leq n$). Entonces \[
+%%   h(X) \leq \frac{1}{2}\log\left(2\pi e\right ) ^n |\Sigma |,\]
+%%   con igualdad si, y solo si, $X \sim \mathcal{N}(0,\Sigma)$.
+%% \end{theorem}
 
 \subsection{Estimación de la información mutua}
 
