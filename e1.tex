@@ -23,6 +23,10 @@
 \usepackage[Symbol]{upgreek} %pi
 \usepackage{mathtools}
 %\allowdisplaybreaks
+\AtBeginDocument{\renewcommand{\epsilon}{\varepsilon}}
+\AtBeginDocument{\newcommand{\R}{\mathbb{R}}}
+\AtBeginDocument{\newcommand{\E}{\mathbb{E}}}
+
 
 %%% Tablas
 \usepackage{tabularx}
@@ -925,7 +929,53 @@ I(X;Y) = h(X) - h(X|Y) = h(Y) - h(Y|X).
 De manera análoga se obtiene la segunda igualdad.
 \end{proof}
 
-\begin{theorem}\[
+\begin{definition}[Variable aleatoria cuantificada]
+  Sea $X$ una variable aleatoria con función de densidad $f$. Si dividimos la imagen de $X$ en intervalos de longitud $\epsilon$ y asumimos que la densidad es constante en cada intervalo, el teorema del valor medio nos dice que, para cada intervalo $\left[i\epsilon, (i+1)\epsilon\right]$ existe un valor $x_i\in \left[i\epsilon, (i+1)\epsilon\right]$ tal que $f(x_i)\epsilon = \int_{i\epsilon}^{(i+1)\epsilon}f(x)dx$.
+  La variable aleatoria cuantificada, $X^{\epsilon}$, se define de la siguiente forma\[
+X^{\epsilon} = x_i, \quad \text{ si } i\epsilon \leq X  < (i+1)\epsilon.
+\]Su función masa de probabilidad viene dada por \[
+P[X^\epsilon = x_i] = p_i =  \int_{i\epsilon}^{(i+1)\epsilon}f(x)dx = f(x_i)\epsilon.
+\]
+\end{definition}
+
+\begin{theorem}
+  Si la densidad $f$ de una variable aleatoria $X$ es integrable Riemann, entonces\[
+H(X^{\varepsilon}) + \log \epsilon \xrightarrow[]{\epsilon \to 0}  h(X).
+  \] 
+\end{theorem}
+\begin{proof}
+  Partimos de la entropía de $X^{\epsilon}$,
+  \begin{align*}
+    H(X^{\epsilon}) &= - \sum_{-\infty}^{+\infty} p_i \log p_i = - \sum_{-\infty}^{+\infty}f(x_i)\epsilon \log\left ( f(x_i)\epsilon \right )\\
+    &= -  \sum_{-\infty}^{+\infty}f(x_i)\epsilon \log\left ( f(x_i) \right ) - \underbrace{\sum_{-\infty}^{+\infty}f(x_i)\epsilon}_{\int_{-\infty}^{+\infty}f(x)dx=1} \log\left ( \epsilon \right ),
+  \end{align*}
+  luego, tenemos que $H(X^{\epsilon}) + \log \epsilon  = \sum_{-\infty}^{+\infty}f(x_i)\epsilon \log\left ( f(x_i) \right )$.
+
+  Como $f$ es integrable Riemann, tomando $\epsilon \to 0$ obtenemos \[\lim_{\epsilon \to 0}\sum_{-\infty}^{+\infty}f(x_i)\epsilon \log\left ( f(x_i) \right )  = - \int_{-\infty}^{+\infty}\log\left( f(x)\right) f(x)dx = h(X).\]
+
+  Por tanto,\[
+H(X^{\varepsilon}) + \log \epsilon \xrightarrow[]{\epsilon \to 0}  h(X).
+  \] 
+\end{proof}
+
+Podemos calcular la información mutua de dos variables aleatorias cuantificadas, 
+\begin{align}\label{eq:imq}
+  I(X^{\epsilon};Y^{\epsilon}) &= H(X^{\epsilon}) - H(X^{\epsilon}|Y^{\epsilon})\nonumber\\&\approx h(X) - \log\epsilon - (h(X|Y) - \log\epsilon) = I(X;Y).
+\end{align}
+
+De forma más general, podemos definir la información mutua en términos de particiones finitas de la imagen de la variable aleatoria. Sea $\mathcal{X}$ la imagen de la variable aleatoria $X$. Una partición $\mathcal{P}$ de $\mathcal{X}$ es una colección finita de conjuntos disjuntos $P_i$ de forma que $\cup_i P_i = \mathcal{X}$. La cuantificación de $X$ dada la partición $\mathcal{P}$, que notaremos $[X]_{\mathcal{P}}$, es la variable aleatoria discreta con función masa de probabilidad\[
+P\left[[X]_{\mathcal{P}} = i\right ] = P [X\in P_i] = \int_{P_i}dF(x).
+\]
+Utilizando esto para dos variables aleatorias con sendas particiones, podremos calcular la información mutua de las variables cuantificadas utilizando \ref{eq:imq}. De esta forma, obtenemos una nueva definición de la información mutua.
+
+\begin{definition}[Información mutua]
+  La información mutua de dos variables aleatorias $X$ e $Y$ viene dada por \[
+I(X;Y) = \sup_{\mathcal{P},\mathcal{Q}}I\left ( [X]_{\mathcal{P}}, [Y]_{\mathcal{Q}} \right),
+  \]donde el supremo es sobre todas las particiones finitas $\mathcal{P}$ y $\mathcal{Q}$.
+\end{definition}
+Notamos que esta definición será válida cuando las variables aleatorias no tengan definida su función de densidad.
+
+\begin{theorem}Si $f$ y $g$ son dos funciones de densidad, entonces\[
 D\left ( f || g \right ) \ge 0
 \]
 con igualdad si, y solo si, $f = g$ en casi todo punto.
