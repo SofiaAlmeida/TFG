@@ -67,7 +67,28 @@
 \newtheorem{corollary}{Corolario}[theorem]
 
 \begin{document}
-\section{Conceptos previos}
+%-------------------------- ÍNDICE--------------------------------------
+\tableofcontents
+\newpage
+%-----------------------------OBJETIVOS---------------------------------
+\section{Objetivos}
+
+---(Se podrían poner aquí como sección 0 o en la sección de introducción)---
+
+%-------------------------INTRODUCCIÓN----------------------------------
+\section{Introducción}
+
+---Hablar de: Shanon, teoría de la información, relevancia que ha tenido,...---
+\subsection{Motivación del trabajo}
+\subsection{Objetivos}
+---(Si se opta por no ponerlos antes de la introducción)---
+
+%--------------------------- FUNDAMENTOS--------------------------------
+\section{Funtamentos y estado del arte}
+
+---(De lo de estado del arte comentar que es un tema que se sigue investigando y poner referencias al respecto)---
+
+\subsection{Conceptos previos}
 
 Antes de entrar en materia, se recogen una serie de definiciones y resultados que se utilizarán a lo largo del trabajo.
 
@@ -107,14 +128,14 @@ La tupla $(\Omega, \mathcal{A}, P)$ se llama espacio de probabilidad. Los conjun
 
 \begin{definition}[Variable aleatoria]
     Sea $(\Omega, \mathcal{A}, P)$ un espacio de probabilidad. Un variable aleatoria $X=(X_1,\cdots, X_n)$ es una función medible \[
-X:(\Omega, \mathcal{A}) \to (\mathbb{R}^n, \mathcal{B}(\mathbb{R})^n).
+X:(\Omega, \mathcal{A}) \to (\mathbb{R}^n, \mathcal{B}(\mathbb{R}^n)).
 \]
 La condición de medibilidad quiere decir que $X^{-1}(B) \in \mathcal{A}\quad \forall B\in \mathcal{B}(\mathbb{R}^n)$.
 \end{definition}
 
-Cuando $n=1$ diremos que la variable aleatoria unidimensional, mientras que cuando $n >1$ diremo que la variable aleatoria es multidimensional, en ocasiones también denominada, vector aleatorio.---¿Se te ocurre algo más que poner aquí?--- En el caso de la variable aleatoria multidimensional podremos querer información sobre ella misma, $X=(X_1,\cdots, X_n)$, lo que llamaramos variable aleatoria conjunta, o sobre alguna de las variables aleatoria $X_i$, que denominaremos variable aleatoria marginal.---Esto me suena raro...lo dejarías ahí o en otro lado...¿quizás donde lo de la función de distribución?---\\ %REVIEW
+Cuando $n=1$ diremos que la variable aleatoria es unidimensional, mientras que cuando $n >1$ diremos que la variable aleatoria es multidimensional, en ocasiones también denominada, vector aleatorio. En el caso de la variable aleatoria multidimensional podremos querer información sobre ella misma, $X=(X_1,\cdots, X_n)$, lo que llamaremos variable aleatoria conjunta, o sobre alguna de las variables aleatoria $X_i$, que denominaremos variable aleatoria marginal.\\
 
-Cuando la imagen de la variable aleatoria $X$ sea numerable, diremos que la variable aleatoria es \textit{discreta}, será descrita por la función masa de probabilidad que asigna una probabilidad a cada valor de la imagen de $X$. Por otro lado, cuando la imagen de la variable aleatoria $X$ sea infinita no numerable, diremos que la variable aleatoria es \textit{continua}. Si además pede ser descrita por una función de densidad, será \textit{absolutamente continua}.\\
+Cuando la imagen de la variable aleatoria $X$ sea numerable, diremos que la variable aleatoria es \textit{discreta}, será descrita por la función masa de probabilidad que asigna una probabilidad a cada valor de la imagen de $X$. Por otro lado, cuando la imagen de la variable aleatoria $X$ sea infinita no numerable, diremos que la variable aleatoria es \textit{continua}. Si además puede ser descrita por una función de densidad, será \textit{absolutamente continua}.\\
 
 Cada variable aleatoria nos da una medida de probabilidad, su probabilidad inducida.
 
@@ -139,7 +160,6 @@ F_X(x_1,\cdots,x_n) = P[X_1\leq x_1,\cdots, X_n\leq x_n].
 \begin{proposition}
   La función de distribución $F_X$ de la variable aleatoria $X$ es no decreciente, continua a la derecha y $\lim_{x\to - \infty}F_X(x) = 0$, $\lim_{x\to +\infty}F_X(x) = 1$.\\
   Si la variable aleatoria $X$ es discreta, la función de distribución tendrá puntos de discontinuidad es los valores de la imagen de $X$. Mientras que si la variable aleatoria es continua, su función de distribución será continua.
-  ---Diciendo esto...¿tiene interés decir lo de que es continua a la derecha en general?---
 \end{proposition}
 
 \begin{definition}[Función Borel]
@@ -173,8 +193,8 @@ P(A|B) = \frac{P(A\cap B)}{P(B)}.
 
 \begin{definition}[Función de densidad condicionada]
   Para cualesquiera dos variables aleatorias $X$,$Y$ con función de densidad $f_X$ y $f_Y$ respectivamente y función de densidad conjunta $f$, la densidad de $X$ condicionada a que $Y=y$ viene dada por\[
-??? = \frac{???}{???}. %REVIEW
-  \]---Se me ocurre que puede ser $f_X(x|Y=y) = \frac{f(x,y)}{f_Y(y)}$---
+f_X(x|Y=y) = \frac{f(x,y)}{f_Y(y)}.
+  \]
 \end{definition}
 
 \begin{definition}[Sucesos independientes]
@@ -254,7 +274,7 @@ Esta propiedad se conoce como \textit{ley del estadístico inconsciente}.
 donde $\sigma_{ij} = Cov(X_i, X_j) = \mathbb{E}\left[(X_i-\mu_i)(X_j-\mu_j)\right]=\sigma_{ji}$ es la covarianza de las variables aleatorias $X_i$ y $X_j$. La podremos definir cuando existan todas las covarianzas.  
 \end{definition}
 
-\subsection{Estimadores}
+\subsubsection{Estimadores}
 
 \begin{definition}[Muestra aleatoria simple]
   Una muestra aleatoria simple de tamaño $n$ de una variable aleatoria $X$ con distribución teórica $F$, son $n$ variables aleatorias $(X_1,\cdots,X_n)$, independientes e idénticamente distribuidas, con distribución común $F$.
@@ -301,7 +321,7 @@ Como ejemplo de los conceptos anteriores podemos considerar la media muestral co
 \end{theorem}
 
 
-\subsection{Algunas distribuciones discretas y continuas}
+\subsubsection{Algunas distribuciones discretas y continuas}
 
 Durante el desarrollo del trabajo se utilizarán algunas distribuciones, se presentan a continuación.
 %--------------------------------- Uniforme unidimensional--------------
@@ -343,8 +363,8 @@ f(x) = \frac{1}{\left (\sqrt{2\pi}\right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1
 %--------------Multinomial - Principio----------------------------------
 La siguiente distribución, la distribución multinomial modela la probabilidad de un número determinado de éxitos para $n$ experimentos independientes, donde hay $k$ posibles éxitos, cada uno de ellos con probabilidad de éxito fija.
 
-\begin{definition}[Distribución multinomial] %REVIEW
- Sean $n$ experimentos independientes donde cada uno produce uno de los sucesos $S_1,\dots,S_k$ para $k\geq 2$ (estos sucesos son mutuamente excluyentes) y cada experimento $S_i$ ocurre con probabilidad $p_i$ ($p_1+\cdots+p_k = 1$). Definimos las variables aleatorias $X_i,\ i=1,\dots,k$ como el número de experimentos en el que ocurre $S_i$. Entonces $X=(X_1,\cdots,X_k)$ tiene una distribución multinomial con parámetros $n$ y $p = (p_1,\dots, p_k)$. Su función masa de probabilidad viene dada por
+\begin{definition}[Distribución multinomial]
+ Sean $n$ experimentos independientes donde cada uno produce uno de los sucesos $S_1,\dots,S_k$ para $k\geq 2$ (estos sucesos son mutuamente excluyentes) y cada suceso $S_i$ ocurre con probabilidad $p_i$ ($p_1+\cdots+p_k = 1$). Definimos las variables aleatorias $X_i,\ i=1,\dots,k$ como el número de experimentos en el que ocurre $S_i$. Entonces $X=(X_1,\cdots,X_k)$ tiene una distribución multinomial con parámetros $n$ y $p = (p_1,\dots, p_k)$. Su función masa de probabilidad viene dada por
   %Sea $k$ un número fijo y finito, tendremos $k$ posibles salidas mutuamente excluyentes con probabilidades $p_1\cdots p_k$. Si la variable aleatoria $X_i$ indica el número de veces que se observa la salida $i$ en los $n$ experimentos, entonces el vector $X = (X_1, \cdots, X_n)$ sigue una distribución multinomial con parámetros $n$ y $p = (p_1,\cdots, p_n)$. Su función masa de probabilidad viene dada por
 
 \begin{align*}
@@ -369,24 +389,21 @@ Veamos cómo son los elementos de la matriz de covarianzas. Los elementos de la 
 %----------------------MULTINOMIAL-FIN----------------------------------
 
 %--------------------------Estudio de la dependencia--------------------
-\subsection{Estudio de la dependencia}
+\subsubsection{Estudio de la dependencia}
 
 Dadas dos variables aleatorias nos podemos preguntar si son o no independientes, es decir, si la realización de una de ellas afecta o no a la realización de la otra. En caso de ser dependientes nos gustaría medir qué tipo de relación existe entre ellas. Hay numerosos métodos que nos permiten realizar esta medida, por ejemplo, el \textit{coeficiente de correlación de Pearson} o el \textit{coeficiente de correlación de Spearman}.
 
-Medir la dependencia entre variables puede ser útil porque nos indica relaciones entre variables que se pueden aprovechar para hacer predecciones de una a partir de la otra. Encontramos infinidad de aplicaciones en el mundo real a conocer una dependencia entre variables. Conocer qué efecto tiene un fenómeno sobre otro...---¿Ejemplos? ¿ideas para rellenar esto?---
-
+Medir la dependencia entre variables puede ser útil porque nos indica relaciones entre variables que se pueden aprovechar para hacer predicciones de una a partir de la otra. Encontramos infinidad de aplicaciones en el mundo real a conocer una dependencia entre variables. Por ejemplo, para conocer qué efecto tiene un fenómeno sobre otro. También, si conocemos la dependencia entre variables, podemos utilizar aquellas de las que tenemos información más precisa o fiable para explicar aquellas de las que no.
 
 \begin{definition}[Coeficiente de correlación de Pearson]
   Se define el coeficiente de correlación de Pearson para un par de variables aleatorias $(X,Y)$ como\[
 r_{X,Y} = \frac{Cov(X,Y)}{\sigma_X\sigma_Y} = \frac{\mathbb{E}\left [ (X- \mu_X)(Y-\mu_Y)\right ]}{\sigma_X\sigma_Y}.
-\]%REVIEW
-a) El mismo coeficiente para una muestra $\{(x_1,y_1),\dots,(x_n,y_n)\}$ se define como
-B) El mismo coeficiente para una muestra $(X_1,Y_1),\dots, (X_n,Y_n)$ en la que se ha obtenido la realización muestral  $\{(x_1,y_1),\dots,(x_n,y_n)\}$ se define como
+\]
+El mismo coeficiente para una muestra $\{(x_1,y_1),\dots,(x_n,y_n)\}$ se define como
+%B) El mismo coeficiente para una muestra $(X_1,Y_1),\dots, (X_n,Y_n)$ en la que se ha obtenido la realización muestral  $\{(x_1,y_1),\dots,(x_n,y_n)\}$ se define como
 \[
 r_{xy}=\frac{\sum_{i=1}^n(x_i-\overline{x})(y_i-\overline{y})}{\sqrt{\sum_{i=1}^n(x_i-\overline{x})^2(y_i-\overline{y})^2}},
 \] donde $\overline{x} = \frac{1}{n}\sum_{i=1}^nx_i$ la media muestral, de forma análoga para $\overline{y}$.
-
----¿a) o b)?---
 \end{definition}
 
 Este coeficiente mide la correlación lineal entre las variables $X,Y$. Su valor se encuentra entre +1 y -1, donde +1 indica una correlación lineal positiva total, 0 que no hay correlación lineal y -1 correlación lineal total negativa. Si el coeficiente de correlación de Pearson de dos variables aleatorias es 0, sabremos que no existe una dependencia lineal entre ellas, pero no podremos asegurar nada acerca de la independencia, pues podría existir otro tipo de dependencia entre ellas.
@@ -414,16 +431,18 @@ La información mutua es otra forma de medir la dependencia entre dos variables 
 %-----------------------------------------------------------------------
 %-----------------------TEORÍA DE LA INFORMACIÓN------------------------
 %-----------------------------------------------------------------------
-    \section{Teoría de la información}
+    \subsection{Teoría de la información}
 
-    El concepto de información es demasiado amplio como para ser recogido en una única definición. Sin embargo, podemos definir el concepto de entropía, que mide la cantidad de información necesaria para describir una variable aleatoria, o el de información mutua, que refleja la información que una variable aleatoria contiene sobre otra.
+    El concepto de información es demasiado amplio como para ser recogido en una única definición. Sin embargo, podemos definir el concepto de entropía, que mide la cantidad de información necesaria para describir una variable aleatoria, o el de información mutua, que refleja la información que una variable aleatoria contiene sobre otra.\\
 
-    \subsection{Entropía}
-
-    Intuitivamente, la entropía es una medida de la información o incertidumbre de una variable aleatoria. El término entropía viene del griego, donde significa \textit{transformación} y tiene relevancia también en otras áreas, como en la física donde se define como el logaritmo del cociente entre temperatura final e inicial de un sistema.
+    Intuitivamente, la entropía es una medida de la información o incertidumbre de una variable aleatoria. El término entropía viene del griego, donde significa \textit{transformación} y tiene relevancia también en otras áreas, como en la física donde se define como el logaritmo del cociente entre temperatura final e inicial de un sistema.\\
 
     La idea de relacionar el número de estados de un sistema con una medida física viene del siglo XIX, en el que Rudolph Clausius sugirió la denominación ``entropía'' para esta medida. En 1928, Ralph Vinton Lyon Hartley define el término en el contexto de la teoría de la información, básicamente como el logaritmo del tamaño del alfabeto. Aunque no es hasta 1948 cuando Claude Shannon da una definición matemática del concepto de información como lo conocemos hoy en día,  sentando las bases de la teoría de la información, que pasó a formar parte de la teoría de la probabilidad. En su concepto de entropía no todos los símbolos de un alfabeto tienen porqué ser equiprobables. Esto nos permite medir la capacidad de comunicación de un canal. Andrei N. Kolmogorov, en la década de los 60, desarrolló su teoría de la complejidad, otra forma de teoría de la información.\\
 
+A continuación, se explicarán estos conceptos, y algunos relacionados, junto a demostraciones de sus propiedades y algunos ejemplos, tanto para el caso discreto como para el caso continuo. Las principales fuentes consultadas para ello han sido \cite{thomas} y \cite{gray}. Se han estudiado y comprendido los capítulos correspondientes a entropía y entropía diferencial para posteriormente exponer aquí una síntesis de lo aprendido.
+
+\subsubsection{Caso discreto}
+    
 Sea una variable aleatoria discreta, $X$, que toma valores en el alfabeto $\mathcal{X} = \{x_1, \cdots, x_N \}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.
 
 \begin{definition}[Entropía]
@@ -710,7 +729,7 @@ donde $\left\Vert\mathcal{X}\right\Vert$ representa al cardinal de $\mathcal{X}$
     \]
 \end{proof}
 
-\subsection{Información mutua}
+%\subsubsection{Información mutua}
 
 La información mutua es una medida de la dependencia entre dos variables aleatorias. Mide la cantidad de información que tenemos sobre una de ellas si hemos observado la otra. Se define como sigue.
 
@@ -773,7 +792,7 @@ El apartado c) del Teorema \ref{t:ent_im} nos dice que $I(X;Y) = H(X)+H(Y)-H(X,Y
 \end{proof}
 %-----------------------------------------------------------------------
 %----------------------- CASO CONTINUO ---------------------------------
-\subsection{Caso continuo}
+\subsubsection{Caso continuo}
 Hasta ahora las definiciones dadas eran para variables aleatorias discretas, que solo tomaban un conjunto finito de valores. Podemos extender las definiciones estudiadas al caso continuo, para aplicarlas en variables aleatorias continuas. Trabajaremos en este apartado con una variable aleatoria $X$ absolutamente continua con función de distribución $F$, función de densidad $f$ y conjunto soporte $S$.
 %Trabajaremos en este caso con una variable aleatoria $X$ con función de distribución $F(x) = Pr[X \leq x]$, si $F$ es continua, la variable aleatoria se dice continua. Sea $f(x) = F'(x)$, cuando la derivada esté definida. Si $\int_{-\infty}^{\infty}f(x)=1,\ f(x)$ se llama la función de densidad de $X$. El conjunto donde $f(x) > 0$ es el soporte de $X$.
 
@@ -785,14 +804,14 @@ La entropía en el caso continuo pasa a llamarse entropía diferencial y podemos
 
 \begin{definition}[Entropía diferencial]
   La entropía diferencial $h(X)$ de una variable aleatoria continua $X$ viene dada por \[
-h(X) = - \int_S\log f(x) f(x) dx,
+h(X) = - \int_S\log \left(f(x)\right) f(x) dx,
 \]
 donde $S$ es el soporte de $X$.
 \end{definition}
 Como en el caso discreto, la entropía diferencial solo depende de la probabilidad de la variable aleatoria, no de los valores que toma. Notamos que en la definición anterior la variable aleatoria $X$ podría ser, o bien, unidimensional, o bien, multidimensional.
 
 \begin{example}\label{ej:uni} Consideramos una variable aleatoria $X$ absolutamente continua con una distribución uniforme sobre $[0,a]$. En este intervalo su densidad es $f(x) = \frac{1}{a}$ para $x\in[0,a]$ y para el resto de puntos es 0. La entropía es \[
-h(X) = - \int_0^a\log\frac{1}{a}\frac{1}{a}dx = \log a.
+h(X) = - \int_0^a\log\left(\frac{1}{a}\right)\frac{1}{a}dx = \log a.
   \]
 Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo puede ser negativa, no como en el caso discreto.\\
 \end{example}
@@ -800,7 +819,7 @@ Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo pued
 \begin{example}\label{ej:norm_uni}
   Consideramos una variable aleatoria $X$ con distribución normal univariante de media $\mu$ y varianza $\sigma^2$, su función de densidad es $f(x) = \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}$, queremos calcular su entropía.
   \begin{align*}
-    h(X) &= - \int_{\mathbb{R}} \log f(x) f(x)  dx = - \int_{\mathbb{R}}  \log \left ( \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \right ) \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}dx\\
+    h(X) &= - \int_{\mathbb{R}} \log \left(f(x)\right) f(x)  dx = - \int_{\mathbb{R}}  \log \left ( \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \right ) \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}dx\\
     &= -  \frac{1}{\sigma \sqrt{2\pi}} \int_{\mathbb{R}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \left [ \log \left ( e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \right ) - \log \left(\sigma \sqrt{2\pi}\right ) \right ] dx\\
     &= -  \frac{1}{\sigma \sqrt{2\pi}}\left [ \int_{\mathbb{R}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \left ( -\frac{(x-\mu)^2}{2\sigma ^2} \right )dx - \int_{\mathbb{R}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \log \left ( \sigma \sqrt{2\pi}\right ) dx \right ].\\
   \end{align*}
@@ -829,7 +848,7 @@ Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo pued
   Tomamos una variable aleatoria $X = (X_1,\cdots,X_n)$ con distribución normal multivariante de vector de medias $\mu$ y matriz de covarianzas $\Sigma$. Su densidad viene dada por $f(x) = \frac{1}{\left (\sqrt{2\pi}\right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)}$.
 
   \begin{align*}
-    h(X) &= - \int_{\mathbb{R}^n} \log f(x)f(x) dx \\
+    h(X) &= - \int_{\mathbb{R}^n} \log\left( f(x)\right)f(x) dx \\
     &= - \int_{\mathbb{R}^n} \log \left ( \frac{1}{\left ( \sqrt{2\pi} \right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)} \right )f(x) dx\\
     &= - \int_{\mathbb{R}^n}\left (- \frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu) - \log\left [ \left (\sqrt{2\pi} \right )^n |\Sigma|^{\frac{1}{2}} \right ]  \right ) f(x) dx\\
     &= \frac{1}{2} \mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ] + \frac{1}{2}\log\left [(2\pi)^n|\Sigma|\right ].
@@ -870,7 +889,7 @@ por el Teorema \ref{t:lgn} tenemos que la expresión anterior converge en probab
 
 \begin{definition}[Entropía diferencial condicionada]
   Si $X,Y$ son variables aleatorias con función de densidad conjunta $f(x,y)$, definimos la entropía diferencial condicionada $h(X|Y)$ como\[
-h(X|Y) = -\int\int f(x,y) \log f(x|y) dxdy.
+h(X|Y) = -\int\int  \log \left(f(x|y)\right) f(x,y) dxdy.
 \]
 Como $f(x|y) = \frac{f(x,y)}{f(y)}$, también podemos definirla como\[
 h(X|Y) = h(X,Y) - h(Y).
@@ -880,7 +899,7 @@ Siempre que las entropías diferenciales sean finitas.
 
 \begin{definition}[Entropía relativa]
   La entropía relativa (o ``distancia'' de Kullback-Leibler) $D(f||g)$ entre dos densidades $f$ y $g$ se define como \[
-D(f||g) = \int_{\mathbb{R}^n} \log \frac{f(x)}{g(x)}f(x) dx.
+D(f||g) = \int_{\mathbb{R}^n} \log\left( \frac{f(x)}{g(x)}\right)f(x) dx.
   \]
 \end{definition}
 
@@ -889,7 +908,7 @@ Al igual que en el caso discreto y motivados por la continuidad consideraremos $
 
 \begin{definition}[Información mutua]
   La información mutua, $I(X;Y)$ entre dos variables aleatorias con función de densidad conjunta $f(x,y)$ viene dada por\[
-I(X;Y) = \int \int \log \frac{f(x,y)}{f(x)f(y)}f(x,y) dxdy = D(f(x,y)||f(x)f(y)).
+I(X;Y) = \int \int \log \left(\frac{f(x,y)}{f(x)f(y)}\right)f(x,y) dxdy = D(f(x,y)||f(x)f(y)).
   \]
 \end{definition}
 
@@ -903,9 +922,9 @@ I(X;Y) = \int \int \log \frac{f(x,y)}{f(x)f(y)}f(x,y) dxdy = D(f(x,y)||f(x)f(y))
   Supongamos que las funciones de densidad marginales de $X$ e $Y$ son $f(x)$, $f(y)$, respectivamente, y la conjunta es $f(x,y)$.
   Para realizar la prueba partiremos de la definición de información mutua y utilizaremos propiedades del logaritmo y el Teorema de Fubini para llegar al resultado.
   \begin{align*}
-    I(X;Y) &= \int \int  \log \frac{f(x,y)}{f(x)f(y)}f(x,y)dxdy \\
-    &= \int \int  \log f(x,y)f(x,y)dxdy - \int \int  \log f(x)f(y)dxdy\\
-    &= -h(X,Y)-\int\int f(x,y) \log f(x) dy dx - \int \int f(x,y)\log f(y)f(x,y)dxdy\\
+    I(X;Y) &= \int \int  \log \left(\frac{f(x,y)}{f(x)f(y)}\right)f(x,y)dxdy \\
+    &= \int \int  \log \left(f(x,y)\right)f(x,y)dxdy - \int \int  \log \left(f(x)f(y)\right) f(x,y)dxdy\\
+    &= -h(X,Y)-\int\int \log \left(f(x)\right)f(x,y)  dy dx - \int \int \log \left(f(y)\right)f(x,y)dxdy\\
     &= -\int  \log f(x)f(x)dx - \int \log f(y) f(y)dy -h(X,Y)\\
     &= h(X) + h(Y) - h(X,Y).
   \end{align*}
@@ -921,9 +940,9 @@ I(X;Y) = h(X) - h(X|Y) = h(Y) - h(Y|X).
   Sean $f(x)$, $f(y)$ las funciones de densidad de $X$ e $Y$ y $f(x,y)$ la función de densidad conjunta.
   De manera similar al Lema anterior, partiremos de la definición de información mutua y utlizaremos propiedades del logaritmo, el teorema de Fubini y la definición de función de densidad condicionada.
   \begin{align*}
-    I(X;Y)&= \int \int  \log \frac{f(x,y)}{f(x)f(y)}f(x,y)dxdy \\
-    &= - \int\int \log f(x)f(x,y)  dx dy + \int\int\log \frac{f(x,y)}{f(y)}  f(x,y)dx dy\\
-    &= - \int  \log f(x)f(x) dx + \int\int \log f(x|y)f(x,y) dx dy\\  
+    I(X;Y)&= \int \int  \log\left( \frac{f(x,y)}{f(x)f(y)}\right)f(x,y)dxdy \\
+    &= - \int\int \log \left(f(x)\right)f(x,y)  dx dy + \int\int\log \left(\frac{f(x,y)}{f(y)}\right)  f(x,y)dx dy\\
+    &= - \int  \log \left(f(x)\right)f(x) dx + \int\int \log \left(f(x|y)\right)f(x,y) dx dy\\  
     &= h(X) - h(X|Y).
   \end{align*}
 De manera análoga se obtiene la segunda igualdad.
@@ -975,13 +994,17 @@ I(X;Y) = \sup_{\mathcal{P},\mathcal{Q}}I\left ( [X]_{\mathcal{P}}, [Y]_{\mathcal
 \end{definition}
 Notamos que esta definición será válida cuando las variables aleatorias no tengan definida su función de densidad.
 
+%REVIEW
+%---Lo que viene a continuación no lo tengo del todo claro---
+%De la misma forma, podemos obtener otra definición de la entropía relativa. Considerando para una función de densidad, $f$, su cuantificación dada por una partición, $\mathcal{Q}$, de manera análoga a como lo hicimos para una variable aleatoria. Particionamos el dominio de $f$ 
+
 \begin{theorem}Si $f$ y $g$ son dos funciones de densidad, entonces\[
 D\left ( f || g \right ) \ge 0
 \]
 con igualdad si, y solo si, $f = g$ en casi todo punto.
 \end{theorem}
 \begin{proof}
-  
+%REVIEW  
 \end{proof}
 
 \begin{corollary}\label{c:im_indc}
@@ -992,20 +1015,28 @@ $I(X;Y)\ge 0$ con igualdad si, y solo si, $X$ e $Y$ son independientes.
 $h(X|Y) \le 0$ con igualdad si, y solo si, $X$ e $Y$ son independientes.
 \end{corollary}
 
-\begin{theorem}[Regla de la cadena para la entropía diferencial]
+\begin{theorem}[Regla de la cadena para la entropía diferencial] Sean $X_1,\dots, X_n$ variables aleatorias, entonces
   \[
 h(X_1,\cdots,X_n) = \sum_{i=1}^n h(X_i|X_1,\cdots, X_{i-1}).
   \]
 \end{theorem}
 
 \begin{proof}
-  %REVIEW
+  Realizaremos la prueba por inducción sobre el número de variables.
+  \begin{itemize}
+  \item Si $n=2$, entonces $h(X_1,X_2) = h(X_1) + h(X_2|X_1)$ por definición de la entropía diferencial condicionada.
+  \item Suponiendo cierto el caso $n-1$, veamos que también se cumple para $n$, utilizando otra vez la definición de entropía diferencial condicionada:
+    \begin{align*}
+h(X_1,\dots,X_n) &= h(X_n|X_1,\dots, X_{n-1}) + h(X_1,\dots, X_{n-1})\\ &= h(X_n|X_1,\dots,X_{n-1}) + \sum_{i=1}^{n-1}h(X_i|X_1,\dots,X_{i-1}).
+    \end{align*}
+  \end{itemize}
 \end{proof}
 
 \begin{corollary}
   \[h(X_1,\cdots, X_n) \leq \sum_i h(X_i),\]
   dándose la igualdad si, y solo si, $X_1,\cdots, X_n$ son independientes.
 \end{corollary}
+% EN la prueba se podría usar el leman 2.21 para ver que h(X) >= h(X|Y)
 
 \begin{theorem}
   Sea $X$ una variable aleatoria absolutamente continua y $c$ un vector de escalares, entonces
@@ -1016,16 +1047,16 @@ h(X_1,\cdots,X_n) = \sum_{i=1}^n h(X_i|X_1,\cdots, X_{i-1}).
 \end{theorem}
 
 \begin{proof}
-  Sea $f_X$ la función de densidad de $X$. Llamemos $Y = X+ c$, esta será una variable aleatoria con función de densidad $f_Y(y)=f_X(y-c)$. Calculamos su entropía diferencial usando su definición y aplicando el cambio de variable $y = x + c$.
+  Sea $f_X$ la función de densidad de $X$. Llamemos $Y = X+ c$, esta será una variable aleatoria cuya función de densidad se relaciona con la de $X$ como sigue: $f_Y(y)=f_X(y-c)$. Calculamos su entropía diferencial usando su definición y aplicando el cambio de variable $y = x + c$.
   \begin{align*}
-    h(X+c) &= h(Y) = - \int \log f_Y(y)f_Y(y) dy\\
-    &= - \int  \log f_X(y-c) f_X(y-c) dy\\
-    &= - \int  \log f_X(x) f_X(x) dx = h(X).
+    h(X+c) &= h(Y) = - \int \log \left(f_Y(y)\right)f_Y(y) dy\\
+    &= - \int  \log \left(f_X(y-c)\right) f_X(y-c) dy\\
+    &= - \int  \log \left(f_X(x)\right) f_X(x) dx = h(X).
   \end{align*}
 \end{proof}
 
 \begin{theorem}
-  Sea $X$ una variable aleatoria unidimensional y $a$ un escalar, entonces\[
+  Sea $X$ una variable aleatoria unidimensional y $a$ un escalar no nulo, entonces\[
 h(aX) = h(X) + \log |a|.
   \]
 \end{theorem}
@@ -1035,11 +1066,10 @@ h(aX) = h(X) + \log |a|.
   \begin{align*}
     h(aX) &= h(Y) = -\int \log \left(f_Y(y)\right) f_Y(y)dy\\
     &=  -\int \log \left ( \frac{1}{|a|}f_X\left (\frac{y}{a} \right ) \right ) \frac{1}{|a|}f_X\left (\frac{y}{a} \right ) dy\\
-    &= -\int  \log \left ( \frac{1}{|a|}f_X\left (x \right ) \right )\frac{a}{|a|}f_X\left (x \right ) dx\\
-    &= -\int \log \left (f_X\left (x \right ) \right ) \frac{a}{|a|}f_X\left (x \right ) dx + \int\log{|a|} \frac{a}{|a|}f_X(x)dx\\%REVIEW
+    &= -\int  \log \left ( \frac{1}{|a|}f_X\left (x \right ) \right )\frac{|a|}{|a|}f_X\left (x \right ) dx\\
+    &= -\int \log \left (f_X\left (x \right ) \right ) f_X\left (x \right ) dx + \int\log\left({|a|}\right) f_X(x)dx\\
     &= h(X) + \log{|a|}.
   \end{align*}
-  ---¿Por qué toma a/|a| = 1? ¿No podría ser -1? ---
 \end{proof}
 
 \begin{corollary}
@@ -1222,8 +1252,13 @@ I^{(2)}(X,Y) \approx \psi(k) - \frac{1}{k} - \langle \psi(n_x) + \psi(n_y) \rang
 
 En general ambas fórmulas dan resultados similares. Para un mismo $k$, $I^{(1)}$ da ligeramente menores errores estadísticos (porque $n_x(i)$ y $n_y(i)$ tienden a ser más grandes y tener menores variaciones relativas), pero tienen mayores errores sistemáticos. Este último es grave solo si estamos interesados en variables con dimensiones muy altas, donde $\varepsilon(i)$ tiende típicamente a ser más grande que la marginal $\varepsilon_x(i)$. En ese caso parece preferible el segundo algoritmo, de resto se pueden usar los dos.
 
-\section{Análisis de implementaciones}
+%-------------------------COMPARACIÓN-----------------------------------
+\section{Metodología para la comparación de estimadores}
+\subsection{Tecnología utilizada}
+---python, bibliotecas usadas, git, planificación (también se podría poner en objetivos) -> hacer un diagrama de Gantt (revisar bibliografía, adquirir conocimmiento, escribir memoria, búsqueda de implementaciones, escribir código)---
 
+\section{Análisis de implementaciones}
+---Esta sección no tengo claro en qué sección iría. Creo que hay que partirla entre Metodología y resultados---
 En esta sección estudiaremos un par de implementaciones de conceptos anteriores como la entropía o la estimación mutua. En general, dado un número finito de muestras de una variable aleatoria no podemos calcular de forma exacta la entropía o información mutua, ya que no conocemos su distribución. Para implementarlas es necesario usar algún estimador, como los estudiados en el apartado anterior.
 
 \subsection{Implementación 1 - GaelVaroquaux}
@@ -1540,6 +1575,14 @@ $d$ & Error estimador 1 & Error estimador 2\\ \midrule
     \label{fig:err_im}
 \end{figure}
 
+\section{Resultados}
+\subsection{Experimentos}
+\subsection{Discusión}
+
+\section{Conclusiones}
+
+\section{Estimación del coste del TFG}
+---Ordenador, horas a precio de junior---
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %       REFERENCIAS
