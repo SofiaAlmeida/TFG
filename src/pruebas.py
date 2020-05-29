@@ -1,6 +1,9 @@
-import sys
+
+'''
+   Archivo utilizado para realizar pruebas para comparar dos implementaciones de estimadores de la entropía y de la información mutua.
+'''
+
 import entropy_estimators as ee
-sys.path.insert(1, '../../ead9898bd3c973c40429/')
 import mutual_info as mi
 
 import random
@@ -11,82 +14,62 @@ import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 
 #----------------------------------------------------------------------
-# Calcula la entropía de 2 variables aleatorias con ambos estimadores
-def rd_ent():
+## Calcula la entropía de 2 variables aleatorias con ambos estimadores.
+# Crea N ejemplos de las variables x e y, estima su entropía con ambos estimadores y la imprime por pantalla.
+# @param N número de ejemplos de cada variable a generar.
+# @param dx dimensión de la primera variable, x.
+# @param dy dimensión de la segunda variable, y.
+# @param k número de vecinos a considerar al llamar a los estimadores.
+def rd_ent(N, dx, dy, k):
     np.random.seed(0)
-    x = np.random.randn(1000, 20)
-    y = np.random.randn(1000, 3)
+    x = np.random.randn(N, dx)
+    y = np.random.randn(N, dy)
 
     print("Entropía de X:")
-    print("Estimador 1: ", mi.entropy(x, k = 3))
+    print("Estimador 1: ", mi.entropy(x, k = k))
     print("Estimador 2: ", ee.entropy(x))
 
     print("Entropía de Y:")
-    print("Estimador 1: ", mi.entropy(y, k = 3))
+    print("Estimador 1: ", mi.entropy(y, k = k))
     print("Estimador 2: ", ee.entropy(y))
 
 
 #----------------------------------------------------------------------
-# Basada en mutual_info.entropy, añade los detalles que diferían de la teoría
+## Basada en mutual_info.entropy, añade los detalles que diferían de la teoría.
+# @param X vector de datos cuya entropía vamos a calcular.
+# @param k número de vecinos más cercanos a considerar.
+# @return entropía de X.
 def entropy_mod(X, k=1):
-    ''' Returns the entropy of the X.
-
-    Parameters
-    ===========
-
-    X : array-like, shape (n_samples, n_features)
-        The data the entropy of which is computed
-
-    k : int, optional
-        number of nearest neighbors for density estimation
-
-    Notes
-    ======
-
-    Kozachenko, L. F. & Leonenko, N. N. 1987 Sample estimate of entropy
-    of a random vector. Probl. Inf. Transm. 23, 95-101.
-    See also: Evans, D. 2008 A computationally efficient estimator for
-    mutual information, Proc. R. Soc. A 464 (2093), 1203-1215.
-    and:
-    Kraskov A, Stogbauer H, Grassberger P. (2004). Estimating mutual
-    information. Phys Rev E 69(6 Pt 2):066138.
-    '''
-
-    # Distance to kth nearest neighbor
-    r = 2 * mi.nearest_distances(X, k) # squared distances
+    # Distance a k-ésimo vecino
+    r = 2 * mi.nearest_distances(X, k) 
     n, d = X.shape
     volume_unit_ball = (pi**(.5*d)) / gamma(.5*d + 1) / 2**d
-    '''
-    F. Perez-Cruz, (2008). Estimation of Information Theoretic Measures
-    for Continuous Random Variables. Advances in Neural Information
-    Processing Systems 21 (NIPS). Vancouver (Canada), December.
-
-    return d*mean(log(r))+log(volume_unit_ball)+log(n-1)-log(k)
-    '''
+    
     return (d*np.mean(np.log(2*(r + np.finfo(X.dtype).eps)))
             + np.log(volume_unit_ball) + psi(n) - psi(k))
 
 
 #---------------------------------------------------------------------
-# Adaptación de mutual_info.test_entropy para que se compare también entropy_estimators.entropy con una normal 
-def test_entropy(d, k = 3):
-    # Testing against correlated Gaussian variables
-    # (analytical results are known)
-    # Entropy of a d-dimensional gaussian variable
+## Adaptación de mutual_info.test_entropy para que se compare también entropy_estimators.entropy con una normal.
+# @param n número de ejemplos que crearemos de la variable X.
+# @param d dimensión de la variable X.
+# @param k número de vecinos a utilizar en los estimadores
+def test_entropy(n = 50000, d = 2, k = 3):
     rng = np.random.RandomState(0)
-    n = 50000
-    P = np.random.randn(d, d)    C = np.dot(P, P.T)
+    # Creamos la matriz de covarianzas
+    P = np.random.randn(d, d)
+    C = np.dot(P, P.T)
+    # Creamos la variable X
     Y = rng.randn(d, n)
     X = np.dot(P, Y)
     H_th = mi.entropy_gaussian(C) / np.log(2)
-    H_est = mi.entropy(X.T, k) / np.log(2)
+    H_est = mi.entropy(X.T, k) 
     H_est2 = ee.entropy(X.T, k)
     print("Entropía gaussiana:")
     print("Teórica: ", H_th)
     print("Estimador 1: ", H_est)
     print("Estimador 2: ", H_est2)
-    # Our estimated entropy should always be less that the actual one
-    # (entropy estimation undershoots) but not too much
+    # La entropía estimada debe ser menor que la teórica pero no por mucho
     np.testing.assert_array_less(H_est, H_th)
     np.testing.assert_array_less(H_est2, H_th)
     np.testing.assert_array_less(.9*H_th, H_est)
@@ -94,18 +77,23 @@ def test_entropy(d, k = 3):
     
 
 #---------------------------------------------------------------------
-# Modificación de test_entropy, devuelve la diferencia entre la entropía teórica y las estimadas
-def err_entropy(d, k, show = False):
-    # Testing against correlated Gaussian variables
-    # (analytical results are known)
-    # Entropy of a 3-dimensional gaussian variable
+## Modificación de pruebas.test_entropy, devuelve la diferencia entre la entropía teórica y las estimadas de variable aleatoria con distribución normal.
+# @param d dimensión de la variable a crear.
+# @param k número de vecinos más cercanos a considerar para realizar las estimacioines.
+# @param n número de ejemplos a crear de la variable X.
+# @param show si vale True imprimirá por pantalla los resultados, si vale False, no.
+# @return Diferencia entre la estimación teórica y la estimación realizada por el primer estimador, diferencia entre la estimación teórica y la estimación realizada por el segundo estimador.
+def err_entropy(d, k = 3, n = 50000, show = False):
     rng = np.random.RandomState(0)
-    n = 50000
+    # Creamos la matriz de covarianzas
     P = np.random.randn(d, d)
-    #P = np.array([[1, 0, 0], [0, 1, .5], [0, 0, 1]])
     C = np.dot(P, P.T)
+    
+    # Creamos la variable X
     Y = rng.randn(d, n)
     X = np.dot(P, Y)
+    
+    # Calculamos las entropías
     H_th = mi.entropy_gaussian(C) / np.log(2)
     H_est = mi.entropy(X.T, k)
     H_est2 = ee.entropy(X.T, k)
@@ -115,9 +103,11 @@ def err_entropy(d, k, show = False):
         print("Teórica: ", H_th)
         print("Estimador 1: ", H_est)
         print("Estimador 2: ", H_est2)
-    
+
+    # Calculamos la diferencia entre la entropía teórica y la estimada
     dif1 = abs(H_th - H_est)
     dif2 = abs(H_th - H_est2)
+    
     return dif1, dif2
 
 #---------------------------------------------------------------------
@@ -214,7 +204,7 @@ def exp_err_ent(reps = 100, max_d = 9, k = 3):
         print("d = ", d)
         print("Error estimador 1: ", e1)
         print("Error estimador 2: ", e2)
-
+ 
     plot_err(err1, err2, max_d)
 
 #-----------------------------------------------------------------------
@@ -322,13 +312,20 @@ def exp_err_im(reps = 100, max_d = 9, k = 3):
 
     
 #-----------------------------------------------------------------------
+def main():
+    rd_ent(1000, 20, 3, 3)
+    test_entropy(5000, 5, 3)
+
 #rd_ent_mi()
 #exp_err_ent(reps = 20, k = 3, max_d = 15)
-exp_err_im(reps = 25, k = 3, max_d = 20)
-input("ENTER TO CONTINUE")
+# exp_err_im(reps = 25, k = 3, max_d = 20)
+# input("ENTER TO CONTINUE")
 
 
-#example_entc()
+# #example_entc()
 
-input("ENTER TO CONTINUE")
+# input("ENTER TO CONTINUE")
 
+
+if __name__ == "__main__":
+    main()
