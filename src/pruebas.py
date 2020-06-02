@@ -274,21 +274,25 @@ def test_mutual_information(n = 50000, k = 3):
 #-----------------------------------------------------------------------
 ## Modificación de test_mutual_information para que imprima la diferencia entre los estimadores teóricos y estimados, además, permite que las variables tengan la dimensión indicada.
 # @param n número de muestras a tomar de las variables.
-# @param dimensión de las variables.
+# @param d dimensión de las variables.
 # @param k número de vecinos más cercanos a utilizar en los estimadores.
-# @param show si True, se imprimen resultados por pantall, si False, no.
+# @param show si True, se imprimen resultados por pantalla, si False, no.
 # @return Diferencia entre la información mutua teórica y la estimada por la primera implementación, diferencia entre la información mutua teórica y la estimada por la segunda implementación.
 def test_mutual_information_mod(n = 50000, d = 2, k = 3, show = False):
     # Creamos las variables
     rng = np.random.RandomState(0)
-    P = np.random.randn(d, d)
+    P = np.random.randn(2*d, 2*d)
     C = np.dot(P, P.T)
-    U = rng.randn(d, n)
+    U = rng.randn(2*d, n)
     Z = np.dot(P, U).T
-    X = Z[:, 0]
-    X = X.reshape(len(X), 1)
-    Y = Z[:, 1]
-    Y = Y.reshape(len(Y), 1)
+    X = Z[:, 0:d]
+    print("X", X.shape)
+    X = X.reshape(len(X), d)
+    Y = Z[:, d:]
+    print("Y", Y.shape)
+    Y = Y.reshape(len(Y), d)
+    print("Y-post", Y.shape)
+    
     # Estimamos
     MI_est = mi.mutual_information((X, Y), k)
     MI_est2 = ee.mi(X, Y)
@@ -347,16 +351,17 @@ def exp_err_im(reps = 100, n = 50000, min_d = 2, max_d = 9, k = 3):
     
 #-----------------------------------------------------------------------
 def main():
-    rd_ent(1000, 20, 3, 3)
-    test_entropy(50000, 5, 3)
-    err_entropy(50000, 2, 3, True)
-    err_entropy_mod()
+    np.random.seed(0)
+    # rd_ent(1000, 20, 3, 3)
+    # test_entropy(50000, 5, 3)
+    # err_entropy(50000, 2, 3, True)
+    # err_entropy_mod()
     
-    example_ent()
-    example_ent_unif()
-    exp_err_ent(reps = 100, min_d = 2, max_d = 4, k = 3)
+    # example_ent()
+    # example_ent_unif()
+    # exp_err_ent(reps = 100, min_d = 2, max_d = 4, k = 3)
 
-    test_mutual_information_mod(n = 50000, d = 2, k = 3, show = True)
+    test_mutual_information_mod(n = 50000, d = 4, k = 3, show = True)
     exp_err_im(reps = 25, n = 50000, min_d = 2, max_d = 4, k = 3)
 #rd_ent_mi()
 #exp_err_ent(reps = 20, k = 3, max_d = 15)
