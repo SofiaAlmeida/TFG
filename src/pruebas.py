@@ -61,8 +61,8 @@ def test_entropy(n = 50000, d = 2, k = 3):
     X = dat.X
 
     H_th = mi.entropy_gaussian(C) / np.log(2)
-    H_est = mi.entropy(X.T, k) 
-    H_est2 = ee.entropy(X.T, k)
+    H_est = mi.entropy(X, k) 
+    H_est2 = ee.entropy(X, k)
 
     print("Entropía gaussiana:")
     print("Teórica: ", H_th)
@@ -326,7 +326,7 @@ def exp_err_im(reps = 100, n = 50000, min_d = 2, max_d = 9, k = 3):
 def main():
     # np.random.seed(0)
     # rd_ent(1000, 20, 3, 3)
-    # #test_entropy(50000, 5, 3)
+    test_entropy(50000, 5, 3)
     # err_entropy(50000, 2, 3, True)
     # err_entropy_mod()
     
