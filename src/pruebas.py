@@ -5,10 +5,11 @@
 
 import entropy_estimators as ee
 import mutual_info as mi
+import data
 
 import random
 from numpy import pi
-from scipy.special import gamma,psi
+from scipy.special import gamma, psi
 import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
@@ -22,8 +23,8 @@ plt.style.use('ggplot')
 # @param k número de vecinos a considerar al llamar a los estimadores.
 def rd_ent(N, dx, dy, k):
     np.random.seed(0)
-    x = np.random.randn(N, dx)
-    y = np.random.randn(N, dy)
+    x = data.Data('random', N, dx).X
+    y = data.Data('random', N, dy).X
 
     print("Entropía de X:")
     print("Estimador 1: ", mi.entropy(x, k = k))
@@ -55,15 +56,10 @@ def entropy_mod(X, k=1):
 # @param d dimensión de la variable X.
 # @param k número de vecinos a utilizar en los estimadores
 def test_entropy(n = 50000, d = 2, k = 3):
-    rng = np.random.RandomState(0)
-    
-    # Creamos la matriz de covarianzas
-    P = np.random.randn(d, d)
-    C = np.dot(P, P.T)
+    dat = data.Data('normal', n, d)
+    C = dat.C
+    X = dat.X
 
-    # Creamos la variable X
-    Y = rng.randn(d, n)
-    X = np.dot(P, Y)
     H_th = mi.entropy_gaussian(C) / np.log(2)
     H_est = mi.entropy(X.T, k) 
     H_est2 = ee.entropy(X.T, k)
@@ -88,19 +84,14 @@ def test_entropy(n = 50000, d = 2, k = 3):
 # @param show si vale True imprimirá por pantalla los resultados, si vale False, no.
 # @return Diferencia entre la estimación teórica y la estimación realizada por el primer estimador, diferencia entre la estimación teórica y la estimación realizada por el segundo estimador.
 def err_entropy(n = 50000, d = 2, k = 3, show = False):
-    rng = np.random.RandomState(0)
-    # Creamos la matriz de covarianzas
-    P = np.random.randn(d, d)
-    C = np.dot(P, P.T)
-    
-    # Creamos la variable X
-    Y = rng.randn(d, n)
-    X = np.dot(P, Y)
+    dat = data.Data('normal', n, d)
+    C = dat.C
+    X = dat.X
     
     # Calculamos las entropías
     H_th = mi.entropy_gaussian(C) / np.log(2)
-    H_est = mi.entropy(X.T, k)
-    H_est2 = ee.entropy(X.T, k)
+    H_est = mi.entropy(X, k)
+    H_est2 = ee.entropy(X, k)
 
     if(show):
         print("Entropía gaussiana:")
@@ -122,21 +113,15 @@ def err_entropy(n = 50000, d = 2, k = 3, show = False):
 # @param k número de vecinos más cercanos considerados para realizar las estimacioines.
 # @return [dif1, dif2, dif3] la diferencia entre la estimación teórica y la calculada por cada uno de los estimadores.
 def err_entropy_mod(n = 50000, d = 2, k = 3):
-    rng = np.random.RandomState(0)
-
-    # Creamos la matriz de covarianzas
-    P = np.random.randn(d, d)
-    C = np.dot(P, P.T)
+    dat = data.Data('normal', n, d)
+    C = dat.C
+    X = dat.X
     
-    # Creamos la variable aleatoria
-    Y = rng.randn(d, n)
-    X = np.dot(P, Y)
-
     # Calculamos la entropía
     H_th = mi.entropy_gaussian(C) / np.log(2)
-    H_est = mi.entropy(X.T, k) 
-    H_est2 = ee.entropy(X.T, k)
-    H_est3 = entropy_mod(X.T, k) / np.log(2)
+    H_est = mi.entropy(X, k) 
+    H_est2 = ee.entropy(X, k)
+    H_est3 = entropy_mod(X, k) / np.log(2)
     
     print("Entropía gaussiana:")
     print("Teórica: ", H_th)
@@ -213,7 +198,7 @@ def example_ent():
 # @param n número de ejemplos a utiliar.
 # @param k número de vecinos más cercanos con los que realizar las estimaciones.
 def example_ent_unif(a = 2, n = 10000, k = 3):
-    x = np.random.uniform(0.0, a, (n, 1))
+    x = data.Data('uniform', n, 1, 0.0, a).X
     H_est = mi.entropy(x, k) 
     H_est2 = ee.entropy(x, k)
     print("Entropía x:")
@@ -240,20 +225,17 @@ def plot_err(x, y, min_d, max_d):
 # @param n número de ejemplos a utilizar de cada variable.
 # @param k número de vecinos más cercanos a utilizar para realizar la estimación.
 def test_mutual_information(n = 50000, k = 3):
-    rng = np.random.RandomState(0)
-    P = np.random.randn(2, 2)
-    C = np.dot(P, P.T)
-    U = rng.randn(2, n)
-    Z = np.dot(P, U).T
-    X = Z[:, 0]
-    X = X.reshape(len(X), 1)
-    Y = Z[:, 1]
-    Y = Y.reshape(len(Y), 1)
+    dat = data.Data('normal', n, 4)
+    C = dat.C
+    X = dat.X[:,0:2]
+    Y = dat.X[:,2:4]
     
     MI_est = mi.mutual_information((X, Y), k = k)
     MI_est2 = ee.mi(X, Y, k = k)
     MI_th = (mi.entropy_gaussian(C[0, 0]) / np.log(2)
              + mi.entropy_gaussian(C[1, 1]) / np.log(2)
+             + mi.entropy_gaussian(C[2, 2]) / np.log(2)
+             + mi.entropy_gaussian(C[3, 3]) / np.log(2)
              - mi.entropy_gaussian(C) / np.log(2)
             )
 
@@ -279,19 +261,10 @@ def test_mutual_information(n = 50000, k = 3):
 # @param show si True, se imprimen resultados por pantalla, si False, no.
 # @return Diferencia entre la información mutua teórica y la estimada por la primera implementación, diferencia entre la información mutua teórica y la estimada por la segunda implementación.
 def test_mutual_information_mod(n = 50000, d = 2, k = 3, show = False):
-    # Creamos las variables
-    rng = np.random.RandomState(0)
-    P = np.random.randn(2*d, 2*d)
-    C = np.dot(P, P.T)
-    U = rng.randn(2*d, n)
-    Z = np.dot(P, U).T
-    X = Z[:, 0:d]
-    print("X", X.shape)
-    X = X.reshape(len(X), d)
-    Y = Z[:, d:]
-    print("Y", Y.shape)
-    Y = Y.reshape(len(Y), d)
-    print("Y-post", Y.shape)
+    dat = data.Data('normal', n, 2*d)
+    C = dat.C
+    X = dat.X[:, 0:d]
+    Y = dat.X[:,d:]
     
     # Estimamos
     MI_est = mi.mutual_information((X, Y), k)
@@ -299,7 +272,7 @@ def test_mutual_information_mod(n = 50000, d = 2, k = 3, show = False):
 
     # Información mutua teórica
     MI_th = 0
-    for i in range(0, d):
+    for i in range(0, 2*d):
         MI_th += mi.entropy_gaussian(C[i, i]) / np.log(2)
   
     MI_th -=  mi.entropy_gaussian(C) / np.log(2)
@@ -351,17 +324,20 @@ def exp_err_im(reps = 100, n = 50000, min_d = 2, max_d = 9, k = 3):
     
 #-----------------------------------------------------------------------
 def main():
-    np.random.seed(0)
+    # np.random.seed(0)
     # rd_ent(1000, 20, 3, 3)
-    # test_entropy(50000, 5, 3)
+    # #test_entropy(50000, 5, 3)
     # err_entropy(50000, 2, 3, True)
     # err_entropy_mod()
     
-    # example_ent()
+    # # example_ent()
     # example_ent_unif()
     # exp_err_ent(reps = 100, min_d = 2, max_d = 4, k = 3)
 
-    test_mutual_information_mod(n = 50000, d = 4, k = 3, show = True)
+    #test_mutual_information()
+    test_mutual_information_mod(n = 50000, d = 2, k = 3, show = True)
+    test_mutual_information_mod(n = 50000, d = 2, k = 3, show = True)
+    test_mutual_information_mod(n = 50000, d = 2, k = 3, show = True)
     exp_err_im(reps = 25, n = 50000, min_d = 2, max_d = 4, k = 3)
 #rd_ent_mi()
 #exp_err_ent(reps = 20, k = 3, max_d = 15)
