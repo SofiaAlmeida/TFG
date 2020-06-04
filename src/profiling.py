@@ -5,20 +5,27 @@
 
 import entropy_estimators as ee
 import mutual_info as mi
-import pruebas
-import numpy as np
+import data
 import cProfile
 import pstats
 from pstats import SortKey
-import sys
+
+
+import timeit
 
 #-----------------------------------------------------------------------
-cProfile.run('pruebas.rd_ent(50000, 2, 2, 3)', 'restats')
+def prof(n, d, k = 3):
+    dat = data.Data('normal', n, d)
+    X = dat.X
+    
+    cProfile.runctx('mi.entropy(X, k)', globals(), locals(), 'stats-mi')
+    cProfile.runctx('ee.entropy(X, k)', globals(), locals(), 'stats-ee')
+    
 
-p = pstats.Stats('restats')
-p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats(10) # Imprime por pantalla las 10 funciones que más tiempo consumen
+def main():  
+     prof(50000, 2)
+     p = pstats.Stats('stats-mi', 'stats-ee')
+     p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats('entropy') # Imprime por pantalla las funciones que contengan 'entropy' en su nombre, ordenadas por tiempo acumulado
 
-# Imprime en el archivo stats.txt
-sys.stdout = open('stats.txt', 'w')
-p = pstats.Stats('restats')
-p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats()
+if __name__ == "__main__":
+    main()
