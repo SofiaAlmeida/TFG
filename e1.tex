@@ -27,7 +27,9 @@
 \AtBeginDocument{\newcommand{\R}{\mathbb{R}}}
 \AtBeginDocument{\newcommand{\E}{\mathbb{E}}}
 
-
+\newcommand{\bias}{\text{bias}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\olsi}[1]{\,\overline{\!{#1}}} % overline short italic
 %%% Tablas
 \usepackage{tabularx}
 \usepackage{float}
@@ -70,10 +72,6 @@
 %-------------------------- ÍNDICE--------------------------------------
 \tableofcontents
 \newpage
-%-----------------------------OBJETIVOS---------------------------------
-\section{Objetivos}
-
----(Se podrían poner aquí como sección 0 o en la sección de introducción)---
 
 %-------------------------INTRODUCCIÓN----------------------------------
 \section{Introducción}
@@ -266,7 +264,7 @@ Esta propiedad se conoce como \textit{ley del estadístico inconsciente}.
 \end{definition}
 \begin{definition}[Varianza y matriz de covarianzas]
   Sea $X$ una variable aleatoria unidimensional de esperanza $\mu_X$, definimos su varianza como\[
-\sigma_X^2 = Var(X) = \mathbb{E}\left [ (X- \mu_X)^2 \right ].
+\sigma_X^2 = \Var(X) = \mathbb{E}\left [ (X- \mu_X)^2 \right ].
   \]
   Se define la matriz de covarianzas de una variable aleatoria multidimensional $X= (X_1,\cdots,X_n)^T$ como\[
 \Sigma = Cov(X) = \mathbb{E}\left [(X-\mu_X)(X-\mu_X)^T \right ] =  \begin{bmatrix} \sigma_{11} & \dots & \sigma_{1n} \\ \vdots& \ddots & \vdots \\ \sigma_{n1} &  \dots & \sigma_{nn}\end{bmatrix}\,,
@@ -284,16 +282,29 @@ donde $\sigma_{ij} = Cov(X_i, X_j) = \mathbb{E}\left[(X_i-\mu_i)(X_j-\mu_j)\righ
 Llamamos distribución teórica $F$ de la variable aleatoria a estudiar a la distribución de la variable aleatoria que, en principio, es desconocida. Notamos $\mathcal{F}$ a la familia de distribuciones candidatas a ser realmente la distribución (se obtiene a partir de información previa). A menudo es posible conocer la forma funcional de $F$ pero se desconocen uno o algunos parámetros de la misma. Para tratar de obtener información sobre este parámetro desconocido a partir de una muestra utilizaremos los \textit{estimadores}.
 
 \begin{definition}[Estadístico]
-  Se denomina estadístico a cualquier función $\widehat{\theta}$ de una muestra aleatoria simple $X_1,\cdots,X_n$  que sea medible.
+  Se denomina estadístico a cualquier función $T:\mathbb{R}^n\to \mathbb{R}$ de una muestra aleatoria simple $X_1,\cdots,X_n$  que sea medible.
 \end{definition}
 
+\begin{example}
+  Algunos estadísticos habituales son:
+
+  \begin{itemize}
+  \item $T(x_1,\dots,x_n) = \frac{1}{n}\sum_{i=1}^nx_i$, media aritmética o media muestral, denotada por $\bar{x}$.
+  \item $T(x_1,\dots,x_n) = \frac{1}{n}\sum_{i=1}^n(x_i-\bar{x})^2$, varianza muestral, notada $s^2$.
+  \item $T(x_1,\dots,x_n) = \min (x_1,\dots,x_n)$, el menor valor muestral.
+  \item $T(x_1,\dots,x_n) = \max (x_1,\dots,x_n)$, el mayor valor muestral.
+  \end{itemize}
+\end{example}
+
 \begin{definition}[Estimador]
-Un estimador es un estadístico $\widehat{\theta}(X_1,\cdots,X_n)$, independiente del parámetro, cuyos valores se utilizan para obtener la estimación puntual de un parámetro desconocido $\theta$.
+Un estimador es un estadístico $\widehat{\theta}(X_1,\cdots,X_n)$ cuyos valores se utilizan para obtener la estimación puntual de un parámetro desconocido $\theta$.
 \end{definition}
+
+Dado un estimador queremos que sus valores sean cercanos al parámetro a predecir, sin embargo, esto no lo podemos medir directamente, así que utilizamos otras propiedades como medida de la calidad de un estimador. Además, podemos considerar diferentes estimadores para estimar un mismo parámetro, nos decidiremos por uno u otro en función a estas propriedades. Algunas propiedades deseables en un estimador son la insesgadez y consistencia, definidas a continuación.
 
 \begin{definition}[Estimador insesgado]
   Si $\widehat{\theta}$ es un estimador del parámetro $\theta$, la diferencia \[
-bias\left( \widehat{\theta}\right) = \mathbb{E}\left [\widehat{\theta} \right ] - \theta
+\bias\left( \widehat{\theta}\right) = \mathbb{E}\left [\widehat{\theta} \right ] - \theta
 \]
 se denomina sesgo del estimador $\widehat{\theta}$ como estimador de $\theta$. Cuando el sesgo es nulo para cualquier valor del parámetro, es decir, si\[
 \mathbb{E} \left [\widehat{\theta}\right] = \theta\quad \forall\theta \in\Theta,
@@ -301,7 +312,26 @@ se denomina sesgo del estimador $\widehat{\theta}$ como estimador de $\theta$. C
 el estimador $\widehat{\theta}$ se dice insesgado para $\theta$.
 \end{definition}
 
-% REVIEW: Añadir ejemplos de estimador de la media y la varianza
+\begin{example}\label{ej:medest}
+  % Media muestral estimador insesgado
+  Sean $X_1,\dots,X_n$ variables aleatorias con distribución $F$ y $\mu = \E\left[X_1\right]$. Si el parámetro de interés es la media $\mu$, podemos utilizar la media muestral para estimarlo. Calculamos su sesgo,\[
+\bias\left[\olsi{X} \right] = \E\left[ \olsi{X}\right] - \mu = \frac{1}{n} \sum_{i=1}^n\E \left [ X_i\right] - \mu = \mu - \mu = 0,
+\]
+hemos comprobado que la media muestral es un estimador insesgado para $\mu$.
+\end{example}
+
+El sesgo de un estimador es una medida del error del estimador, nos da una idea de cuánto se aleja del parámetro $\theta$ a predecir. Podemos medir también la varianza de un estimador, una medida de la fluctuación estocástica. Intuitivamente, la varianza nos permite medir cuánto puede variar el estimador si lo calculamos utilizando una muestra diferente. El tamaño de la muestra, será por tanto, un factor que influya en la estimación. Por ello, otra propiedad deseable en un estimador es la consistencia. Para dar la definición de estimador consistente es necesario conocer la definición de convergencia en probabilidad.
+
+%% \begin{example}
+%%   % Varianza muestral estimador sesgado
+%%   Sean $X_1,\dots,X_n$ variables aleatorias con distribución $F$ y $\sigma^2 = \Var(X_1)$. Si ahora el parámetro de interés es $\sigma^2$ y utilizamos como estimador la varianza muestral, veremos que este estimador es sesgado para $\sigma^2$.
+%%   \[
+%% \bias\left[S^2\right] = \E\left[ S^2\right] - \sigma^2 = \frac{1}{n} \sum_{i=1}^n\left(\E \left [ X_i - \olsi{X}\right]\right)^2 - \sigma^2 = 0 - \sigma^2 \neq 0,
+%% \]
+%% \end{example}
+
+
+
 Existen diferentes nociones de convergencia de variables aleatorias, presentamos a continuación una de ellas, la convergencia en probabilidad.
 \begin{definition}[Convergencia en probabilidad]
   Una sucesión de variables aleatorias $\{X_n\}$ converge en probabilidad a la variable $X$ si para todo $\varepsilon > 0$,\[
@@ -309,13 +339,31 @@ Existen diferentes nociones de convergencia de variables aleatorias, presentamos
   \] Lo notaremos $X_n\xrightarrow[]{P}X$.
 \end{definition}
 
+
+\begin{definition}[Estimador consistente]
+  Sea $\hat{\theta}_n$ un estimador del parámetro $\theta$ para una muestra de tamaño $n$. Diremos que el estimador $\hat{\theta}_n$ es consistente si, cuando $n\to\infty$, se verifica\[
+\hat{\theta}_n\xrightarrow[]{P}\theta.
+  \]
+\end{definition}
+
+\begin{lemma}
+  Sea $\hat{\theta}_n$ un estimador del parámetro $\theta$. Si $\bias\left(\hat{\theta}_n\right)\to 0$ y $\Var\left(\hat{\theta}_n\right)\to0$, entonces $\hat{\theta}_n\xrightarrow[]{P}\theta$, esto es, el estimador $\hat{\theta}_n$ es consistente.
+\end{lemma}
+
+\begin{example}
+  % Estimadores consistentes
+  Consideramos la media muestral, un estimador insesgado de la media de una variable aleatoria $X$. Veamos el comportamiento asintótico de su varianza.\[
+\Var(\olsi{X}) = \E\left[(\olsi{X}-\mu)^2\right]
+  \]
+\end{example}
+
 Como ejemplo de los conceptos anteriores podemos considerar la media muestral como estimador de la media teórica de una variable aleatoria $X$, la ley (débil) de los grandes números ...---no sé cómo quiero redactar eso---
 
 \begin{theorem}[Ley (débil) de los grandes números]\label{t:lgn}
   Sean $X_1,\cdots,X_n$ variables aleatorias con distribución $F$ y $\mu =\mathbb{E}\left [X_1 \right]$. Si $\mu =\mathbb{E}\left [X_1 \right] < \infty$, entonces la media muestral\[
-\overline{X}_n = \frac{1}{n}\sum_{i=1}^nX_i
+\olsi{X}_n = \frac{1}{n}\sum_{i=1}^nX_i
 \]converge en probabilidad a $\mu$, esto es,\[
-\overline{X}_n\xrightarrow[]{P} \mu.
+\olsi{X}_n\xrightarrow[]{P} \mu.
 \]
   
 \end{theorem}
@@ -385,7 +433,7 @@ donde $x_1,\cdots, x_k$ son enteros no negativos.
 
 El valor esperado de observar la salida $i$ en $n$ sucesos es $\mathbb{E}(X_i) = np_i$, luego $\mathbb{E}(X) = np$.
 
-Veamos cómo son los elementos de la matriz de covarianzas. Los elementos de la diagonal son la varianza de una variable aleatoria con distribución binomial, luego $Var(X_i) = np_i(1-p_i)$. Las covarianzas de $X_i, X_j$ para $i\neq j$ son $Cov(X_i, X_j) = - n p_i p_j$. Por tanto, $Var(X) = n [\text{diag}(p) - p p^T]$, donde diag$(p)$ representa la matriz diagonal que tiene el elemento $p_i$ en la posición $i,i$.
+Veamos cómo son los elementos de la matriz de covarianzas. Los elementos de la diagonal son la varianza de una variable aleatoria con distribución binomial, luego $\Var(X_i) = np_i(1-p_i)$. Las covarianzas de $X_i, X_j$ para $i\neq j$ son $Cov(X_i, X_j) = - n p_i p_j$. Por tanto, $\Var(X) = n [\text{diag}(p) - p p^T]$, donde diag$(p)$ representa la matriz diagonal que tiene el elemento $p_i$ en la posición $i,i$.
 %----------------------MULTINOMIAL-FIN----------------------------------
 
 %--------------------------Estudio de la dependencia--------------------
@@ -402,8 +450,8 @@ r_{X,Y} = \frac{Cov(X,Y)}{\sigma_X\sigma_Y} = \frac{\mathbb{E}\left [ (X- \mu_X)
 El mismo coeficiente para una muestra $\{(x_1,y_1),\dots,(x_n,y_n)\}$ se define como
 %B) El mismo coeficiente para una muestra $(X_1,Y_1),\dots, (X_n,Y_n)$ en la que se ha obtenido la realización muestral  $\{(x_1,y_1),\dots,(x_n,y_n)\}$ se define como
 \[
-r_{xy}=\frac{\sum_{i=1}^n(x_i-\overline{x})(y_i-\overline{y})}{\sqrt{\sum_{i=1}^n(x_i-\overline{x})^2(y_i-\overline{y})^2}},
-\] donde $\overline{x} = \frac{1}{n}\sum_{i=1}^nx_i$ la media muestral, de forma análoga para $\overline{y}$.
+r_{xy}=\frac{\sum_{i=1}^n(x_i-\olsi{x})(y_i-\olsi{y})}{\sqrt{\sum_{i=1}^n(x_i-\olsi{x})^2(y_i-\olsi{y})^2}},
+\] donde $\olsi{x} = \frac{1}{n}\sum_{i=1}^nx_i$ la media muestral, de forma análoga para $\olsi{y}$.
 \end{definition}
 
 Este coeficiente mide la correlación lineal entre las variables $X,Y$. Su valor se encuentra entre +1 y -1, donde +1 indica una correlación lineal positiva total, 0 que no hay correlación lineal y -1 correlación lineal total negativa. Si el coeficiente de correlación de Pearson de dos variables aleatorias es 0, sabremos que no existe una dependencia lineal entre ellas, pero no podremos asegurar nada acerca de la independencia, pues podría existir otro tipo de dependencia entre ellas.
@@ -1086,13 +1134,13 @@ h(AX) = h(X) + \log|det(A)|.
 %%   con igualdad si, y solo si, $X \sim \mathcal{N}(0,\Sigma)$.
 %% \end{theorem}
 
-\subsection{Estimación de la información mutua}
+\subsection{Estimación de la entropía y de la información mutua}
 
-Generalmente no conocemos las funciones de densidad de las variables aleatorias cuya información mutua queremos calcular, por ello, buscamos aproximar este valor a partir de la información que sí tenemos. El objetivo es estimar $I(X;Y)$ a partir de un conjunto $\{z_i=(x_i,y_i) : i = 1,\cdots, N\}$ sin conocer las densidades $f=f_z, f_x$ y $f_y$.
+Generalmente no conocemos las funciones de densidad de las variables aleatorias cuya entropía o información mutua queremos calcular, por ello, tratamos de aproximar este valor a partir de información que sí conocemos, como realizaciones muestrales de las variables. El objetivo es, para dos variables aleatorias $X,Y$, estimar $I(X;Y)$ a partir de un conjunto de realizaciones muestrales, $\{z_i=(x_i,y_i) : i = 1,\cdots, N\}$, sin conocer las funciones de densidad $f=f_Z, f_X$ y $f_Y$, donde $Z = (X,Y$ es la distribución conjunta de $X$ e $Y$.
 
 Nos centraremos en los estimadores de Kozachenko - Leonenko, aunque presentaremos brevemente otras dos posibles estimaciones.
 
-\subsubsection{Forma más extendida de estimar}
+\subsubsection{Estimador basado en particiones}
 
 Particionamos el soporte de $X$ e $Y$ en \textit{contenedores} de tamaño finito (no necesariamente el mismo) y aproximamos la información mutua por \[
 I(X,Y) \approx I_{\textit{binned}}(X,Y) = \sum_{i,j} p(i,j) \log \frac{p(i,j)}{p_x(i)p_y(j)},
@@ -1107,7 +1155,48 @@ Si todas las densidades son funciones \textit{proper}, cuando $N$ tienda a infin
 
 ---Con \textit{proper function} entiendo que el artículo hace referencia a esto: \url{https://en.wikipedia.org/wiki/Proper\_convex\_function}. Es un concepto que no he visto y no sé cómo traducir.
 
-\subsubsection{Estimar la entropía a partir de estadísticos de los $k$ vecinos más cercanos}
+\subsubsection{Estimadores de la entropía basados en los $k$ vecinos más cercanos}
+
+Los estimadores estudiados a continuación, realizan una estimación de la función de densidad de la variable aleatoria $X$ a partir de los $k$ vecinos más cercanos, un tipo de estimación no paramétrica. Prosiguen viendo la entropía como la esperanza del $\log(X)$ negada y utilizando el estimador de la densidad de $X$ obtenido anteriormente para estimar la entropía.\\
+
+Sea $X$ una variable aleatoria $d$-dimensional con función de densidad $f$ y $x_1,\dots,x_n$ una realización muestral, $x_i\in \mathbb{R}^d$. Para cada punto, $x$, ordenamos todas las observaciones según la distancia al punto dado. Notaremos $\epsilon_k(x)$ a la distancia entre $x$ y el $k$-ésimo punto más cercano a él, al que llamaremos su $k$-ésimo vecino más cercano (\textit{$k$-nearest neighbour}, $k$-nn).\\
+
+Consideramos la bola de centro $x$ y radio $\epsilon_k(x)$,\[
+B(x, \epsilon_k(x)) = \{y \in \R^d: \Vert x - y\Vert \leq \epsilon_k(x)\},
+\]que verifica \begin{align}\label{eq:knn-ind}
+\frac{k}{n} = \frac{1}{n} \sum_{i=1}^nI\left((x_i\in B\left(x,\epsilon_k(x)\right)\right),
+\end{align}
+donde $I$ es la función indicadora. La cantidad $\frac{1}{n} \sum_{i=1}^nI\left((x_i\in B(x,\epsilon_k(x))\right)$ la podemos ver como un estimador de \[
+P[x_i\in B(x,\epsilon_k(x))] \approx \int_{B(x,\epsilon_k(x))}f(y)dy.
+\]
+
+Cuando $n$ es grande y $k$ es relativamente pequeño en comparación, $\epsilon_k(x)$ será pequeño porque $\frac{k}{n}$ lo es.
+---Esto no sé por qué---
+
+Luego, la densidad $f(y)$ en la bola $B(x,\epsilon_k(x))$ no cambiará demasiado. Para cualquier punto de la bola consideraremos que su densidad coincide con la del centro de la misma, $f(y)\approx f(x)$. Tenemos entonces\[
+P[x_i\in B(x,\epsilon_k(x))] \approx \int_{B(x,\epsilon_k(x))}f(y)dy\approx f(x) \int_{B(x,\epsilon_k(x))}dy = f(x)\cdot V_d \cdot \epsilon^d_k(x),
+\]
+donde $V_d\cdot \epsilon^d_k(x)$ es el volumen de la bola $d$ dimensional de radio $\epsilon_k(x)$.
+
+Utilizando \ref{eq:knn-ind} para estimar $P[x_i\in B(x,\epsilon_k(x))]$, tendremos,\[
+f(x)\cdot V_d \cdot \epsilon_k(x) \approx P[x_i\in B(x,\epsilon_k(x))]\approx  \frac{1}{n} \sum_{i=1}^nI\left((x_i\in B\left(x,\epsilon_k(x)\right)\right) = \frac{k}{n}.
+\]
+Considerando\[
+f(x)\cdot V_d \cdot \epsilon^d_k(x) \approx \frac{k}{n}
+\]
+se obtiene el estimador de la función de densidad, \[
+\hat{f}(x) = \frac{k}{n}\frac{1}{V_d \cdot \epsilon^d_k(x)}.
+\]
+
+Este estimador verifica,
+\begin{align*}
+  \bias\left(\hat{f}(x)\right) &= O \left(\left(\frac{k}{n}\right)^{\frac{2}{d}} + \frac{1}{k}\right),\\
+  \Var\left(\hat{f}(x)\right) &= O \left(\frac{1}{k}\right).
+\end{align*}
+
+Su comportamiento asintótico no depende solo del tamaño de la muestra sino también de la dimensión $d$ y del valor $k$ elegido. De hecho, la varianza depende exclusivamente del valor de $k$, la variabilidad del estimador viene dada por el número de vecinos más cercanos a considerar. 
+
+-----
 
 Si $X$ es una variable aleatoria unidimensional, podemos ordenar los distintos $x_i$ (realizaciones muestrales de $X$). Si, además, $x_{i+1} -x_i \to 0$ y $N\to \infty$, aproximamos:\[
 H(X)\approx \frac{1}{N-1}\sum_{i=1}^N \log(x_{i+1}-x_i) + \psi(1) - \psi(N),\]
@@ -1252,16 +1341,10 @@ I^{(2)}(X,Y) \approx \psi(k) - \frac{1}{k} - \langle \psi(n_x) + \psi(n_y) \rang
 
 En general ambas fórmulas dan resultados similares. Para un mismo $k$, $I^{(1)}$ da ligeramente menores errores estadísticos (porque $n_x(i)$ y $n_y(i)$ tienden a ser más grandes y tener menores variaciones relativas), pero tienen mayores errores sistemáticos. Este último es grave solo si estamos interesados en variables con dimensiones muy altas, donde $\varepsilon(i)$ tiende típicamente a ser más grande que la marginal $\varepsilon_x(i)$. En ese caso parece preferible el segundo algoritmo, de resto se pueden usar los dos.
 
-%-------------------------COMPARACIÓN-----------------------------------
-\section{Metodología para la comparación de estimadores}
-\subsection{Tecnología utilizada}
----python, bibliotecas usadas, git, planificación (también se podría poner en objetivos) -> hacer un diagrama de Gantt (revisar bibliografía, adquirir conocimmiento, escribir memoria, búsqueda de implementaciones, escribir código)---
-
-\section{Análisis de implementaciones}
----Esta sección no tengo claro en qué sección iría. Creo que hay que partirla entre Metodología y resultados---
+\subsection{Implementaciones de estimadores de la entropía y de la información mutua}
 En esta sección estudiaremos un par de implementaciones de conceptos anteriores como la entropía o la estimación mutua. En general, dado un número finito de muestras de una variable aleatoria no podemos calcular de forma exacta la entropía o información mutua, ya que no conocemos su distribución. Para implementarlas es necesario usar algún estimador, como los estudiados en el apartado anterior.
 
-\subsection{Implementación 1 - GaelVaroquaux}
+\subsubsection{Implementación 1 - GaelVaroquaux}
 
 Comenzaremos revisando la implementación \cite{estimating}. Para ello leeremos el código y nos formaremos una idea de qué hace y cómo cada una de las funciones.
 
@@ -1311,7 +1394,7 @@ Añadimos a esta tupla la diferencia entre ambos valores:
 
 Observamos una pequeña diferencia entre los valores estimados y los teóricos.
 
-\subsection{Implementación 2 -  gregversteeg}
+\subsubsection{Implementación 2 -  gregversteeg}
 
 Pasamos a revisar la segunda implementación, que encontramos en \cite{npeet}. Como en el caso anterior, comenzamos leyendo el código función por función. 
 \begin{itemize}
@@ -1434,6 +1517,15 @@ noisy: I(X; Y) = 2.7575 ± 0.0264 (maximum possible 3.3168)
 \end{lstlisting}
 
 En primer lugar, se calcula la entropía de variables con una distribución uniforme en un intervalo $[0,\alpha]$. En el ejemplo \ref{ej:uni} calculamos la entropía teórica, $h(x) = \log \alpha$. En este caso se tomó $\alpha = 2$, luego la entropía teórica vale 1. Observamos que para los valores $k$ siempre hay una pequeña diferencia entre el valor obtenido y la entropía teórica. A continuación, calcula la información mutua (condicionada y sin condicionar) de una variable aleatoria con distribución normal, de forma teórica y usando el estimador. Por último, prueba los estimadores para el caso discreto. 
+
+
+%-------------------------COMPARACIÓN-----------------------------------
+\section{Metodología para la comparación de estimadores}
+\subsection{Tecnología utilizada}
+---python, bibliotecas usadas, git, planificación (también se podría poner en objetivos) -> hacer un diagrama de Gantt (revisar bibliografía, adquirir conocimmiento, escribir memoria, búsqueda de implementaciones, escribir código)---
+
+
+\section{Resultados}
 
 \subsection{Análisis comparativo}
 
@@ -1575,7 +1667,7 @@ $d$ & Error estimador 1 & Error estimador 2\\ \midrule
     \label{fig:err_im}
 \end{figure}
 
-\section{Resultados}
+
 \subsection{Experimentos}
 \subsection{Discusión}
 
