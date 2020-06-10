@@ -8,6 +8,7 @@ import data
 import cProfile
 import pstats
 from pstats import SortKey
+import pandas as pd
 
 #-----------------------------------------------------------------------
 def prof_ent(n, d, k = 3, reps = 10):
@@ -49,68 +50,52 @@ def prof_im(n, d, k = 3, reps = 10):
     pr.disable()
     return pr    
     
-def get_stats(p, v, dic_mi, dic_ee, list):
+def get_stats(p, d, n, df_mi, df_ee, list):
      for f in list:
           cc, nc, tt, ct, callers = p.stats[f]
           
           if(f[0] == 'entropy_estimators.py'):
-               dic_ee[v] = ct / nc
+               df_ee.loc[d][n] = ct / nc
                
           if(f[0] == 'mutual_info.py'):
-               dic_mi[v] = ct / nc
+               df_mi.loc[d][n] = ct / nc
      
-def main():  	
-     d = 2
-     ns = [5000, 50000, 100000, 150000, 200000]
-     n_mi_ent = {}
-     n_ee_ent ={}
+def main():
+     # Valores de n y d para los que realizar estimaciones
+     ns = [1000, 30000, 100000]
+     ds = [2, ] #, 10, 100]
+
+     # DataFrames para almacenar estimaciones
+     mi_ent = pd.DataFrame(index = ds, columns = ns)
+     ee_ent = pd.DataFrame(index = ds, columns = ns)
+     mi_mi = pd.DataFrame(index = ds, columns = ns)
+     ee_mi = pd.DataFrame(index = ds, columns = ns)
+     
+     # Variables necesarias para recuperar las mediciones
+     # Se obtuvieron mediante % REVIEW
      f_ent = [('entropy_estimators.py', 17, 'entropy'), ('mutual_info.py', 50, 'entropy')]
-     
-     n_mi_mi = {}
-     n_ee_mi ={}
      f_mi = [('mutual_info.py', 91, 'mutual_information'), ('entropy_estimators.py', 61, 'mi')]
+
+     # Número de repeticiones
+     reps = 5
      
-     # Fijamos un valor d y medimos los tiempos de ejecución de la entropía y la información mutua para distintos valores de n
-     for n in ns:		
-          # Medimos tiempo de cálculos de entropía	
-          pr = prof_ent(n, d, reps = 20)
-          p_ent = pstats.Stats(pr).strip_dirs()
-          get_stats(p_ent, n, n_mi_ent, n_ee_ent, f_ent)
-          
-          # Medimos tiempo de ejecución de información mutua
-          pr = prof_im(n, d, reps = 10)
-          p_im = pstats.Stats(pr).strip_dirs()
-          get_stats(p_im, n, n_mi_mi, n_ee_mi, f_mi)
-          
-     print(n_mi_ent)
-     print(n_ee_ent)
-     print(n_mi_mi)
-     print(n_ee_mi)
-     
-     ds = range(2, 6)
-     n = 50000
-     reps = 10
-     d_mi_ent = {}
-     d_ee_ent ={}
-     d_mi_mi = {}
-     d_ee_mi ={}
-     
-     # Fijamos el valor de n y medimos los tiempos de ejecución de la entropía y la im para distintos valores de d
+     # Realizaremos las medidadas para todos los valores de d y n
      for d in ds:
-          # Medimos tiempo de cálculos de entropía	
-          pr = prof_ent(n, d, reps = reps)
-          p_ent = pstats.Stats(pr).strip_dirs()
-          get_stats(p_ent, d, d_mi_ent, d_ee_ent, f_ent)
+         for n in ns:
+             # Medimos tiempo de cálculos de entropía	
+             pr = prof_ent(n, d, reps = reps)
+             p_ent = pstats.Stats(pr).strip_dirs()
+             get_stats(p_ent, d, n, mi_ent, ee_ent, f_ent)
           
-          # Medimos tiempo de ejecución de información mutua
-          pr = prof_im(n, d, reps = reps)
-          p_im = pstats.Stats(pr).strip_dirs()
-          get_stats(p_im, d, d_mi_mi, d_ee_mi, f_mi)
-          
-     print(d_mi_ent)
-     print(d_ee_ent)
-     print(d_mi_mi)
-     print(d_ee_mi)
+             # Medimos tiempo de ejecución de información mutua
+             pr = prof_im(n, d, reps = reps)
+             p_im = pstats.Stats(pr).strip_dirs()
+             get_stats(p_im, d, n, mi_mi, ee_mi, f_mi)
+    
+     print(mi_ent)
+     print(ee_ent)
+     print(mi_mi)
+     print(ee_mi)
      
 if __name__ == "__main__":
     main()
