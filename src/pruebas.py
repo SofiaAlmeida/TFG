@@ -16,16 +16,11 @@ plt.style.use('ggplot')
 
 #----------------------------------------------------------------------
 ## Calcula la entropía de 2 variables aleatorias con ambos estimadores.
-# Crea N ejemplos de las variables x e y, estima su entropía con ambos estimadores y la imprime por pantalla.
-# @param N número de ejemplos de cada variable a generar.
-# @param dx dimensión de la primera variable, x.
-# @param dy dimensión de la segunda variable, y.
+# Estima la entropía de las variables x e y y la imprime por pantalla.
 # @param k número de vecinos a considerar al llamar a los estimadores.
-def rd_ent(N, dx, dy, k):
-    np.random.seed(0)
-    x = data.Data('random', N, dx).X
-    y = data.Data('random', N, dy).X
-
+# @param x primera variable aleatoria.
+# @param y segunda variable aleatoria.
+def ent(k, x, y):
     print("Entropía de X:")
     print("Estimador 1: ", mi.entropy(x, k = k))
     print("Estimador 2: ", ee.entropy(x))
@@ -52,11 +47,9 @@ def entropy_mod(X, k=1):
 
 #---------------------------------------------------------------------
 ## Adaptación de mutual_info.test_entropy para que se compare también entropy_estimators.entropy con una normal.
-# @param n número de ejemplos que crearemos de la variable X.
-# @param d dimensión de la variable X.
-# @param k número de vecinos a utilizar en los estimadores
-def test_entropy(n = 50000, d = 2, k = 3):
-    dat = data.Data('normal', n, d)
+# @param dat objeto de la clase Data generado mediante una distribución normal.
+# @param k número de vecinos a utilizar en los estimadores.
+def test_entropy(dat, k = 3):
     C = dat.C
     X = dat.X
 
@@ -78,13 +71,11 @@ def test_entropy(n = 50000, d = 2, k = 3):
 
 #---------------------------------------------------------------------
 ## Modificación de pruebas.test_entropy, devuelve la diferencia entre la entropía teórica y las estimadas de variable aleatoria con distribución normal.
-# @param n número de ejemplos a crear de la variable X.
-# @param d dimensión de la variable a crear.
+# @param dat objeto de la clase Data que contiene una variable aleatoria con distribución normal.
 # @param k número de vecinos más cercanos a considerar para realizar las estimacioines.
 # @param show si vale True imprimirá por pantalla los resultados, si vale False, no.
 # @return Diferencia entre la estimación teórica y la estimación realizada por el primer estimador, diferencia entre la estimación teórica y la estimación realizada por el segundo estimador.
-def err_entropy(n = 50000, d = 2, k = 3, show = False):
-    dat = data.Data('normal', n, d)
+def err_entropy(dat, k = 3, show = False):
     C = dat.C
     X = dat.X
     
@@ -108,12 +99,10 @@ def err_entropy(n = 50000, d = 2, k = 3, show = False):
 #---------------------------------------------------------------------
 ## Modificación de pruebas.err_entropy para añadir un tercer estimador.
 # Compara tres estimadores de la entropía con la entropía teórica de una variable aleatoria con distribución normal.
-# @param n número de muestras a crear de la variable X.
-# @param d dimensión de la variable X.
+# @param dat objeto de la clase Data siguiendo una distribución normal.
 # @param k número de vecinos más cercanos considerados para realizar las estimacioines.
 # @return [dif1, dif2, dif3] la diferencia entre la estimación teórica y la calculada por cada uno de los estimadores.
-def err_entropy_mod(n = 50000, d = 2, k = 3):
-    dat = data.Data('normal', n, d)
+def err_entropy_mod(dat, k = 3):
     C = dat.C
     X = dat.X
     
@@ -152,12 +141,17 @@ def exp_err_ent(reps = 100, n = 50000, min_d = 2, max_d = 9, k = 3):
         dif1 = np.array([])
         dif2 = np.array([])
         for i in range(0, reps):
-            d1, d2 = err_entropy(n, d, k)
+            # Generamos datos
+            dat = data.Data('normal', n, d)
+            # Calculamos el error
+            d1, d2 = err_entropy(dat, k)
+            # Añadimos el error en esta repetición
             dif1 = np.append(dif1, d1)
             dif2 = np.append(dif2, d2)
-
+        # Calculamos la media de los errores para esta dimensión
         e1 = np.mean(dif1)
         e2 = np.mean(dif2)
+        # Los añadimos a la lista de errores
         err1 = np.append(err1, e1)
         err2 = np.append(err2, e2)
 
@@ -193,16 +187,19 @@ def example_ent():
     print("Estimador 2: ", H_est2)
 
 #---------------------------------------------------------------------
-## Imprime el cálculo de la entropía de una variable aleatoria con distribución uniforme en el intervalor [0,a], teórica y estimada.
-# @param a extremo superior del intervalo.
-# @param n número de ejemplos a utiliar.
+## Imprime el cálculo de la entropía de una variable aleatoria con distribución uniforme en el intervalor [a,b], teórica y estimada.
+# @param dat dat objeto de la clase Data con distribución uniforme.
 # @param k número de vecinos más cercanos con los que realizar las estimaciones.
-def example_ent_unif(a = 2, n = 10000, k = 3):
-    x = data.Data('uniform', n, 1, 0.0, a).X
+def example_ent_unif(dat, k = 3):
+    x = dat.X
+    a = dat.a
+    b = dat.b
+    
     H_est = mi.entropy(x, k) 
     H_est2 = ee.entropy(x, k)
+
     print("Entropía x:")
-    print("Teórica: ", np.log(a) / np.log(2))
+    print("Teórica: ", np.log(b - a) / np.log(2))
     print("Estimador 1: ", H_est)
     print("Estimador 2: ", H_est2)
 
@@ -222,10 +219,9 @@ def plot_err(x, y, min_d, max_d):
 
 #-----------------------------------------------------------------------
 ## Adaptación de mutual_information.test_mutual_information para incluir a entropy_estimators.mi. Calcula la información mutua de dos variables aleatorias de dimensión 2 con distribución normal. Imprime por pantalla la información mutua teórica y la estudiada por los 2 estimadores.
-# @param n número de ejemplos a utilizar de cada variable.
+# @param dat objeto de la clase Data con distribución normal y dimensión 4.
 # @param k número de vecinos más cercanos a utilizar para realizar la estimación.
-def test_mutual_information(n = 50000, k = 3):
-    dat = data.Data('normal', n, 4)
+def test_mutual_information(dat, k = 3):
     C = dat.C
     X = dat.X[:,0:2]
     Y = dat.X[:,2:4]
@@ -255,13 +251,12 @@ def test_mutual_information(n = 50000, k = 3):
 
 #-----------------------------------------------------------------------
 ## Modificación de test_mutual_information para que imprima la diferencia entre los estimadores teóricos y estimados, además, permite que las variables tengan la dimensión indicada.
-# @param n número de muestras a tomar de las variables.
-# @param d dimensión de las variables.
+# @param dat objeto de la clase Data con distribución normal y dimensión 2*d.
 # @param k número de vecinos más cercanos a utilizar en los estimadores.
 # @param show si True, se imprimen resultados por pantalla, si False, no.
 # @return Diferencia entre la información mutua teórica y la estimada por la primera implementación, diferencia entre la información mutua teórica y la estimada por la segunda implementación.
-def test_mutual_information_mod(n = 50000, d = 2, k = 3, show = False):
-    dat = data.Data('normal', n, 2*d)
+def test_mutual_information_mod(dat, k = 3, show = False):
+    d = int(dat.d / 2)
     C = dat.C
     X = dat.X[:, 0:d]
     Y = dat.X[:,d:]
@@ -306,7 +301,8 @@ def exp_err_im(reps = 100, n = 50000, min_d = 2, max_d = 9, k = 3):
         dif1 = np.array([])
         dif2 = np.array([])
         for i in range(0, reps):
-            d1, d2 = test_mutual_information_mod(n, d, k)
+            dat = data.Data('normal', n, 2*d)
+            d1, d2 = test_mutual_information_mod(dat, k)
             dif1 = np.append(dif1, d1)
             dif2 = np.append(dif2, d2)
 
@@ -324,25 +320,33 @@ def exp_err_im(reps = 100, n = 50000, min_d = 2, max_d = 9, k = 3):
     
 #-----------------------------------------------------------------------
 def main():
-    # np.random.seed(0)
-    # rd_ent(1000, 20, 3, 3)
-    test_entropy(50000, 5, 3)
-    # err_entropy(50000, 2, 3, True)
-    # err_entropy_mod()
+    np.random.seed(0)
+    #-------------------------------
+    # Calculamos la entropía de dos variables aleatorias
+    N = 1000
+    x = data.Data('random', N, 3).X
+    y = data.Data('random', N, 4).X
+    #ent(3, x, y)
+    
+    # Entropía de una variable aleatoria con distribución normal
+    N = 50000
+    d = 2
+    dat = data.Data('normal', N, d)
+    #test_entropy(dat, 3)
+    #err_entropy(dat, 3, True)
+    #err_entropy_mod(dat, 3)
     
     # # example_ent()
-    # example_ent_unif()
-    # exp_err_ent(reps = 100, min_d = 2, max_d = 4, k = 3)
+    # Calculamos entropía va con distribución uniforme
+    dat = data.Data('uniform', N, 2, 0.0, 2)
+    example_ent_unif(dat)
 
-    #test_mutual_information()
-    test_mutual_information_mod(n = 50000, d = 2, k = 3, show = True)
-    test_mutual_information_mod(n = 50000, d = 2, k = 3, show = True)
-    test_mutual_information_mod(n = 50000, d = 2, k = 3, show = True)
-    exp_err_im(reps = 25, n = 50000, min_d = 2, max_d = 4, k = 3)
-#rd_ent_mi()
-#exp_err_ent(reps = 20, k = 3, max_d = 15)
-# exp_err_im(reps = 25, k = 3, max_d = 20)
+    #exp_err_ent(reps = 100, min_d = 2, max_d = 4, k = 3)
 
+    dat = data.Data('normal', N, 4)
+    #test_mutual_information(dat)
+    #test_mutual_information_mod(dat, k = 3, show = True)
+    exp_err_im(reps = 10, n = 5000, min_d = 2, max_d = 4, k = 3)
 
 if __name__ == "__main__":
     main()
