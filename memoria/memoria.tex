@@ -1,5 +1,5 @@
 % article example for classicthesis.sty
-\documentclass[10pt,a4paper]{article} % KOMA-Script article scrartcl
+\documentclass[12pt,a4paper]{report} % KOMA-Script article scrartcl
 \usepackage[spanish]{babel}
 %\usepackage[utf8]{inputenc}
 %\usepackage{lipsum}
@@ -7,7 +7,9 @@
 
 % Cargamos amsmath antes que classicthesis que si no tenemos fallos de compilación
 \usepackage{amsmath}
-\usepackage[nochapters]{./classicthesis} % nochapters
+\usepackage{./classicthesis}
+
+\usepackage[left=1.5in,right=1.5in,top=1in,bottom=1in]{geometry}
 
 % fuente del mathbb
 \AtBeginDocument{%
@@ -30,6 +32,7 @@
 \newcommand{\bias}{\text{bias}}
 \newcommand{\Var}{\text{Var}}
 \newcommand{\olsi}[1]{\,\overline{\!{#1}}} % overline short italic
+
 %%% Tablas
 \usepackage{tabularx}
 \usepackage{float}
@@ -37,6 +40,9 @@
 \usepackage{booktabs}
 \usepackage{diagbox}
 \renewcommand\spanishtablename{Tabla}
+\usepackage{subcaption}
+\usepackage{chngpage} % allows for temporary adjustment of side margins
+
 
 %%% Código
 %\usepackage{listingsutf8}
@@ -50,7 +56,7 @@
 
 %%% Gráficas
 \usepackage{graphicx} % Required for including pictures
-\graphicspath{{./fig/}}
+\graphicspath{{../fig/}}
 
 %%% Bibliografía
 \usepackage[backend=biber]{biblatex}
@@ -74,19 +80,19 @@
 \newpage
 
 %-------------------------INTRODUCCIÓN----------------------------------
-\section{Introducción}
+\chapter{Introducción}
 
----Hablar de: Shanon, teoría de la información, relevancia que ha tenido,...---
-\subsection{Motivación del trabajo}
-\subsection{Objetivos}
+---Hablar de: Shannon, teoría de la información, relevancia que ha tenido,...---
+\section{Motivación del trabajo}
+\section{Objetivos}
 ---(Si se opta por no ponerlos antes de la introducción)---
 
 %--------------------------- FUNDAMENTOS--------------------------------
-\section{Funtamentos y estado del arte}
+\chapter{Funtamentos y estado del arte}
 
 ---(De lo de estado del arte comentar que es un tema que se sigue investigando y poner referencias al respecto)---
 
-\subsection{Conceptos previos}
+\section{Conceptos previos}
 
 Antes de entrar en materia, se recogen una serie de definiciones y resultados que se utilizarán a lo largo del trabajo.
 
@@ -272,7 +278,7 @@ Esta propiedad se conoce como \textit{ley del estadístico inconsciente}.
 donde $\sigma_{ij} = Cov(X_i, X_j) = \mathbb{E}\left[(X_i-\mu_i)(X_j-\mu_j)\right]=\sigma_{ji}$ es la covarianza de las variables aleatorias $X_i$ y $X_j$. La podremos definir cuando existan todas las covarianzas.  
 \end{definition}
 
-\subsubsection{Estimadores}
+\subsection{Estimadores}
 
 En esta sección recordaremos algunos conceptos sobre estimación puntual que utilizaremos más adelante.
 
@@ -324,7 +330,7 @@ hemos comprobado que la media muestral es un estimador insesgado para $\mu$.\\
 
 \begin{definition}[Eficiencia]
   Si $\hat{\theta}_1, \hat{\theta}_2$ son dos estimadores insesgados del parámetro $\theta$, diremos que $\hat{\theta}_1$ es más eficiente que $\hat{\theta}_2$ si \[
-\Var\left(\hat{\theta}_1\right) < \Var\left(\hat{\theta}_2\right.
+\Var\left(\hat{\theta}_1\right) < \Var\left(\hat{\theta}_2\right).\\
   \]
 \end{definition}
 
@@ -378,7 +384,7 @@ La media muestral no es solo un estimador insesgado y consistente de la media te
 \end{theorem}
 
 
-\subsubsection{Algunas distribuciones discretas y continuas}
+\subsection{Algunas distribuciones discretas y continuas}
 
 Durante el desarrollo del trabajo se utilizarán algunas distribuciones, se presentan a continuación.
 %--------------------------------- Uniforme unidimensional--------------
@@ -446,7 +452,7 @@ Veamos cómo son los elementos de la matriz de covarianzas. Los elementos de la 
 %----------------------MULTINOMIAL-FIN----------------------------------
 
 %--------------------------Estudio de la dependencia--------------------
-\subsubsection{Estudio de la dependencia}
+\subsection{Estudio de la dependencia}
 
 Dadas dos variables aleatorias nos podemos preguntar si son o no independientes, es decir, si la realización de una de ellas afecta o no a la realización de la otra. En caso de ser dependientes nos gustaría medir qué tipo de relación existe entre ellas. Hay numerosos métodos que nos permiten realizar esta medida, por ejemplo, el \textit{coeficiente de correlación de Pearson} o el \textit{coeficiente de correlación de Spearman}.
 
@@ -490,7 +496,7 @@ La información mutua es otra forma de medir la dependencia entre dos variables 
 %-----------------------------------------------------------------------
 %-----------------------TEORÍA DE LA INFORMACIÓN------------------------
 %-----------------------------------------------------------------------
-    \subsection{Teoría de la información}
+    \section{Teoría de la información}
 
     El concepto de información es demasiado amplio como para ser recogido en una única definición. Sin embargo, podemos definir el concepto de entropía, que mide la cantidad de información necesaria para describir una variable aleatoria, o el de información mutua, que refleja la información que una variable aleatoria contiene sobre otra.\\
 
@@ -500,7 +506,7 @@ La información mutua es otra forma de medir la dependencia entre dos variables 
 
 A continuación, se explicarán estos conceptos, y algunos relacionados, junto a demostraciones de sus propiedades y algunos ejemplos, tanto para el caso discreto como para el caso continuo. Las principales fuentes consultadas para ello han sido \cite{thomas} y \cite{gray}. Se han estudiado y comprendido los capítulos correspondientes a entropía y entropía diferencial para posteriormente exponer aquí una síntesis de lo aprendido.
 
-\subsubsection{Caso discreto}
+\subsection{Caso discreto}
     
 Sea una variable aleatoria discreta, $X$, que toma valores en el alfabeto $\mathcal{X} = \{x_1, \cdots, x_N \}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.
 
@@ -851,7 +857,7 @@ El apartado c) del Teorema \ref{t:ent_im} nos dice que $I(X;Y) = H(X)+H(Y)-H(X,Y
 \end{proof}
 %-----------------------------------------------------------------------
 %----------------------- CASO CONTINUO ---------------------------------
-\subsubsection{Caso continuo}
+\subsection{Caso continuo}
 Hasta ahora las definiciones dadas eran para variables aleatorias discretas, que solo tomaban un conjunto finito de valores. Podemos extender las definiciones estudiadas al caso continuo, para aplicarlas en variables aleatorias continuas. Trabajaremos en este apartado con una variable aleatoria $X$ absolutamente continua con función de distribución $F$, función de densidad $f$ y conjunto soporte $sop(X)$.
 %Trabajaremos en este caso con una variable aleatoria $X$ con función de distribución $F(x) = Pr[X \leq x]$, si $F$ es continua, la variable aleatoria se dice continua. Sea $f(x) = F'(x)$, cuando la derivada esté definida. Si $\int_{-\infty}^{\infty}f(x)=1,\ f(x)$ se llama la función de densidad de $X$. El conjunto donde $f(x) > 0$ es el soporte de $X$.
 
@@ -1144,29 +1150,33 @@ h(AX) = h(X) + \log|det(A)|.
 %%   con igualdad si, y solo si, $X \sim \mathcal{N}(0,\Sigma)$.
 %% \end{theorem}
 
-\subsection{Estimación de la entropía y de la información mutua}
+\section{Estimación de la entropía y de la información mutua}
 
 Generalmente no conocemos las funciones de densidad de las variables aleatorias cuya entropía o información mutua queremos calcular, por ello, tratamos de aproximar este valor a partir de información que sí conocemos, como realizaciones muestrales de las variables. El objetivo es, para dos variables aleatorias $X,Y$ ($d$-dimensionales), estimar $h(X)$ o $I(X;Y)$ a partir de un conjunto de realizaciones muestrales, $\{z_i=(x_i,y_i) : i = 1,\cdots, N\}$, sin conocer las funciones de densidad $f=f_Z, f_X$ y $f_Y$, donde $Z = (X,Y)$ es la distribución conjunta de $X$ e $Y$.
 
-Nos centraremos en los estimadores del tipo de Kozachenko - Leonenko, aunque presentaremos brevemente otras dos posibles estimaciones.
+Presentaremos brevemente un estimador basado en particiones antes de estudiar estimadores basados en los $k$ vecinos más cercanos y del tipo de Kozachenko - Leonenko.
 
-\subsubsection{Estimador basado en particiones}
+\subsection{Estimador basado en particiones}
 
 En este enfoque, dividiremos el soporte de $X$ e $Y$ en particiones de tamaño finito (no necesariamente el mismo) y aproximamos la información mutua por \[
 I(X,Y) \approx I_{\textit{binned}}(X,Y) = \sum_{i,j} p(i,j) \log \frac{p(i,j)}{p_x(i)p_y(j)},
 \]
-donde $p_x(i) = \int_i f_x(x)dx$, $p_y(j) = \int_j f_y(y)dy$, $\int_i$ representa la integral sobre la i-ésima partición, y $p(i,j) = \int_i\int_jf(x,y)dxdy$.
+donde $p_x(i) = \int_i f_x(x)dx$, $p_y(j) = \int_j f_y(y)dy$, $\int_i$ representa la integral sobre la $i$-ésima partición, y $p(i,j) = \int_i\int_jf(x,y)dxdy$.\\
 
-Llamamos $n_x(i)$ al número de puntos en la i-ésima partición de $X$, análogamente $n_y(j)$. $n(i,j)$ es el número de puntos en la intersección de $n_x(i)$ y $n_y(j)$.
+Llamamos $n_x(i)$ al número de puntos en la i-ésima partición de $X$, análogamente $n_y(j)$. $n(i,j)$ es el número de puntos en la intersección de $n_x(i)$ y $n_y(j)$.\\
 
-Lo que hacemos es aproximar $p_x(i) \approx \frac{n_x(i)}{N}, p_y(j) \approx \frac{n_y(j)}{N}, p(i,j) \approx \frac{n(i,j)}{N}$.
+Aproximamos \begin{align*}
+  p_x(i) &\approx \frac{n_x(i)}{N},\\
+  p_y(j) &\approx \frac{n_y(j)}{N},\\
+  p(i,j) &\approx \frac{n(i,j)}{N}.
+  \end{align*}
 
-Si todas las densidades son funciones propias (todos sus valores son distintos de $-\infty$ y al menos un valor es menor que $+\infty$), cuando $N$ tienda a infinito y el tamaño de cada partición converja a cero, la estimación $I_{\textit{binned}}(X,Y) \to I(X;Y)$.
+Si todas las densidades son funciones propias (todos sus valores son distintos de $-\infty$ y al menos un valor es menor que $+\infty$), cuando $N$ tienda a infinito y el tamaño de cada partición converja a cero, la estimación $I_{\textit{binned}}(X,Y) \to I(X;Y)$.---Referenciar---¿Teorema 1 - Estimation of Entropy and Mutual Information - Liam Paninski?---
 
 
-\subsubsection{Estimadores de la entropía basados en los $k$ vecinos más cercanos}
+\subsection{Estimadores de la entropía basados en los $k$ vecinos más cercanos}
 
-Introducimos a continuación estimadores de la entropía, $h(X)$ basados en los $k$ vecinos más cercanos. Para ello, consideramos $X$ una variable aleatoria $d$-dimensional, con función de densidad $f(x)$. Queremos estimar la entropía\[
+Introducimos a continuación estimadores de la entropía, $h(X)$, basados en los $k$ vecinos más cercanos. Para ello, consideramos $X$ una variable aleatoria $d$-dimensional, con función de densidad $f(x)$. Queremos estimar la entropía\[
 h(X) = - \int \log\left(f(x)\right)f(x)dx
 \]
 a partir de una muestra aleatoria simple\[
@@ -1196,7 +1206,7 @@ Podemos ver \[
 Cuando $N$ es grande y $k$ es relativamente pequeño en comparación, $\epsilon_k(x_i)$ será pequeño porque $\frac{k}{N}$ lo es. Luego, la densidad $f(y)$ en la bola $B(x_i,\epsilon_k(x_i))$ no cambiará demasiado. Para cualquier punto de la bola consideraremos que su densidad coincide con la del centro de la misma, $f(y)\approx f(x_i)$. Tenemos entonces\begin{align*}
 P[X_i\in B(x_i,\epsilon_k(x_i))] &\approx \int_{B(x_i,\epsilon_k(x_i))}f(y)dy\approx f(x_i) \int_{B(x_i,\epsilon_k(x_i))}dy\\ &= f(x_i)\cdot V_d \cdot \epsilon^d_k(x_i),
 \end{align*}
-donde $V_d\cdot \epsilon^d_k(x_i)$ es el volumen de la bola $d$ dimensional de radio $\epsilon_k(x_i)$.\\
+donde $V_d\cdot \epsilon^d_k(x_i)$ es el volumen de la bola $d$ dimensional de radio $\epsilon_k(x_i)$ (este volumen depende la norma utilizada).\\
 
 Utilizando \ref{eq:knn-ind} para estimar $P[X_i\in B(x_i,\epsilon_k(x_i))]$, tendremos,\[
 f(x_i)\cdot V_d \cdot \epsilon_k(x_i) \approx P[X_i\in B(x_i,\epsilon_k(x_i))]\approx  \frac{1}{N} \sum_{i=1}^NI\left(X_i\in B\left(x_i,\epsilon_k(x_i)\right)\right) = \frac{k}{N}.
@@ -1208,7 +1218,7 @@ se obtiene el estimador de la función de densidad, \[
 \hat{f}(x) = \frac{k}{N}\cdot\frac{1}{V_d \cdot \epsilon^d_k(x)},\quad \forall x\in \R^d.
 \]
 
-Este estimador verifica,%REVIEW: REFERENCIAR
+Este estimador verifica,---Referenciar, lo cogí de la Lec7, pero ahí no hay más referencias---
 \begin{align*}
   \bias\left(\hat{f}(x)\right) &= O \left(\left(\frac{k}{n}\right)^{\frac{2}{d}} + \frac{1}{k}\right),\\
   \Var\left(\hat{f}(x)\right) &= O \left(\frac{1}{k}\right).
@@ -1225,90 +1235,98 @@ Obteniendo el estimador de la entropía
   &= - \log\frac{k}{N} + \log V_d +  \frac{d}{N} \sum_{i=1}^N\log  \epsilon_k(x_i).
 \end{align*}
 
-Este estimador es sesgado, aunque es asintóticamente insesgado y con $\Var\left (\hat{h}\right)\to \infty$ solo si $k\to \infty, N \to \infty$ y $\frac{k}{N} \to 0$. Aumentar el valor de $k$ incrementa el tiempo de cómputo notablemente, dificultando el cálculo efectivo. Por ello, se propone la modificación siguiente, basada en el estimador de Kozachenko - Leonenko.%REVIEW: REFERENCIAR
+Este estimador es sesgado, aunque es asintóticamente insesgado y con $\Var\left (\hat{h}\right)\to \infty$ solo si $k\to \infty, N \to \infty$ y $\frac{k}{N} \to 0$. Aumentar el valor de $k$ incrementa el tiempo de cómputo notablemente, dificultando el cálculo efectivo. Por ello, se propone la modificación siguiente, basada en el estimador de Kozachenko - Leonenko. ---En el artículo de Fernando Pérez Cruz viene probado lo primero antes de aplicar logaritmo, ¿si tomamos logaritmos se sigue cumpliendo?---
 
-\subsubsection{Estimadores de la entropía del tipo de Kozachenko - Leonenko}
+\subsection{Estimadores de la entropía del tipo de Kozachenko - Leonenko}
 
-Asumimos que tenemos unas métricas dadas para los espacios $X$, $Y$, $Z = (X,Y)$. Para cada punto $z_i = (x_i, y_i)$ sus vecinos según la distancia $d_{i,j}=\Vert z_i-z_j \Vert$ serían $d_{i,j_1} \leq d_{i,j_2} \leq \cdots$. Podríamos obtener los vecindarios de $X$ e $Y$ de manera similar.
+Partiendo de un razonamiento similar al anterior, trataremos de estimar la entropía, $h(X)$, a partir de \[
+\widehat{h}(X) = -\frac{1}{N}\sum_{i=1}^N\widehat{\log f}(X_i).\]
 
-Estimaremos la entropía de una variable $X$ promediando la distancia media de los $k$ vecinos más cercanos de todos los $x_i$. De esta forma, estimaremos $H(X), H(Y)$ y $H(X,Y)$. A continuación, estimaremos la información mutua utilizando el Lema \ref{l:ent_im}.\\
+La diferencia vendrá marcada por la forma de estimar $\widehat{\log f}(X_i)$.\\
 
-Sea $X$ una variable aleatoria continua con valores en un espacio métrico, es decir, hay definida una distancia, $\Vert x - x'\Vert$, entre dos realizaciones de $X$, y sea $f(x)$ la función de densidad una función $proper$. Nuestro objetivo es estimar la entropía $H(X)$ a partir de una muestra aleatoria simple $(x_1,\cdots,x_N)$ de $N$ realizaciones de $X$.
+Para obtener el estimador $\widehat{\log f}(X_i)$, para un $k$ fijo, consideramos la función de densidad, $P_k(\varepsilon)$, de la distancia entre $X_i$ y su $k$-ésimo vecino más cercano, $\epsilon$ será una realización de $\mathcal{E}_{i_k}$.\\
 
-La ecuación de la entropía, $H(X) = - \int f(x) \log f(x) dx$, se podría entender (salvo el signo menos) como una media de $\log f(x)$. Si tuviéramos un estimador insesgado, $\widehat{\log f}(x)$, del mismo, podríamos obtener un estimador insesgado de la entropía:\[
-\widehat{H}(x) = - \frac{1}{N} \sum_{i=1}^N\widehat{\log f}(x_i).\]
+Vamos a calcular $P\left[\epsilon \leq \mathcal{E}_{i_k} \leq \epsilon + h\right]$. Esta probabilidad es igual a la probabilidad de que haya un punto a distancia $r\in \left[ \varepsilon,\varepsilon + h \right ]$ de $X_i$, de que haya otros $k-1$ puntos a menor distancia; y de que $N-k-1$ puntos se encuentren a mayor distancia de $x_i$.\\
 
-Para obtener el estimador $\widehat{\log f}(x_i)$ consideramos la distribución de probabilidad $P_k(\varepsilon)$ de la distancia entre $x_i$ y su $k$-ésimo vecino más cercano. La probabilidad $P_k(\varepsilon)d\varepsilon$ ---no entiendo por qué aquí añade el $d\varepsilon$--- es igual a la probabilidad de que haya un punto a distancia $r\in \left[ \frac{\varepsilon}{2}, \frac{\varepsilon}{2} + \frac{d\varepsilon}{2} \right ]$ de $x_i$, de que haya otros $k-1$ puntos a menor distancia; y de que $N-k-1$ puntos se encuentren a mayor distancia de $x_i$.
+Llamamos $p_i(\epsilon) = P\left[X_i \in B(x_i,\epsilon)\right]$ a la distribución de la bola centrada en $x_i$ y radio $\varepsilon$, \[
+p_i(\varepsilon) = \int_{B(x_i,\epsilon)}f(y)dy.\]
 
-Llamamos $p_i$ a la función masa de probabilidad  de la bola centrada en $x_i$ y radio $\varepsilon$, $p_i(\varepsilon) = \int_{\Vert s - x_i \Vert < \frac{\varepsilon}{2}}f(s)ds$. 
+Usaremos la fórmula de la distribución multinomial para expresar $P_k(\varepsilon)$, teniendo en cuenta que, para una muestra aleatoria simple, $p_i(\epsilon) = p_j(\epsilon)$ por ser una muestra idénticamente distribuida.
 
-Usaremos la fórmula de la distribución multinomial para expresar $P_k(\varepsilon)d\varepsilon$. Recordamos que la distribución multinomial nos da la probabilidad de un número de éxitos $k$ en $N$ sucesos de Bernouilli (estos sucesos toman valor 1 para la probabilidad de éxito  y 0 para la de fracaso) independientes y equiprobables, tiene como función de densidad $\frac{N!}{x_1!\cdots x_k!}p_1^{x_1}\cdots p_k^{x_k}$. Luego,\[
-P_k(\varepsilon)d\varepsilon = \frac{(N-1)!}{1!(k-1)!(N-k-1)!} \cdot \frac{d p_i(\varepsilon)}{d\varepsilon} d\varepsilon \cdot p_i^{k-1} \cdot (1-p_i)^{N-k-1}.
-\]
-
---- En la ecuación anterior no entiendo el término $ \frac{d p_i(\varepsilon)}{d\varepsilon} $, entiendo que tiene que ser la probabilidad de que haya un punto justo a distancia $\varepsilon$ de $x_i$ pero no sé por qué se calcula así---
-
-A partir de ahí, integrando, calculamos,\[
-P_k(\varepsilon) = k\binom{N-1}{k}
-\cdot \frac{d p_i(\varepsilon)}{d\varepsilon} \cdot p_i^{k-1} \cdot (1-p_i)^{N-k-1}.
-\]
-
-Se comprueba que $\int P_k(\varepsilon)d\varepsilon = 1$ ---no me salió ---, que debe cumplir para ser función de distribución.
-
-Podemos calcular la esperanza de $\log p_i (\varepsilon)$, a partir de la posición de los $N-1$ puntos restantes, con $x_i$ fijo:
-
---- No sé por qué se verifican las igualdades siguientes---
 \begin{align*}
-\mathbb{E}(\log p_i) &= \int_0^\infty P_k(\varepsilon) \log p_i(\varepsilon) d\varepsilon =  k\binom{N-1}{k} \int_0^1 p^{k-1}(1-p)^{N-k-1}\log p\ dp\\ &= \psi (k) - \psi(N).
+  P_k(\epsilon) &= \lim_{h\to 0}\frac{P\left[\epsilon \leq \mathcal{E}_{i_k} \leq \epsilon + h\right]}{h}\\[5pt] &= \lim_{h\to 0} \left [\frac{(N-1)!}{1!(k-1)!(N-k-1)!}  \cdot p_i(\epsilon)^{k-1} \cdot \left(1-p_i(\epsilon)\right)^{N-k-1}\left(\frac{p_i(\epsilon + h ) - p_i(\epsilon)}{h}\right)\right ]\\[10pt] &= k\binom{N-1}{k}
+\cdot \frac{d p_i(\varepsilon)}{d\varepsilon} \cdot p_i(\epsilon)^{k-1} \cdot \left(1-p_i(\epsilon)\right)^{N-k-1}.\\
 \end{align*}
 
-Obtenemos un estimador de $\log f(x)$ asumiendo que $f(x)$ es constante en la bola de radio $\varepsilon$. --- ¿por qué es necesario asumir esto?, ¿cómo obtiene la aproximación siguiente?--- Esto nos da $p_i (\varepsilon) \approx c_d \varepsilon^d f(x_i)$, donde $d$ es la dimensión de $X$ y $c_d$ es el volumen de la bola unidad $d$-dimensional. La constante $c_d$ depende de la norma, para la del máximo tenemos $c_d=1$, mientras que para la euclídea $c_d=\frac{\pi^{d/2}}{\Gamma\left ( 1+ \frac{d}{2} \right ) / 2^d}$.
+
+Se comprueba que $\int P_k(\varepsilon)d\varepsilon = 1$, que debe cumplir para ser función de densidad. ---Referenciar, no lo encuentro en el último artículo---
+
+Podemos calcular la esperanza de $\log p_i (\varepsilon)$, a partir de la posición de los $N-1$ puntos restantes, con $x_i$ fijo:
+---Referenciar, no lo esncuentro en el último artículo---
+\begin{align*}
+\mathbb{E} \left[\log p_i(\epsilon)\right ] &= \int_0^\infty P_k(\varepsilon) \log p_i(\varepsilon) d\varepsilon =  k\binom{N-1}{k} \int_0^1 p^{k-1}(1-p)^{N-k-1}\log p\ dp\\ &= \psi (k) - \psi(N),
+\end{align*}
+
+donde $\psi$ es la función digamma.\\
+
+Si asumimos que $f(x)$ es constante en la bola de radio $\epsilon$, tendremos \begin{align*}
+p_i(\epsilon) &\approx \int_{B(x_i,\epsilon)}f(y)dy\approx f(x_i) \int_{B(x_i,\epsilon)}dy\\ &= f(x_i)\cdot V_d \cdot \epsilon^d.\\
+\end{align*}
 
 Tomando logaritmos sobre la aproximación de $p_i(\varepsilon)$, obtenemos:\[
-\log p_i(\varepsilon) \approx \log c_d + d \log \varepsilon + \log f(x_i)
+\log p_i(\varepsilon) \approx \log f(x_i) + \log V_d + d \log \varepsilon, 
 \]
-Continuamos tomando esperanzas respecto de $\varepsilon$ y sustituyendo la esperanza del logaritmo ya calculada:\[
-\log f(x_i) \approx \mathbb{E}(\log p_i) - \log c_d  - d \mathbb{E} (\log \varepsilon) = \psi (k) - \psi (N) - \log c_d  - d \mathbb{E} (\log \varepsilon).
+despejando $\log f(x_i)$,\[
+\log f(x_i) \approx  \log p_i(\varepsilon) - \log V_d - d \log \varepsilon.
 \]
 
-Hemos calculado el estimador $\widehat{\log f} (x_i)$, sustituiremos de la forma propuesta para obtener un estimador de la entropía:
+Continuamos tomando esperanzas respecto de $\varepsilon$ y sustituyendo la esperanza del logaritmo ya calculada, notamos que $\log f(X_i)$ no depende de $\epsilon$:\[
+\log f(x_i) \approx \mathbb{E}\left[\log p_i(\epsilon)\right] - \log V_d  - d \mathbb{E} \left[\log \varepsilon\right] = \psi (k) - \psi (N) - \log V_d  - d \mathbb{E} \left[\log \varepsilon\right].
+\]
+
+Hemos calculado un estimador de $\widehat{\log f} (X_i)$, sustituiremos de la forma propuesta para obtener un estimador de la entropía:
 \begin{align}
-  \widehat{H}(X) &= - \frac{1}{N} \sum_{i=1}^N\widehat{\log f} (x_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \psi (N) - \log c_d  - d\log \varepsilon \right ) \nonumber \\
-  &= - \psi (k) + \psi (N) + \log c_d + \frac{d}{N} \sum_{i=1}^N \log \varepsilon (i), \label{eq:est_ent}
+  \widehat{h}(X) &= - \frac{1}{N} \sum_{i=1}^N\widehat{\log f} (X_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \psi (N) - \log V_d  - d\log \varepsilon \right ) \nonumber \\
+  &= - \psi (k) + \psi (N) + \log V_d + \frac{d}{N} \sum_{i=1}^N \log \varepsilon (x_i). \label{eq:est_ent}
 \end{align}
-donde $\varepsilon(i)$ es dos veces la distancia de $x_i$ a su $k$-ésimo vecino más cercano.
----En la ecuación anterior no sé por qué desaparece la esperanza---
 
+El estimador anterior es el de Kozachenko - Leonenko en el caso $k=1$.
 
-Por cómo lo hemos obtenido, $\widehat{H}(X)$ será insesgado si la densidad $f(x)$ es estrictamente constante. --- Esto no sé por qué ---
+Por cómo lo hemos obtenido, $\widehat{h}(X)$ será insesgado si la densidad $f(x)$ es constante.
 
-Consideremos ahora la variable aleatoria conjunta $Z=(X,Y)$ con la norma del máximo: $\Vert z - z' \Vert = \max \{\Vert x-x' \Vert, \Vert y-y'\Vert\}$, donde las normas en $X$ e $Y$ pueden ser cualesquiera, no necesariamente la misma.
+\subsection{Estimadores de la información mutua del tipo de Kozachenko - Leonenko}
 
-Tomamos uno de los $N$ puntos, $z_i$, y notamos $\frac{\varepsilon(i)}{2}$ la distancia de este punto a su $k$-ésimo vecino. $\frac{\varepsilon_x(i)}{2}$ y $\frac{\varepsilon_y(i)}{2}$ reflejan la misma distancia proyectada en el subespacio $X$ e $Y$ respectivamente. $\varepsilon(i) = \max \{\varepsilon_x(i), \varepsilon_y(i)\}$.
+Consideremos ahora la variable aleatoria conjunta $Z=(X,Y)$ con la norma del máximo\[ \Vert Z - Z' \Vert = \max \{\Vert X-X' \Vert, \Vert Y-Y'\Vert\},\] donde las normas en $X$ e $Y$ pueden ser cualesquiera, no necesariamente la misma. \\
 
-Distinguiremos dos algoritmos diferentes para estimar la información mutua según si consideramos los vecinos que se encuentren en el cuadrado de lado $\varepsilon(i)$, o en el rectángulo de lados $\varepsilon_x(i)$, $\varepsilon_y(i)$. 
+Para un $k$ fijo, tomamos uno de los $N$ puntos de la muestra, $z_i$, y notamos $\varepsilon_k(z_i)$ la distancia de este punto a su $k$-ésimo vecino más cercano, esta será una realización de $\mathcal{E}_{i_k}$. $\epsilon_k(x_i)$ y $\epsilon_k(y_i)$ reflejan la misma distancia proyectada en los subespacios $X$ e $Y$ respectivamente. Por la norma elegida, se verifica \[\varepsilon_k(z_i) = \max \{\varepsilon_k(x_i), \varepsilon_k(y_i)\}.\]
 
-\paragraph{Primer algoritmo}
+Distinguiremos dos algoritmos diferentes para estimar la información mutua según si consideramos los vecinos que se encuentren en el cuadrado de lado $2\varepsilon(z_i)$, o en el rectángulo de lados $2\varepsilon(x_i)$, $2\varepsilon(y_i)$. 
 
-Este algoritmo se caracteriza por definir $n_x(i)$ como el número de puntos $x_j$ cuya distancia a $x_i$ es menor que $\frac{\varepsilon(i)}{2}$, de forma análoga se define $n_y(i)$. Como $\varepsilon(i)$ es una variable aleatoria, $n_x(i),\ n_y(i)$ también lo son. $\frac{\varepsilon(i)}{2}$ es una variable aleatoria con distribución dada por $P_k(\varepsilon)$, luego $\mathbb{E}(\log p_i) = \psi(k) - \psi(N)$ se cumple también en este caso. Para utilizar el estimador de la entropía calculado anteriormente debemos cambiar: $x_i$ por $z_i=(x_i,y_i)$, $d$ por $d_X,\ d_Y$ y $c_d$ por $c_{d_X}c_{d_Y}$. Con estas modificaciones obtenemos\[
-\widehat{H}(X,Y) = - \psi(k) + \psi(N) + \log (c_{d_X}c_{d_Y}) + \frac{d_X+d_Y}{N} \sum_{i=1}^N\log(\varepsilon(i)).
+\subsubsection{Primer algoritmo}
+
+Este algoritmo se caracteriza por definir $n_x(i)$ como el número de puntos $x_j$ cuya distancia a $x_i$ es menor que $\varepsilon_k(z_i)$, análogamente se define $n_y(i)$. $\varepsilon_k(z_i)$ es una observación de una variable aleatoria con densidad dada por $P_k(\varepsilon_k(z_i))$, luego $\mathbb{E}\left[\log p_i\left(\varepsilon_k(z_i)\right)\right] = \psi(k) - \psi(N)$ se cumple también en este caso.\\
+
+Para utilizar el estimador de la entropía calculado anteriormente debemos cambiar: $x_i$ por $z_i=(x_i,y_i)$, $d$ por $d_X + d_Y$ y $V_d$ por $V_{d_X}V_{d_Y}$. Con estas modificaciones obtenemos\[
+\widehat{h}(X,Y) = - \psi(k) + \psi(N) + \log (V_{d_X}V_{d_Y}) + \frac{d_X+d_Y}{N} \sum_{i=1}^N\log\left(\varepsilon_k(z_i)\right).
 \]
 
-Para obtener $I(X;Y)$ tenemos que restar este valor a las estimaciones de $H(X)$ y $H(Y)$. Podríamos usar el mismo $k$ para realizar estas estimaciones, pero entonces usaríamos diferentes escalas en el espacio conjunto que en los marginales. Para un $k$ fijo, la distancia al $k$-ésimo vecino en el espacio conjunto sería mayor que las distancias a los vecinos en los espacios marginales. El sesgo en el estimador de la entropía marcado por la no uniformidad de la densidad depende de estas distancias, los sesgos en $\widehat{H}(X)$, $\widehat{H}(Y)$, $\widehat{H}(X,Y)$ no se cancelarían. Para evitar eso, notamos que la estimación se cumple para cualquier valor de $k$ y que no tenemos porqué mantenerlo fijo.
-
-Suponiendo que el $k$-ésimo vecino de $x_i$ se encuentra en uno de los lados verticales del cuadrado de lado $\varepsilon(i)$, si hay $n_x(i)$ puntos en la recta vertical $x = x_i \pm \frac{\varepsilon(i)}{2}$, entonces $\frac{\varepsilon(i)}{2}$ es la distancia al $n_x(i) + 1$ vecino de $x_i$ y estimamos su entropía mediante\[
-\widehat{H}(X) = - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \psi(N) + \log c_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon(i).
+Para obtener una estimación de $I(X;Y)$ utilizaremos el Lema \ref{l:ent_im},\[
+\hat{I}(X;Y) = \hat{h}(X) + \hat{h}(Y) - \hat{h}(X,Y).
 \]
----En la ecuación anterior, ¿$x$ estaría fijo?---
+Podríamos usar el mismo valor de $k$ para realizar estas estimaciones, pero entonces estaríamos utilizando diferentes escalas en el espacio conjunto y en los marginales. Para un $k$ fijo, la distancia al $k$-ésimo vecino en el espacio conjunto sería mayor que las distancias a los vecinos en los espacios marginales. El sesgo en el estimador de la entropía proveniente de la no uniformidad de la densidad depende de estas distancias, los sesgos en $\widehat{h}(X)$, $\widehat{h}(Y)$, $\widehat{h}(X,Y)$ no se cancelarían. Para evitar eso, notamos que la estimación se cumple para cualquier valor de $k$ y que no tenemos por qué mantenerlo fijo.\\
 
-Para la variable $Y$ podría no cumplirse exactamente así, ya que $\varepsilon(i)$ no tendría por qué ser dos veces la distancia al $(n_y(i)+1)$-ésimo vecino. Sin embargo, consideramos la ecuación anterior una buena aproximación para $H(Y)$ (cambiando $X$ por $Y$). Esta aproximación se vuelve exacta cuando $n_y(i) \to \infty$ y cuando $N\to \infty$.
+Suponemos que el $k$-ésimo vecino de $x_i$ se encuentra en uno de los lados verticales del cuadrado de lado $2\varepsilon_k(z_i)$. Entre las rectas verticales $x_i - \varepsilon_k(z_i)$ y $x_i + \varepsilon_k(z_i)$ hay $n_x(i)$ puntos, por definición de $n_x(i)$, luego, $\varepsilon_k(z_i)$ coincide con la distancia entre $x_i$ y su $(n_x(i) + 1)$-ésimo vecino más cercano. Tomando $k = n_x(i)+1$, estimamos la entropía de la variable $X$ mediante\[
+\widehat{h}(X) = - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \psi(N) + \log V_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon_k(z_i).
+\]
+
+Para la variable $Y$, $\varepsilon_k(z_i)$ no tendría por qué coincidir con la distancia entre $y_i$ y su $(n_y(i)+1)$-ésimo vecino. Sin embargo, consideramos la ecuación anterior una buena aproximación para $h(Y)$ (cambiando $X$ por $Y$). Esta aproximación será exacta cuando $n_y(i) \to \infty$ y cuando $N\to \infty$.---Referenciar---\\
 
 Usando estas estimaciones en la ecuación correspondiente, obtenemos:
 \begin{align*}
-  I^{(1)}(X,Y) \approx & \widehat{H}(X) + \widehat{H}(Y) - \widehat{H}(X, Y)\\ =& - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \psi(N) + \log c_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon(i)\\
-  & - \frac{1}{N}\sum_{i=1}^N\psi(n_Y(i)+1) + \psi(N) + \log c_{d_Y} + \frac{d_Y}{N} \sum_{i=1}^N\log \varepsilon(i)\\
-  & + \psi(k) - \psi(N) - \log (c_{d_X}c_{d_Y}) - \frac{d_X+d_Y}{N} \sum_{i=1}^N\log(\varepsilon(i))\\
-  =& \psi(k) - \frac{1}{N}\sum_{i=1}^N\left( \psi(n_x(i)+1) + \psi(n_y(i)+1) \right ) + \psi(N).
+  I^{(1)}(X,Y) \approx& \ \widehat{h}(X) + \widehat{h}(Y) - \widehat{h}(X, Y)\\ =& - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \psi(N) + \log V_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon(i)\\
+  & - \frac{1}{N}\sum_{i=1}^N\psi(n_Y(i)+1) + \psi(N) + \log V_{d_Y} + \frac{d_Y}{N} \sum_{i=1}^N\log \varepsilon(i)\\
+  & + \psi(k) - \psi(N) - \log (V_{d_X}V_{d_Y}) - \frac{d_X+d_Y}{N} \sum_{i=1}^N\log(\varepsilon(i))\\
+  =& \ \psi(k) - \frac{1}{k} - \frac{1}{N}\sum_{i=1}^N\left( \psi(n_x(i)+1) + \psi(n_y(i)+1) \right ) + \psi(N).
 \end{align*}
 
 Notamos $\langle \cdots \rangle$ a la media sobre todos los $i\in\{1,\cdots,N\}$ y sobre todas las realizaciones de las muestras aleatorias,\[
@@ -1318,15 +1336,16 @@ Notamos $\langle \cdots \rangle$ a la media sobre todos los $i\in\{1,\cdots,N\}$
 Utilizando esta notación la estimación de la entropía quedaría:\[
 I^{(1)}(X,Y) \approx \psi(k) - \langle \psi(n_x+1) + \psi(n_y+1) \rangle + \psi(N).
 \]
---- No entiendo cómo aplicamos $\langle \cdots \rangle$, ¿no faltaría una esperanza?---
 
-El principal inconveniente de esta estimación es que solo usamos el estimador de Kozachenko - Leonenko correctamente en una dirección marginal. Esto parece inevitable si queremos usar (hiper)cubos en el espacio conjunto, como opción alternativa podríamos usar (hiper)rectángulos.
+El principal inconveniente de esta estimación es que solo usamos el estimador de la entropía correctamente en una dirección marginal. Esto parece inevitable si queremos usar (hiper)cubos en el espacio conjunto, como opción alternativa podríamos usar (hiper)rectángulos.
 
-\paragraph{Segundo algoritmo} En este caso, $n_x(i)$ y $n_y(i)$ serán el número de puntos con $\Vert x_i - x_j \Vert \leq \frac{\varepsilon_x(i)}{2}$ y $\Vert y_i - y_j \Vert \leq \frac{\varepsilon_y(i)}{2}$ respectivamente. Tenemos que distinguir dos casos:
+\subsubsection{Segundo algoritmo}
+
+En este caso, $n_x(i)$ y $n_y(i)$ serán el número de puntos con $\Vert x_i - x_j \Vert \leq \varepsilon_k(x_i)$ y $\Vert y_i - y_j \Vert \leq \varepsilon_k(y_i)$ respectivamente. Tenemos que distinguir dos situaciones:
 
 \begin{enumerate}[label={\alph*)}]
-\item Los lados $\varepsilon_x(i)$ y $\varepsilon_y(i)$ quedan determinados por el mismo punto.
-\item Los lados $\varepsilon_x(i)$ y $\varepsilon_y(i)$ quedan determinados por puntos diferentes.
+\item Los lados $\varepsilon_k(x_i)$ y $\varepsilon_k(y_i)$ quedan determinados por el mismo punto.
+\item Los lados $\varepsilon_k(x_i)$ y $\varepsilon_k(y_i)$ quedan determinados por puntos diferentes.
 \end{enumerate}
 
 En ambos casos tenemos que cambiar $P_k(\varepsilon)$ por una probabilidad 2-dimensional:\[
@@ -1339,15 +1358,36 @@ P_k^{a)}(\varepsilon_x, \varepsilon_y) = \binom{N-1}{k} \frac{d^2[q_i^k]}{d\vare
 y\[
 P_k^{b)}(\varepsilon_x, \varepsilon_y) = (k-1)\binom{N-1}{k} \frac{d^2[q_i^k]}{d\varepsilon_x d \varepsilon_y}(1-p_i)^{N-k-1},
 \]
-donde $q_i \equiv q_i(\varepsilon_x, \varepsilon_y)$ es la función de densidad del rectángulo de lados $\varepsilon_x \times \varepsilon_y$ centrado en el punto $(x_i, y_i)$, y $p_i$ es la función de densidad del cuadrado de lado $\varepsilon = \max \{\varepsilon_x, \varepsilon_y\}$. Esta última es necesario porque usando la norma del máximo garantizamos que no hay puntos en ese cuadrado que no estén en el cuadrado.
+donde $q_i \equiv q_i(\varepsilon_k(X), \varepsilon_k(Y))$ es la función de densidad del rectángulo de lados $\varepsilon_k(X) \times \varepsilon_k(Y)$ centrado en el punto $(X_i, Y_i)$, y $p_i$ es la función de densidad del cuadrado de lado $\varepsilon = \max \{\varepsilon_k(X), \varepsilon_k(Y)\}$. Esta última es necesaria porque usando la norma del máximo garantizamos que no hay puntos en ese cuadrado que no estén en el rectángulo.
 
-Se verifica que $\int P_k =1$. Calculamos la esperanza de $\log p_i$:
+Se verifica que $\int P_k =1$. Calculamos la esperanza de $\log q_i$:
 ---No sé por qué se verifican las igualdades siguientes---
 \[
 \mathbb{E}(\log q_i) = \int \int_0^{\infty} P_k(\varepsilon_x, \varepsilon_y) \log q_i(\varepsilon_x, \varepsilon_y) d \varepsilon_x d\varepsilon_y
 = \psi(k) - \frac{1}{k} - \psi(N)
 \]
---- ¿Se cumple $pi\approx c_d\varepsilon^df(x)$ y podemos proceder de forma similar al caso anterior?---
+
+Volviendo a aproximar $\log f(x_i)$ por \[
+\log f(x_i) \approx  \log q_i(\varepsilon) - \log V_d - d \log \varepsilon,
+\]
+tomando esperanzas, obtenemos \[
+\log f(x_i) \approx  \psi(k) - \frac{1}{k} - \psi(N) - \log V_d - d \E\log \varepsilon.
+\]
+Esto nos da el siguiente estimador de la entropía
+ \begin{align*}
+  \widehat{h}(X) &= - \frac{1}{N} \sum_{i=1}^N\widehat{\log f} (X_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \frac{1}{k} - \psi (N) - \log V_d  - d\log \varepsilon \right ) \\
+  &= - \psi (k) + \frac{1}{k}+ \psi (N) + \log V_d + \frac{d}{N} \sum_{i=1}^N \log \varepsilon (x_i). 
+ \end{align*}
+
+ Como ya hicimos en el primer algoritmo, utilizaremos el Lema \ref{l:ent_im} para estimar la información mutua, esta vez a partir del estimador de la entropía recién conseguido.
+
+\begin{align*}
+  I^{(2)}(X,Y) \approx& \ \widehat{h}(X) + \widehat{h}(Y) - \widehat{h}(X, Y)\\ =& - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \frac{1}{n_x(i)+1} + \psi(N) + \log V_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon(i)\\
+  & - \frac{1}{N}\sum_{i=1}^N\psi(n_Y(i)+1) + \frac{1}{n_y(i)+1} + \psi(N) + \log V_{d_Y} + \frac{d_Y}{N} \sum_{i=1}^N\log \varepsilon(i)\\
+  & + \psi(k) - \frac{1}{k} - \psi(N) - \log (V_{d_X}V_{d_Y}) - \frac{d_X+d_Y}{N} \sum_{i=1}^N\log(\varepsilon(i))\\
+  =& \ \psi(k) - \frac{1}{N}\sum_{i=1}^N\left( \psi(n_x(i)+1) + \psi(n_y(i)+1) \right ) + \psi(N).
+\end{align*}
+--- No llego a la última igualdad---
 
 La información mutua se aproximaría por
 \begin{align}
@@ -1355,12 +1395,12 @@ I^{(2)}(X,Y) \approx \psi(k) - \frac{1}{k} - \langle \psi(n_x) + \psi(n_y) \rang
 \end{align}
 
 
-En general ambas fórmulas dan resultados similares. Para un mismo $k$, $I^{(1)}$ da ligeramente menores errores estadísticos (porque $n_x(i)$ y $n_y(i)$ tienden a ser más grandes y tener menores variaciones relativas), pero tienen mayores errores sistemáticos. Este último es grave solo si estamos interesados en variables con dimensiones muy altas, donde $\varepsilon(i)$ tiende típicamente a ser más grande que la marginal $\varepsilon_x(i)$. En ese caso parece preferible el segundo algoritmo, de resto se pueden usar los dos.
+En general ambas fórmulas dan resultados similares. Para un mismo $k$, $I^{(1)}$ da menores errores estadísticos (porque $n_x(i)$ y $n_y(i)$ tienden a ser más grandes y tener menores variaciones relativas), pero tiene mayores errores sistemáticos. Esto último es grave solo si estamos interesados en variables con dimensiones muy altas, donde $\varepsilon(i)$ es habitualmente más grande que la marginal $\varepsilon_x(i)$. En ese caso, parece preferible el segundo algoritmo, de resto es indiferente usar uno u otro.
 
-\subsection{Implementaciones de estimadores de la entropía y de la información mutua}
+\section{Implementaciones de la entropía y de la información mutua}
 En esta sección estudiaremos un par de implementaciones de conceptos anteriores como la entropía o la estimación mutua. En general, dado un número finito de muestras de una variable aleatoria no podemos calcular de forma exacta la entropía o información mutua, ya que no conocemos su distribución. Para implementarlas es necesario usar algún estimador, como los estudiados en el apartado anterior.
 
-\subsubsection{Implementación 1 - GaelVaroquaux}
+\subsection{Implementación 1 - GaelVaroquaux}
 
 Comenzaremos revisando la implementación \cite{estimating}. Para ello leeremos el código y nos formaremos una idea de qué hace y cómo cada una de las funciones.
 
@@ -1381,9 +1421,9 @@ H(X_1,\cdots, X_n) = \frac{n}{2} \left (1 + \log(2\pi) \right) + \frac{1}{2}\log
 
 Coincidiendo con la fórmula vista en \ref{ej:norm_multi}.
 
-\item \texttt{entropy}: calcula la entropía de la variable \texttt{X} usando el estimador de Leonenko - Kozachenko \ref{eq:est_ent}. Comienza inicializando los elementos que se necesitan para aplicar la fórmula: vecinos más cercanos para todos los elementos del vector, dimensiones de \texttt{X}, volumen de la bola unidad ($c_d$). Notamos que en el cálculo de la constante $c_d$ (\texttt{volume\_unit\_ball}) falta un $\frac{1}{2^d}$. Otra diferencia es que en el estimador propuesto, $\varepsilon$ era dos veces la distancia del punto al vecino, mientras que en \texttt{r} tenemos la distancia del punto a su vecino más cercano una sola vez. Donde el estimador estudiado ponía $\varepsilon$ en esta implementación pone \texttt{r + eps}, donde \texttt{eps} es el menor valor que al ser sumado varía el resultado (de forma que  \texttt{1+eps $\neq$ 1}). En ambas implementaciones se añade un ínfimo ruido a los datos, para evitar que varios puntos tengan exactamente las mismas coordenadas. Devuelve el resultado de sustituir estos valores en la fórmula \ref{eq:est_ent}.
+\item \texttt{entropy}: calcula la entropía de la variable \texttt{X} usando el estimador de Leonenko - Kozachenko \ref{eq:est_ent}. Comienza inicializando los elementos que se necesitan para aplicar la fórmula: vecinos más cercanos para todos los elementos del vector, dimensiones de \texttt{X}, volumen de la bola unidad ($V_d$). Notamos que en el cálculo de la constante $V_d$ (\texttt{volume\_unit\_ball}) falta un $\frac{1}{2^d}$. Otra diferencia es que en el estimador propuesto, $\varepsilon$ era dos veces la distancia del punto al vecino, mientras que en \texttt{r} tenemos la distancia del punto a su vecino más cercano una sola vez. Donde el estimador estudiado ponía $\varepsilon$ en esta implementación pone \texttt{r + eps}, donde \texttt{eps} es el menor valor que al ser sumado varía el resultado (de forma que  \texttt{1+eps $\neq$ 1}). En ambas implementaciones se añade un ínfimo ruido a los datos, para evitar que varios puntos tengan exactamente las mismas coordenadas. Devuelve el resultado de sustituir estos valores en la fórmula \ref{eq:est_ent}.
 
-\item \texttt{mutual\_information}: devuelve la información mutua entre cualquier número de variables. Para ello suma las entropías marginales de cada una de ellas y les resta la entropía conjunta (usando el mismo valor $k$ para ambas estimaciones).---Esta fórmula habría que probarla y añadirla a la parte de teoría (la tenemos para 2 variables)--- % REVIEW: Referenciar lema correspondiente
+\item \texttt{mutual\_information}: devuelve la información mutua entre cualquier número de variables. Para ello suma las entropías marginales de cada una de ellas y les resta la entropía conjunta (usando el mismo valor $k$ para ambas estimaciones), aplicando el Lema \ref{l:ent_im} y calculando la entropía llamando a la función \texttt{entropy}.
 
 \item \texttt{mutual\_information\_2d}: calcula la información mutua entre dos variables unidimensionales a partir de su histograma conjunto. 
 
@@ -1410,7 +1450,7 @@ Añadimos a esta tupla la diferencia entre ambos valores:
 
 Observamos una pequeña diferencia entre los valores estimados y los teóricos.
 
-\subsubsection{Implementación 2 -  gregversteeg}
+\subsection{Implementación 2 -  gregversteeg}
 
 Pasamos a revisar la segunda implementación, que encontramos en \cite{npeet}. Como en el caso anterior, comenzamos leyendo el código función por función. 
 \begin{itemize}
@@ -1418,7 +1458,7 @@ Pasamos a revisar la segunda implementación, que encontramos en \cite{npeet}. C
   \frac{\psi(N) - \psi(k) + d \cdot \log 2 + \frac{d}{N}\sum \varepsilon(i)}{\log(base)}.
   \]
 
-  Este $\log (base)$ se utiliza para que la fórmula pase a estar en base 2. La fórmula coincide con la estudiada salvo porque la constante $\log c_d$ es sustituida por $d \cdot \log 2$.
+  Este $\log (base)$ se utiliza para que la fórmula pase a estar en base 2. La fórmula coincide con la estudiada salvo porque la constante $\log V_d$ es sustituida por $d \cdot \log 2$.
 
 \item \texttt{centropy}: estima la entropía de $X|Y$, para ello usa la función anterior para calcular las entropías de $(X,Y)$ e $Y$. Estima la entropía condicionada como $H(X|Y) = H(X,Y)-H(Y)$.
 \item \texttt{tc}: calcula la entropía de cada característica, devuelve la suma de las entropías de las características menos la entropía de la variable.
@@ -1441,7 +1481,7 @@ donde \texttt{nn} y \texttt{nnp} son las distancias a los vecinos más cercanos 
 \item \texttt{lnc\_correction}: ---esta función no la entiendo bien---.
 
 \item \texttt{entropyd}: con esta comienza una serie de funciones para los estimadores discretos. Se estima la probabilidad contando el número de apariciones de un elemento y dividiendo entre el total de elementos. Se devuelve la suma de las probabilidades multiplicadas por el logaritmo de 1 partido por la probabilidad, todo ello dividido entre $\log base$:\[
-\frac{\sum p \log \frac{1}{p}}{log(base)}.
+\frac{\sum p \log \frac{1}{p}}{\log(base)}.
 \]
 
 Si las probabilidades son correctas, esta fórmula coincide con la entropía teórica.
@@ -1536,14 +1576,14 @@ En primer lugar, se calcula la entropía de variables con una distribución unif
 
 
 %-------------------------COMPARACIÓN-----------------------------------
-\section{Metodología para la comparación de estimadores}
-\subsection{Tecnología utilizada}
----python, bibliotecas usadas, git, planificación (también se podría poner en objetivos) -> hacer un diagrama de Gantt (revisar bibliografía, adquirir conocimmiento, escribir memoria, búsqueda de implementaciones, escribir código)---
+\chapter{Metodología para la comparación de estimadores}
+\section{Tecnología utilizada}
+---python, bibliotecas usadas, git, planificación (también se podría poner en objetivos) -> hacer un diagrama de Gantt (revisar bibliografía, adquirir conocimmiento, escribir memoria, búsqueda de implementaciones, escribir código), diseño basado en prototipos---
+---cProfiler, Stats---
 
+\chapter{Resultados}
 
-\section{Resultados}
-
-\subsection{Análisis comparativo}
+\section{Análisis comparativo}
 
 Pasamos a implementar el programa \texttt{prueba.py} para poder comparar ambas implementaciones y realizar las modificaciones que consideremos.
 
@@ -1684,12 +1724,95 @@ $d$ & Error estimador 1 & Error estimador 2\\ \midrule
 \end{figure}
 
 
-\subsection{Experimentos}
-\subsection{Discusión}
+\section{Experimentos}
 
-\section{Conclusiones}
+Compararemos ambas implementaciones en función al consumo de recursos, como tiempo y memoria.
 
-\section{Estimación del coste del TFG}
+\subsection{Comparación de tiempos de ejecución}
+
+Para realizar la comparación de los tiempos de ejecución de las funciones se han utilizado las funciones implementadas en el archivo \texttt{profiling.py}.\\
+
+Se ha realizado un análisis de los tiempos de ejecución de las dos implementaciones de la entropía y de las dos implementaciones de la información mutua vistas. Para ello, se han ejecutado 5 veces y nos hemos quedado con los tiempos medios de ejecución para diferentes valores del número de muestras y dimensión de las mismas.\\
+
+Se han considerado tres rangos para el tamaño de las muestras: pequeñas (1000 muestras), medianas (30000 muestras) y grandes (100000). De forma similar, en función a la dimensión, se realizaron estimaciones con tres tipos de dimensiones: pequeñas (dimensión 2), medianas (dimensión 10) y grandes (dimensión 100). Notamos que en el caso de la dimensión 100 el programa no llega a finalizar, así que debemos excluirlo de la tabla de resultados.\\
+
+Comenzaremos analizando los tiempos obtenidos al calcular la entropía. Podemos observarlos en la Tabla \ref{tab:tiempos_ent}. Como es de esperar, a medida que aumenta el número de muestras y la dimensión, se incrementan los tiempos de ejecución. Para dimensión 2, los tiempos son similares para muestras pequeñas y medianas, diferenciándose más para muestras grandes. Sin embargo, en todos los casos la implementación 1 es más lenta que la 2. Al aumentar la dimensión, se incrementan los tiempos de ejecución de ambas implementaciones, pero también las diferencias entre ellas. Para una muestra pequeña la implementación 1 tarda aproximadamente el doble que la 2. Con muestras más grandes la diferencia de tiempo aumenta. Para una muestra grande, la implementación 1 tarda casi el triple que la 2.\\
+
+Podemos concluir, por tanto, que la segunda implementación es más rápida que la primera para calcular la entropía. El cálculo que realizan ambas estimaciones es el mismo, utilizan el mismo estimador, varía únicamente la implementación, en cuanto a tiempo de cómputo será preferible la implementación 2.
+
+---¿qué tabla nos permite comparar mejor? ---
+
+\begin{table}[!htb]
+  \begin{adjustwidth}{-.5in}{-.5in}  
+    \caption{Tiempos de ejecución de la función \texttt{entropy}.}
+    \label{tab:tiempos_ent}
+    \begin{subtable}{.5\linewidth}
+      \centering
+        \caption{Implementación 1.}
+        \begin{tabular}{l|rrr}
+          \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
+          \midrule
+2 &   0.0022 $s$ & 0.0589 $s$ & 0.2340 $s$\\
+10 &   0.0144 $s$& 2.3644 $s$ & 13.1121 $s$\\
+        \end{tabular}
+    \end{subtable}
+    \begin{subtable}{.5\linewidth}
+      \centering
+        \caption{Implementación 2.}
+        \begin{tabular}{l|rrr}
+          \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
+          \midrule
+2 &    0.0017 $s$ &  0.0503 $s$ &  0.1838 $s$\\
+10 &  0.0068 $s$ &   0.8612 $s$ &    4.6004 $s$\\
+        \end{tabular}
+    \end{subtable}
+    \end{adjustwidth}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Tiempos de ejecución de la función \texttt{entropy} en ambas implementaciones para diferentes valores del parámetro $d$ y $n$.}
+\label{tab:tiempos_ent}
+\begin{tabular}{r|l|rrr}
+  \toprule
+Implementación & \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
+ \midrule
+1 & 2 &   0.0022 $s$ & 0.0589 $s$ & 0.2340 $s$\\
+2 & 2  &    0.0017 $s$ &  0.0503 $s$ &  0.1838 $s$\\[5pt]
+1 & 10 &   0.0144 $s$& 2.3644 $s$ & 13.1121 $s$\\
+2 & 10 &  0.0068 $s$ &   0.8612 $s$ &    4.6004 $s$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Pasamos a estudiar qué implementación es más rápida en el cálculo de la información mutua. Recordamos que en este caso las implementaciones no realizan el mismo cálculo. La primera implementación calcula la información mutua a través de las entropías de las variables marginales. La segunda implementación lo hace a través de $I^{(2)}$.
+
+\begin{table}[H]
+\centering
+\caption{Tiempos de ejecución del cálculo de la información mutua en ambas implementaciones para diferentes valores del parámetro $d$ y $n$.}
+\label{tab:tiempos_mi}
+\begin{tabular}{r|l|rrr}
+  \toprule
+Implementación & \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
+ \midrule
+1 & 2 &   0.0066 $s$ &  0.2852 $s$ &  1.1668 $s$\\
+2 & 2  &    0.0065 $s$ &  0.4432 $s$ &  2.2371 $s$ \\[5pt]
+1 & 10 &   0.091 $s$ &   28.3134 $s$ &  380.604 $s$\\
+2 & 10 &  0.0504 $s$ &  32.9856 $s$ &  783.608 $s$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+En la Tabla \ref{tab:tiempos_mi} vemos los tiempos de ejecución para ambas implementaciones de la información mutua con los tamaño y dimensión de muestra establecidos. Al igual que para la entropía, los tiempos en todos los casos aumentan al considerar muestras más grandes y de mayor dimensión. Además, notamos que los tiempos de ejecución superiores que los necesitados para calcular la entropía, esto no es de extrañar, en uno de los casos se calcula la entropía de varias variables y luego se opera con ellas para obtener la información mutua. Para un tamaño de muestra pequeña y dimensión pequeña, los tiempos son muy similares, pero a medida que van aumentando, tanto dimensión como tamaño de muestra, aumenta también la diferencia entre los tiempos de ejecución de las dos implementaciones. En este caso ocurre al contrario que al calcular la entropía, la implementación que tarda más en estimar la información mutua es, en todos los casos, la segunda, tardando el doble para muestras grandes con dimensión 10.
+
+
+
+
+\section{Discusión}
+
+\chapter{Conclusiones}
+
+\chapter{Estimación del coste del TFG}
 ---Ordenador, horas a precio de junior---
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
