@@ -63,7 +63,7 @@ def get_stats(p, d, n, df_mi, df_ee, list):
 def main():
      # Valores de n y d para los que realizar estimaciones
      ns = [1000, 30000, 100000]
-     ds = [2, ] #, 10, 100]
+     ds = [2, 10, 100]
 
      # DataFrames para almacenar estimaciones
      mi_ent = pd.DataFrame(index = ds, columns = ns)
@@ -91,6 +91,12 @@ def main():
              pr = prof_im(n, d, reps = reps)
              p_im = pstats.Stats(pr).strip_dirs()
              get_stats(p_im, d, n, mi_mi, ee_mi, f_mi)
+             
+         print(mi_ent, file=open('./res/mi_ent.txt', 'w'))
+         print(ee_ent, file=open('./res/ee_ent.txt', 'w'))
+         print(mi_mi, file=open('./res/mi_mi.txt', 'w'))
+         print(ee_mi, file=open('./res/ee_mi.txt', 'w'))
+        
     
      print(mi_ent)
      print(ee_ent)
