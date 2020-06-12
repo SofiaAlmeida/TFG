@@ -53,6 +53,7 @@
   %frame=single,
   breaklines=true
 }
+\usepackage[htt]{hyphenat} % Permite salto de líneas en texttt
 
 %%% Gráficas
 \usepackage{graphicx} % Required for including pictures
@@ -1730,44 +1731,48 @@ Compararemos ambas implementaciones en función al consumo de recursos, como tie
 
 \subsection{Comparación de tiempos de ejecución}
 
-Para realizar la comparación de los tiempos de ejecución de las funciones se han utilizado las funciones implementadas en el archivo \texttt{profiling.py}.\\
+Para realizar la comparación de los tiempos de ejecución de las funciones se ha utilizado el archivo \texttt{profiling.py}.\\
 
-Se ha realizado un análisis de los tiempos de ejecución de las dos implementaciones de la entropía y de las dos implementaciones de la información mutua vistas. Para ello, se han ejecutado 5 veces y nos hemos quedado con los tiempos medios de ejecución para diferentes valores del número de muestras y dimensión de las mismas.\\
+Se ha realizado un análisis de los tiempos de ejecución de las dos implementaciones de la entropía y de las dos implementaciones de la información mutua vistas. Para ello, se han ejecutado 5 veces y nos hemos quedado con los tiempos medios de ejecución para diferentes valores del número de muestras y dimensión de las mismas. Remarcamos que el tiempo de ejecución considerado es el tiempo acumulado por la función a estudiar y todas las funciones a las que esta llame.\\
 
-Se han considerado tres rangos para el tamaño de las muestras: pequeñas (1000 muestras), medianas (30000 muestras) y grandes (100000). De forma similar, en función a la dimensión, se realizaron estimaciones con tres tipos de dimensiones: pequeñas (dimensión 2), medianas (dimensión 10) y grandes (dimensión 100). Notamos que en el caso de la dimensión 100 el programa no llega a finalizar, así que debemos excluirlo de la tabla de resultados.\\
+Se han considerado tres rangos para el tamaño de las muestras: pequeñas (1000 muestras), medianas (30000 muestras) y grandes (100000). De forma similar, en función a la dimensión, se realizaron estimaciones con tres tipos de dimensiones: pequeñas (dimensión 2), medianas (dimensión 10) y grandes (dimensión 25). Notamos que en el caso de la dimensión 25 debido a los elevados tiempos de ejecución, se repiten las mediciones 3 veces en vez de 5.\\
 
-Comenzaremos analizando los tiempos obtenidos al calcular la entropía. Podemos observarlos en la Tabla \ref{tab:tiempos_ent}. Como es de esperar, a medida que aumenta el número de muestras y la dimensión, se incrementan los tiempos de ejecución. Para dimensión 2, los tiempos son similares para muestras pequeñas y medianas, diferenciándose más para muestras grandes. Sin embargo, en todos los casos la implementación 1 es más lenta que la 2. Al aumentar la dimensión, se incrementan los tiempos de ejecución de ambas implementaciones, pero también las diferencias entre ellas. Para una muestra pequeña la implementación 1 tarda aproximadamente el doble que la 2. Con muestras más grandes la diferencia de tiempo aumenta. Para una muestra grande, la implementación 1 tarda casi el triple que la 2.\\
-
-Podemos concluir, por tanto, que la segunda implementación es más rápida que la primera para calcular la entropía. El cálculo que realizan ambas estimaciones es el mismo, utilizan el mismo estimador, varía únicamente la implementación, en cuanto a tiempo de cómputo será preferible la implementación 2.
-
----¿qué tabla nos permite comparar mejor? ---
+Comenzaremos analizando los tiempos obtenidos al calcular la entropía. En la Tabla \ref{tab:tiempos_ent_sep} vemos los tiempos de de ejecución de ambas implementaciones para los valores de $n$ y $d$ estudiados. Como es de esperar, a medida que aumenta el número de muestras y la dimensión, se incrementan los tiempos de ejecución en ambos casos.
 
 \begin{table}[!htb]
   \begin{adjustwidth}{-.5in}{-.5in}  
-    \caption{Tiempos de ejecución de la función \texttt{entropy}.}
-    \label{tab:tiempos_ent}
+    \caption{Tiempos de ejecución de la función \texttt{entropy} para diferentes valores de $n$ y $d$.}
+    \label{tab:tiempos_ent_sep}
     \begin{subtable}{.5\linewidth}
       \centering
         \caption{Implementación 1.}
         \begin{tabular}{l|rrr}
+          \toprule
           \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
           \midrule
-2 &   0.0022 $s$ & 0.0589 $s$ & 0.2340 $s$\\
-10 &   0.0144 $s$& 2.3644 $s$ & 13.1121 $s$\\
+2 &   0.0022\,s & 0.0589\,s & 0.2340\,s\\
+10 &   0.0144\,s& 2.3644\,s & 13.1121\,s\\
+25 & 0.0703\,s & 32.1099\,s & 633.221\,s\\ 
+\bottomrule
         \end{tabular}
     \end{subtable}
     \begin{subtable}{.5\linewidth}
       \centering
         \caption{Implementación 2.}
         \begin{tabular}{l|rrr}
+          \toprule
           \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
           \midrule
-2 &    0.0017 $s$ &  0.0503 $s$ &  0.1838 $s$\\
-10 &  0.0068 $s$ &   0.8612 $s$ &    4.6004 $s$\\
+2 &    0.0017\,s &  0.0503\,s &  0.1838\,s\\
+10 &  0.0068\,s &   0.8612\,s &    4.6004\,s\\
+25 & 0.04\,s & 30.1558\,s &  878.081\,s\\
+\bottomrule
         \end{tabular}
     \end{subtable}
     \end{adjustwidth}
 \end{table}
+
+Para realizar la comparación atenderemos a la Tabla \ref{tab:tiempos_ent}, que contiene la misma información estructurada de forma que resulte más fácil comparar. Cuando la dimensión es 2, los tiempos son similares para muestras pequeñas y medianas, diferenciándose más para muestras grandes. Sin embargo, en casi todos los casos la implementación 1 es más lenta que la 2. Al aumentar la dimensión, se incrementan los tiempos de ejecución de ambas implementaciones, pero también las diferencias entre ellas. Para una muestra pequeña la implementación 1 tarda aproximadamente el doble que la 2. Con muestras mayores la diferencia de tiempo aumenta, para una muestra grande, la implementación 1 tarda casi el triple que la 2. Destaca que para una dimensión grande y un tamaño de muestra grande se invierte la tendencia observada en el resto de combinaciones de tamaño de muestra y dimensión.\\
 
 \begin{table}[H]
 \centering
@@ -1777,15 +1782,64 @@ Podemos concluir, por tanto, que la segunda implementación es más rápida que 
   \toprule
 Implementación & \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
  \midrule
-1 & 2 &   0.0022 $s$ & 0.0589 $s$ & 0.2340 $s$\\
-2 & 2  &    0.0017 $s$ &  0.0503 $s$ &  0.1838 $s$\\[5pt]
-1 & 10 &   0.0144 $s$& 2.3644 $s$ & 13.1121 $s$\\
-2 & 10 &  0.0068 $s$ &   0.8612 $s$ &    4.6004 $s$\\
+1 & 2 &   0.0022\,s & 0.0589\,s & 0.2340\,s\\
+2 & 2  &    0.0017\,s &  0.0503\,s &  0.1838\,s\\[5pt]
+1 & 10 &   0.0144\,s& 2.3644\,s & 13.1121\,s\\
+2 & 10 &  0.0068\,s &   0.8612\,s &    4.6004\,s\\[5pt]
+1 & 25 & 0.0703\,s & 32.1099\,s & 633.221\,s\\
+2 & 25 & 0.04\,s & 30.1558\,s &  878.081\,s\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Pasamos a estudiar qué implementación es más rápida en el cálculo de la información mutua. Recordamos que en este caso las implementaciones no realizan el mismo cálculo. La primera implementación calcula la información mutua a través de las entropías de las variables marginales. La segunda implementación lo hace a través de $I^{(2)}$.
+Podemos concluir, por tanto, que la segunda implementación es más rápida que la primera para calcular la entropía, salvo para dimensión y tamaño de muestra grande. El cálculo que realizan ambas estimaciones es el mismo, utilizan el mismo estimador, varía únicamente la forma de implementarlo, en cuanto a tiempo de cómputo será preferible la implementación 2.\\
+
+Si analizamos qué pasos emplean más tiempo en las implementaciones de la entropía nos sorprende descubrir que es en la misma función, el método \texttt{query} de \texttt{sklearn.neighbors.\_kd\_tree.BinaryTree}. Sin embargo, aunque ambas implementaciones llaman a este método, la primera pasa más tiempo en ella que la segunda. Por ejemplo, para $d=10$ y $n = 100000$, la implementación 1 empleó $17.075\,$s (de una ejecución de $17.2516\,$s) en la función \texttt{query}, mientras que la implementación 2 usó $6.057\,$s en esta función (de una ejecución que en total duró $6.2308\,$s). \\
+
+En la implementación 1 se obtienen los vecinos más cercanos utilizando la clase \texttt{sklearn.neighbors.NearestNeighbors}, llamando al método \texttt{kneighbors}. Este método realiza una serie de comprobaciones antes de llamar al método \texttt{query} para obtener realmente los vecinos más cercanos y sus distancias. Además, la llamada a \texttt{query} se realiza usando métodos que proporcionan paralelismo, que en este caso no se está aprovechando.\\
+
+En la implementación 2, se crea un árbol de tipo \texttt{sklearn.neighbors.BallTree} y luego se calculan los vecinos más cercanos llamando directamente al método \texttt{query}.\\
+
+Suponemos que el coste de realizar la llamada en paralelo sin aprovechar realmente el paralelismo es el que provoca el incremento en las llamadas a \texttt{query} en la primera implementación y que por eso en la segunda implementación, en la que se llama al método directamente, es más rápida. No se llega a concluir nada acerca de la anomalía para tamaños de muestra grandes y dimensión grande.\\
+
+Pasamos a estudiar qué implementación es más rápida en el cálculo de la información mutua. Recordamos que en este caso las implementaciones no realizan el mismo cálculo. La primera implementación halla la información mutua a través de las entropías de las variables marginales, mientras que la segunda implementación lo hace a través de $I^{(2)}$.\\
+
+En la Tabla \ref{tab:tiempos_im_sep} se recogen los tiempos de ejecución de las dos implementaciones para los valores de $n$ y $d$ considerados.
+Al igual que para la entropía, los tiempos en todos los casos aumentan al considerar muestras más grandes y de mayor dimensión. Además, notamos que los tiempos de ejecución son superiores a los necesitados para calcular la entropía, esto no es de extrañar, en uno de los casos se calcula la entropía de varias variables y luego se opera con ellas para obtener la información mutua.\\
+\begin{table}[!htb]
+  \begin{adjustwidth}{-.5in}{-.5in}  
+    \caption{Tiempos de ejecución del cálculo de la información mutua para diferentes valores de $n$ y $d$.}
+    \label{tab:tiempos_im_sep}
+    \begin{subtable}{.5\linewidth}
+      \centering
+        \caption{Implementación 1.}
+        \begin{tabular}{l|rrr}
+          \toprule
+          \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
+          \midrule
+2 &   0.0066\,s &  0.2852\,s &  1.1668\,s\\
+10 &   0.091\,s &   28.3134\,s &  380.604\,s\\
+25 & 0.2218\,s & 177.259\,s & 3194.09\,s\\
+\bottomrule
+\end{tabular}
+\end{subtable}
+    \begin{subtable}{.5\linewidth}
+      \centering
+        \caption{Implementación 2.}
+        \begin{tabular}{l|rrr}
+          \toprule
+          \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
+          \midrule
+2  &    0.0065\,s &  0.4432\,s &  2.2371\,s \\
+10 &  0.0504\,s &  32.9856\,s &  783.608\,s\\
+25 & 0.1213\,s & 153.015\,s & 3044.07\,s\\
+\bottomrule
+        \end{tabular}
+    \end{subtable}
+    \end{adjustwidth}
+\end{table}
+
+Compararemos los tiempos de ejecución de ambas implementaciones utilizando la Tabla \ref{tab:tiempos_mi}. Para un tamaño de muestra pequeña y dimensión pequeña, los tiempos son muy similares, pero a medida que van aumentando, tanto dimensión como tamaño de muestra, aumenta también la diferencia entre los tiempos de ejecución de las dos implementaciones. En este caso ocurre al contrario que al calcular la entropía, la implementación que tarda más en estimar la información mutua es, en todos los casos menos para una muestra grande y dimensión grande, la segunda, tardando el doble para muestras grandes con dimensión 10 y más del cuádruple para muestras medianas y dimensión grande.\\
 
 \begin{table}[H]
 \centering
@@ -1795,15 +1849,17 @@ Pasamos a estudiar qué implementación es más rápida en el cálculo de la inf
   \toprule
 Implementación & \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
  \midrule
-1 & 2 &   0.0066 $s$ &  0.2852 $s$ &  1.1668 $s$\\
-2 & 2  &    0.0065 $s$ &  0.4432 $s$ &  2.2371 $s$ \\[5pt]
-1 & 10 &   0.091 $s$ &   28.3134 $s$ &  380.604 $s$\\
-2 & 10 &  0.0504 $s$ &  32.9856 $s$ &  783.608 $s$\\
+1 & 2 &   0.0066\,s &  0.2852\,s &  1.1668\,s\\
+2 & 2  &    0.0065\,s &  0.4432\,s &  2.2371\,s \\[5pt]
+1 & 10 &   0.091\,s &   28.3134\,s &  380.604\,s\\
+2 & 10 &  0.0504\,s &  32.9856\,s &  783.608\,s\\[5pt]
+1 & 25 & 0.2218\,s & 177.259\,s & 3194.09\,s\\
+2 & 25 & 0.1213\,s & 153.015\,s & 3044.07\,s\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-En la Tabla \ref{tab:tiempos_mi} vemos los tiempos de ejecución para ambas implementaciones de la información mutua con los tamaño y dimensión de muestra establecidos. Al igual que para la entropía, los tiempos en todos los casos aumentan al considerar muestras más grandes y de mayor dimensión. Además, notamos que los tiempos de ejecución superiores que los necesitados para calcular la entropía, esto no es de extrañar, en uno de los casos se calcula la entropía de varias variables y luego se opera con ellas para obtener la información mutua. Para un tamaño de muestra pequeña y dimensión pequeña, los tiempos son muy similares, pero a medida que van aumentando, tanto dimensión como tamaño de muestra, aumenta también la diferencia entre los tiempos de ejecución de las dos implementaciones. En este caso ocurre al contrario que al calcular la entropía, la implementación que tarda más en estimar la información mutua es, en todos los casos, la segunda, tardando el doble para muestras grandes con dimensión 10.
+En la primera implementación, es el método \texttt{query} el que emplea más tiempo de ejecución (69.5\,s de una ejecución de 70.2\,s para dimensión 10), se llama a este método 3 veces, una para cada entropía a estimar, las marginales y la conjunta. En la segunda implementación, además de usar el método \texttt{query} (en este caso una sola vez) para calcular los vecinos más cercanos se utiliza el método \texttt{query\_radius} para calcular el valor de la media de $\psi$ (es necesario calcular 2 valores diferentes). Para una ejecución con $n=100000$ y $d=10$ que tardó $425.95\,$s, se emplearon $414.94\,s$ en la función \texttt{query} y $10.45\,$s en \texttt{query\_radius}, el cuello de botella es, por tanto, la función \texttt{query}.---¿Por qué tarda mucho más para la segunda implementación que para la primera?---
 
 
 
