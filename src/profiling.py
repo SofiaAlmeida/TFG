@@ -45,7 +45,6 @@ def prof_ent(n, d, k = 3, reps = 10):
 def prof_mi(n, d, k = 3, reps = 10):
     # Generamos la muestra 
     dat = data.Data('normal', n, 2*d)
-    C = dat.C
     X = dat.X[:, 0:d]
     Y = dat.X[:, d:]
     
@@ -56,7 +55,7 @@ def prof_mi(n, d, k = 3, reps = 10):
     # Ejecutamos ambos estimadores reps veces
     for i in range(0, reps):
          mi.mutual_information((X, Y), k)
-         MI_est2 = ee.mi(X, Y, k=k)
+         ee.mi(X, Y, k=k)
     
     # Desactivamos el profiler
     pr.disable()
@@ -87,12 +86,13 @@ def get_stats(p, d, n, df_mi, df_ee, list):
           # Análogamente, para mutual_info.py
           if(f[0] == 'mutual_info.py'):
                df_mi.loc[d][n] = ct / nc
-     
-def main():
-     # Valores de n y d para los que realizar estimaciones
-     ns = [1000, 30000, 100000]
-     ds = [2, 10, 100]
 
+## Obtiene los tiempos de ejecución de las dos implementaciones de la entropía y de las dos implementaciones de la información mutua. Imprime por pantalla los tiempos de ejecución y los guarda en archivos en la carpeta ./res.
+# @param ds dimensiones que probar.
+# @param ns tamañaos de muestra que probar.
+# @param reps número de veces que repetir las ejecuciones.
+# @param save si es True se almacenan los resultados en archivos.
+def compare_estimators(ds, ns, reps = 5, save = False):
      # DataFrames para almacenar estimaciones
      mi_ent = pd.DataFrame(index = ds, columns = ns)
      ee_ent = pd.DataFrame(index = ds, columns = ns)
@@ -104,11 +104,10 @@ def main():
      # width, list = p.sort_stats(SortKey.CUMULATIVE).get_print_list('entropy')
      # p.print_line(list)
      # donde p es un objeto de pstats, entre la lista devuelta se seleccionaron las líneas correspondientes a las funciones a estudiar
-     f_ent = [('entropy_estimators.py', 17, 'entropy'), ('mutual_info.py', 50, 'entropy')]
-     f_mi = [('mutual_info.py', 91, 'mutual_information'), ('entropy_estimators.py', 61, 'mi')]
-
-     # Número de repeticiones
-     reps = 5
+     f_ent = [('entropy_estimators.py', 17, 'entropy'),
+              ('mutual_info.py', 50, 'entropy')]
+     f_mi = [('mutual_info.py', 91, 'mutual_information'),
+             ('entropy_estimators.py', 61, 'mi')]
      
      # Realizaremos las medidas para todos los valores de d y n
      for d in ds:
@@ -124,16 +123,65 @@ def main():
              get_stats(p_im, d, n, mi_mi, ee_mi, f_mi)
 
          # Imprimimos en un archivo por cada función los resultados hasta el momento
-         print(mi_ent, file=open('./res/mi_ent.txt', 'w'))
-         print(ee_ent, file=open('./res/ee_ent.txt', 'w'))
-         print(mi_mi, file=open('./res/mi_mi.txt', 'w'))
-         print(ee_mi, file=open('./res/ee_mi.txt', 'w'))
+         if (save):
+             print(mi_ent, file=open('./res/mi_ent.txt', 'w'))
+             print(ee_ent, file=open('./res/ee_ent.txt', 'w'))
+             print(mi_mi, file=open('./res/mi_mi.txt', 'w'))
+             print(ee_mi, file=open('./res/ee_mi.txt', 'w'))
         
     
-     print(mi_ent)
-     print(ee_ent)
-     print(mi_mi)
-     print(ee_mi)
+     print("Entropía - mutual_info.py\n", mi_ent, "\n")
+     print("Entropía - entropy_estimators.py\n", ee_ent, "\n")
+     print("Información mutua - mutual_info.py\n", mi_mi, "\n")
+     print("Información mutua - entropy_estimators.py\n", ee_mi, "\n")
+
+     
+## Imprime las 10 funciones que más tiempo consumen en la función que calcule la entropía.
+# @param func función con la que calcular la entropía.
+# @param n tamaño de muestra.
+# @param d dimensión de los datos.
+# @param reps número de veces que repetir la medición.
+# @param k número de vecinos más cercanos con los que estimar la entropía.
+def func_stats(func, reps, *args):
+    # Generamos los datos de prueba
+    
+    # Activamos el profiler
+    pr = cProfile.Profile()
+    pr.enable()
+    
+    # Ejecutamos ambos estimadores reps veces
+    for i in range(0, reps):
+         func(*args)
+         
+    # Desactivamos el profiler
+    pr.disable()
+    
+    p = pstats.Stats(pr).strip_dirs()
+    p.sort_stats(SortKey.TIME).print_stats(10) # Imprime las 10 funciones que más tiempo consumen
+    p.print_callers(10)
+
+    
+def main():
+     # Valores de n y d para los que realizar estimaciones
+     ns = [1000, 30000, 100000]
+     ds = [2] #, 10, 100]
+     reps = 5
+     #compare_estimators(ds, ns, reps)
+     n = 100000
+     d = 4
+     #entropy_stats(mi.entropy, n, d)
+     #entropy_stats(ee.entropy, n, d)
+
+     dat = data.Data('normal', n, d)
+     X = dat.X
+
+     # Vemos qué "subfunciones" de la entropía requieren más tiempo
+     func_stats(mi.entropy, 5, X, 3)
+     func_stats(ee.entropy, 5, X, 3)
+
+     # Vemos qué subfunciones de la información mutua gastan más tiempo
+     func_stats(mi.mutual_information, 5, (X, X), 3)
+     func_stats(ee.mi, 5, X, X, None, 3)
      
 if __name__ == "__main__":
     main()
