@@ -248,7 +248,7 @@ En el caso de que $X$ sea una variable aleatoria absolutamente continua y admita
  siempre que existan todas las esperanzas unidimensionales.
 \end{definition}
 
-\begin{proposition}[Propiedades de la esperanza]
+\begin{proposition}[Propiedades de la esperanza]\label{p:prop_esp}
   Sea $X$ una variable aleatoria con función de densidad $f(x)$, entonces se cumplen las siguientes propiedades de la esperanza:
   \begin{itemize}
   \item Para una función $g(x)$, $g(X)$ será también una variable aleatoria y su esperanza será\[
@@ -862,7 +862,7 @@ El apartado c) del Teorema \ref{t:ent_im} nos dice que $I(X;Y) = H(X)+H(Y)-H(X,Y
 Hasta ahora las definiciones dadas eran para variables aleatorias discretas, que solo tomaban un conjunto finito de valores. Podemos extender las definiciones estudiadas al caso continuo, para aplicarlas en variables aleatorias continuas. Trabajaremos en este apartado con una variable aleatoria $X$ absolutamente continua con función de distribución $F$, función de densidad $f$ y conjunto soporte $sop(X)$.
 %Trabajaremos en este caso con una variable aleatoria $X$ con función de distribución $F(x) = Pr[X \leq x]$, si $F$ es continua, la variable aleatoria se dice continua. Sea $f(x) = F'(x)$, cuando la derivada esté definida. Si $\int_{-\infty}^{\infty}f(x)=1,\ f(x)$ se llama la función de densidad de $X$. El conjunto donde $f(x) > 0$ es el soporte de $X$.
 
-Las definiciones a continuación incluyen integrales, por lo que entenderemos en la redacción que todas ellas existen.\\
+Las definiciones a continuación incluyen integrales, por lo que entenderemos en la redacción que todas ellas existen para no alargar la redacción.\\
 
 %deberíamos añadirles un \textit{si existe} a todas ellas. Se pueden construir ejemplos de variables aleatorias cuya función de densidad no exista, o para la que no exista la integral a calcular.
 
@@ -870,12 +870,12 @@ La entropía en el caso continuo pasa a llamarse entropía diferencial y podemos
 
 \begin{definition}[Entropía diferencial]
   La entropía diferencial $h(X)$ de una variable aleatoria continua $X$ viene dada por \[
-h(X) = - \int_{sop(X)}\log \left(f(x)\right) f(x) dx.
+h(X) = - \int_{sop(X)}\log \left(f(x)\right) f(x) dx.\\
 \]
 \end{definition}
-Como en el caso discreto, la entropía diferencial solo depende de la probabilidad de la variable aleatoria, no de los valores que toma. Notamos que en la definición anterior la variable aleatoria $X$ podría ser, o bien, unidimensional, o bien, multidimensional.
+Como en el caso discreto, la entropía diferencial solo depende de la probabilidad de la variable aleatoria, no de los valores que toma. Notamos que en la definición anterior la variable aleatoria $X$ podría ser, o bien, unidimensional, o bien, multidimensional.\\
 
-\begin{example}\label{ej:uni} Consideramos una variable aleatoria $X$ absolutamente continua con una distribución uniforme sobre $[0,a]$. En este intervalo su densidad es $f(x) = \frac{1}{a}$ para $x\in[0,a]$ y para el resto de puntos es 0. La entropía es \[
+\begin{example}\label{ej:uni} Consideramos una variable aleatoria $X$ absolutamente continua con una distribución uniforme sobre $[0,a]$. En este intervalo su densidad es $f(x) = \frac{1}{a}$ para $x\in[0,a]$ y para el resto de puntos es nula. La entropía es \[
 h(X) = - \int_0^a\log\left(\frac{1}{a}\right)\frac{1}{a}dx = \log a.
   \]
 Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo puede ser negativa, no como en el caso discreto.\\
@@ -889,7 +889,7 @@ Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo pued
     &= -  \frac{1}{\sigma \sqrt{2\pi}}\left [ \int_{\mathbb{R}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \left ( -\frac{(x-\mu)^2}{2\sigma ^2} \right )dx - \int_{\mathbb{R}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \log \left ( \sigma \sqrt{2\pi}\right ) dx \right ].\\
   \end{align*}
 
-  Ahora, utilizando la ley del estadístico inconsciente ($E[g(X)]=  \int g(x)f(x)dx$), tenemos,
+  Ahora, utilizando la ley del estadístico inconsciente (que recordamos en la Proposición \ref{p:prop_esp}), tenemos,
   \begingroup
 \allowdisplaybreaks
   \begin{align*}
@@ -901,22 +901,16 @@ Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo pued
   
 \end{example}
 
-%% No siempre tendremos variables unidimensionales, es por ello que definimos también el concepto de entropía para un conjunto de variables.
-%% --- No se si hace falta esta definición o si con la anterior sería suficiente al estar considerando variables aleatorias multidimensionales.---
-%% \begin{definition}[Entropía diferencial]
-%%   La entropía diferencial de un conjunto de variables aleatorias $X_1,\cdots,X_n = X$ con función de densidad $f(x_1,\cdots,x_n) = f(x)$ se define como\[
-%% h(X_1,\cdots,X_n) = h(X) = - \int f(x)\log f(x) dx.
-%%   \]
-%% \end{definition}
 
 \begin{example}\label{ej:norm_multi}
-  Tomamos una variable aleatoria $X = (X_1,\cdots,X_n)$ con distribución normal multivariante de vector de medias $\mu$ y matriz de covarianzas $\Sigma$. Su densidad viene dada por $f(x) = \frac{1}{\left (\sqrt{2\pi}\right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)}$.
-
+  Tomamos una variable aleatoria multidimensional $X = (X_1,\cdots,X_n)$ con distribución normal multivariante de vector de medias $\mu$ y matriz de covarianzas $\Sigma$. Su función de densidad es \[f(x) = \frac{1}{\left (\sqrt{2\pi}\right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)}.\]
+    
+    Comenzamos los cálculos de la entropía,
   \begin{align*}
     h(X) &= - \int_{\mathbb{R}^n} \log\left( f(x)\right)f(x) dx \\
     &= - \int_{\mathbb{R}^n} \log \left ( \frac{1}{\left ( \sqrt{2\pi} \right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)} \right )f(x) dx\\
     &= - \int_{\mathbb{R}^n}\left (- \frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu) - \log\left [ \left (\sqrt{2\pi} \right )^n |\Sigma|^{\frac{1}{2}} \right ]  \right ) f(x) dx\\
-    &= \frac{1}{2} \mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ] + \frac{1}{2}\log\left [(2\pi)^n|\Sigma|\right ].
+    &= \frac{1}{2} \mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ] + \frac{1}{2}\log\left [(2\pi)^n|\Sigma|\right ].\\
   \end{align*}
 
   Continuamos desarrollando la expresión $\mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ]$,
@@ -925,7 +919,7 @@ Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo pued
     \mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ] &= \mathbb{E}\left [ \sum_{i,j}(X_i - \mu)(\Sigma^{-1})_{ij}(X_j-\mu)\right ]\\
     &= \mathbb{E}\left[ \sum_{i,j}(X_j-\mu)(X_i-\mu)(\Sigma^{-1})_{ij}\right]\\
     &= \sum_{i,j}\underbrace{\mathbb{E}\left[ \sum_{i,j}(X_j-\mu)(X_i-\mu)\right]}_{Cov(X_j,X_i)}(\Sigma^{-1})_{ij}\\
-    &= \sum_j\sum_i(\Sigma)_{ji}(\Sigma^{-1})_{ij} = \sum_j (\Sigma\Sigma^{-1})_{jj} = \sum_j (I_n)_{jj} = n.
+    &= \sum_j\sum_i(\Sigma)_{ji}(\Sigma^{-1})_{ij} = \sum_j (\Sigma\Sigma^{-1})_{jj}\\ &= \sum_j (I_n)_{jj} = n.
   \end{align*}
 
   Sustituyendo este valor en la expresión de la entropía, obtenemos,
@@ -939,7 +933,7 @@ Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo pued
 \end{example}
 
 \begin{theorem}\label{t:mmlog}
-  Sean $X_1,\cdots, X_n$ una serie de variables aleatorias independientes e idénticamente distribuidas con función de densidad $f_X(x)$. Si notamos $f(x_1,\dots,x_n)$ a la función de densidad conjunta, entonces\[
+  Sean $X_1,\cdots, X_n$ una serie de variables aleatorias independientes e idénticamente distribuidas con función de densidad $f_X(x)$. Si notamos por $f(x_1,\dots,x_n)$ a la función de densidad conjunta, entonces\[
 -\frac{1}{n}\log f(X_1,\cdots, X_n) \xrightarrow[]{P} \mathbb{E}\left [ - \log f_X(X) \right ] = h(X).
   \]
 \end{theorem}
@@ -948,7 +942,7 @@ Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo pued
   Como las variables son independientes, se verifica\[
 -\frac{1}{n}\log f(X_1,\cdots, X_n) = - \frac{1}{n} \sum_{i=1}^n \log f_X(X_i),
 \]
-por el Teorema \ref{t:lgn} tenemos que la expresión anterior converge en probabilidad a $\mathbb{E}\left [ - \log f_X(X) \right ] = h(X)$.
+por el Teorema \ref{t:lgn} tenemos que la expresión anterior converge en probabilidad a $\mathbb{E}\left [ - \log f_X(X) \right ] = h(X)$.\\
 \end{proof}
 
 
@@ -957,14 +951,14 @@ por el Teorema \ref{t:lgn} tenemos que la expresión anterior converge en probab
 h(X|Y) = -\int\int  \log \left(f(x|y)\right) f(x,y) dxdy.
 \]
 Como $f(x|y) = \frac{f(x,y)}{f(y)}$, también podemos definirla como\[
-h(X|Y) = h(X,Y) - h(Y).
+h(X|Y) = h(X,Y) - h(Y),
 \]
-Siempre que las entropías diferenciales sean finitas.
+siempre que las entropías diferenciales sean finitas.\\
 \end{definition}
 
 \begin{definition}[Entropía relativa]
   La entropía relativa (o ``distancia'' de Kullback-Leibler) $D(f||g)$ entre dos densidades $f$ y $g$ se define como \[
-D(f||g) = \int_{\mathbb{R}^n} \log\left( \frac{f(x)}{g(x)}\right)f(x) dx.
+D(f||g) = \int_{\mathbb{R}^n} \log\left( \frac{f(x)}{g(x)}\right)f(x) dx.\\
   \]
 \end{definition}
 
@@ -1247,7 +1241,7 @@ La diferencia vendrá marcada por la forma de estimar $\widehat{\log f}(X_i)$.\\
 
 Para obtener el estimador $\widehat{\log f}(X_i)$, para un $k$ fijo, consideramos la función de densidad, $P_k(\varepsilon)$, de la distancia entre $X_i$ y su $k$-ésimo vecino más cercano, $\epsilon$ será una realización de $\mathcal{E}_{i_k}$.\\
 
-Vamos a calcular $P\left[\epsilon \leq \mathcal{E}_{i_k} \leq \epsilon + h\right]$. Esta probabilidad es igual a la probabilidad de que haya un punto a distancia $r\in \left[ \varepsilon,\varepsilon + h \right ]$ de $X_i$, de que haya otros $k-1$ puntos a menor distancia; y de que $N-k-1$ puntos se encuentren a mayor distancia de $x_i$.\\
+Vamos a calcular $P\left[\epsilon \leq \mathcal{E}_{i_k} \leq \epsilon + h \right]$. Esta probabilidad es igual a la probabilidad de que haya un punto a distancia $r\in \left[ \varepsilon,\varepsilon + h \right ]$ de $X_i$, de que haya otros $k-1$ puntos a menor distancia; y de que $N-k-1$ puntos se encuentren a mayor distancia de $x_i$.\\
 
 Llamamos $p_i(\epsilon) = P\left[X_i \in B(x_i,\epsilon)\right]$ a la distribución de la bola centrada en $x_i$ y radio $\varepsilon$, \[
 p_i(\varepsilon) = \int_{B(x_i,\epsilon)}f(y)dy.\]
@@ -1582,6 +1576,33 @@ En primer lugar, se calcula la entropía de variables con una distribución unif
 ---python, bibliotecas usadas, git, planificación (también se podría poner en objetivos) -> hacer un diagrama de Gantt (revisar bibliografía, adquirir conocimmiento, escribir memoria, búsqueda de implementaciones, escribir código), diseño basado en prototipos---
 ---cProfiler, Stats---
 
+%\subsection{Herramientas para medir el tiempo de ejecución}
+
+%----------------------------------------------------------------------
+% PARALELISMO EN PYTHON
+%-----------------------------------------------------------------------
+\subsection{Paralelismo en Python}
+GIL, abreviatura de \textit{global interpreter lock}, \cite{glossary_GIL}, \cite{GIL}, es el mecanismo usado por el intérprete de Python para asegurar que solo  se ejecuta una hebra en cada momento. Su objetivo es hacer más seguro el acceso concurrente a memoria y esto lo consigue al poner un cerrojo sobre el intérprete al completo. Sin este cerrojo, se podrían dar problemas de sincronización en programas multihebra.\\
+
+Algunos módulos, de la librería estándar o no, liberan este cerrojo para ejecutar código muy costoso computacionalmente. También es habitual liberarlo en operaciones de entrada o salida, que son más lentas, liberando este cerrojo se permite la ejecución de otras hebras  en lo que se completan las operaciones de entrada o salida.\\
+
+El uso de GIL es controvertido, ya que no permite que programas multihebra aprovechen sistemas multiprocesadores. Se ha intentado crear un intérprete que permita el uso de hebras mediante cerrojos locales, pero estos intentos no han tenido éxito, porque bajaba el rendimiento cuando había un solo procesador. Además, se cree que solucionar este problema haría la implementación mucho más complicada y, por ello, más difícil de mantener.\\
+
+% 
+El módulo \texttt{threading} \cite{threading} de la biblioteca estándar de Python proporciona una interfaz de alto nivel para trabajar con hebras en este lenguaje. La clase \texttt{Thread} permite crear y ejecutar hebras diferentes a la principal. Contiene un constructor para crearlas indicando la función a ejecutar, el método \texttt{start()} que permite comenzar su actividad y el método \texttt{join()} para esperar a que la hebra termine, entre otros. Sin embargo, debido al cerrojo global (GIL) solo se puede ejecutar una hebra a la vez. El paralelismo a nivel de hebra podría ser apropiado cuando queramos ejecutar tareas cuyo cuello de botella sea la entrada salida, en cuyo caso se liberaría este cerrojo. \\
+
+
+Una solución para poder ejecutar código en paralelo es usar múltiples procesos en vez de múltiples hebras. El paquete \texttt{multiprocessing} \cite{multiprocessing} de la biblioteca estándar de Python permite la ejecución concurrente de procesos, evitando el cerrojo global del intérprete al usar subprocesos en vez de hebras. La clase \texttt{Process} es análoga a la clase \texttt{Thread} para el caso de procesos. Como los procesos no comparten memoria es necesario implementar un método de comunicación entre procesos, para esto están la clase \texttt{Queue} y la función \texttt{Pipe()}. Además, se proporcionan varias alternativas para sincronizar los procesos como cerrojos (\texttt{Lock}), semáforos (\texttt{Semaphore}) o barreras (\texttt{Barrier}). Así, como una clase (\texttt{Pool}) para gestionar las tareas que queremos que ejecuten los diferentes procesos.\\
+
+No solo existen estos módulos para tratar el paralelismo, de hecho, en la documentación de Python se referencian algunas bibliotecas para ello \cite{parallelprocessing}. Entre estas comentaremos \texttt{Joblib}, pues es la que utilizan las funciones de \texttt{sklearn} usadas en las implementaciones estudiadas.\\
+
+Uno de los objetivos principales de \texttt{Joblib} \cite{joblib} es permitir la ejecución en paralelo de forma sencilla. Esta biblioteca nos permite hacer uso de la concurrencia a nivel de hebra o de proceso según le indiquemos, notamos que a nivel de hebra solo será efectivo si el GIL ha sido liberado. Por defecto, utilizará el módulo \texttt{'loky'} para separar procesos y ejecutar tareas simultáneamente en varios procesadores, pero es posible indicarle que utilice el módulo \texttt{threading} o \texttt{multiprocessing}.\\
+
+%----------------------------------------------------------------------
+% Fin de Paralelismo en Python
+%-----------------------------------------------------------------------
+
+
 \chapter{Resultados}
 
 \section{Análisis comparativo}
@@ -1796,7 +1817,7 @@ Podemos concluir, por tanto, que la segunda implementación es más rápida que 
 
 Si analizamos qué pasos emplean más tiempo en las implementaciones de la entropía nos sorprende descubrir que es en la misma función, el método \texttt{query} de \texttt{sklearn.neighbors.\_kd\_tree.BinaryTree}. Sin embargo, aunque ambas implementaciones llaman a este método, la primera pasa más tiempo en ella que la segunda. Por ejemplo, para $d=10$ y $n = 100000$, la implementación 1 empleó $17.075\,$s (de una ejecución de $17.2516\,$s) en la función \texttt{query}, mientras que la implementación 2 usó $6.057\,$s en esta función (de una ejecución que en total duró $6.2308\,$s). \\
 
-En la implementación 1 se obtienen los vecinos más cercanos utilizando la clase \texttt{sklearn.neighbors.NearestNeighbors}, llamando al método \texttt{kneighbors}. Este método realiza una serie de comprobaciones antes de llamar al método \texttt{query} para obtener realmente los vecinos más cercanos y sus distancias. Además, la llamada a \texttt{query} se realiza usando métodos que proporcionan paralelismo, que en este caso no se está aprovechando.\\
+En la implementación 1 se obtienen los vecinos más cercanos utilizando la clase \texttt{sklearn.neighbors.NearestNeighbors}, llamando al método \texttt{kneighbors}. Este método realiza una serie de comprobaciones antes de llamar al método \texttt{query} para obtener realmente los vecinos más cercanos y sus distancias. Además, la llamada a \texttt{query} se realiza usando métodos que proporcionan paralelismo de la biblioteca \texttt{joblib}, indicando que se utilizará paralelismo a nivel de hebra.\\
 
 En la implementación 2, se crea un árbol de tipo \texttt{sklearn.neighbors.BallTree} y luego se calculan los vecinos más cercanos llamando directamente al método \texttt{query}.\\
 
