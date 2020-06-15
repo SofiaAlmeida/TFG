@@ -86,7 +86,7 @@
 ---Hablar de: Shannon, teoría de la información, relevancia que ha tenido,...---
 \section{Motivación del trabajo}
 \section{Objetivos}
----(Si se opta por no ponerlos antes de la introducción)---
+---objetivos, planificación (también se podría poner en objetivos) -> hacer un diagrama de Gantt (revisar bibliografía, adquirir conocimmiento, escribir memoria, búsqueda de implementaciones, escribir código)---
 
 %--------------------------- FUNDAMENTOS--------------------------------
 \chapter{Funtamentos y estado del arte}
@@ -1573,10 +1573,15 @@ En primer lugar, se calcula la entropía de variables con una distribución unif
 %-------------------------COMPARACIÓN-----------------------------------
 \chapter{Metodología para la comparación de estimadores}
 \section{Tecnología utilizada}
----python, bibliotecas usadas, git, planificación (también se podría poner en objetivos) -> hacer un diagrama de Gantt (revisar bibliografía, adquirir conocimmiento, escribir memoria, búsqueda de implementaciones, escribir código), diseño basado en prototipos---
----cProfiler, Stats---
+---python, bibliotecas usadas, git, diseño basado en prototipos---
 
-%\subsection{Herramientas para medir el tiempo de ejecución}
+\subsection{Herramientas para medir el tiempo de ejecución}
+
+Puesto que estamos comparando dos implementaciones diferentes que deben realizar el mismo cálculo, además de la precisión de sus resultados, podemos medir sus tiempos de ejecución para ver si hay o no diferencias significativas entre ellos. Para ello, se utilizará la herramienta \texttt{cProfile}, que nos permite hacer \textit{profiling} determinístico de programas escritos en Python, y la clase \texttt{Stats} que nos permite acceder a los medidas realizadas por la herramienta anterior \cite{profilers}.\\
+
+\texttt{cProfile} mide el número de veces que se ejecuta cada función, el tiempo total empleado en cada función, el tiempo empleado en cada función cada vez que se llamó a la función, el tiempo acumulado de cada función y todas a las que estas llamen y el tiempo acumulado entre el número de veces que se llame a esta función. Esta herramienta será precisa incluso en el caso de funciones recursivas, al distinguir el número de veces que se llama a la función del número de veces que fue invocada de forma recursiva.\\
+
+El uso de esta herramienta se complementa con la utilización de la clase \texttt{Stats}, que permite trabajar con las medidas realizadas por \texttt{cProfile}. Usando esta clase podremos ordenar y especificar el número o nombre de las funciones cuyos tiempo queremos observar, así como almacenar en archivos la información para consultarla más adelante.
 
 %----------------------------------------------------------------------
 % PARALELISMO EN PYTHON
