@@ -17,6 +17,11 @@
   \DeclareMathAlphabet{\mathbb}{U}{msb}{m}{n}%
 }
 
+%%% Cabeceras
+\cleardoublepage
+\pagestyle{scrheadings}
+\automark{chapter}
+
 
 %%% Matemáticas
 \usepackage{amsmath}
@@ -799,14 +804,14 @@ donde $\left\Vert\mathcal{X}\right\Vert$ representa al cardinal de $\mathcal{X}$
 
 La información mutua es una medida de la dependencia entre dos variables aleatorias. Mide la cantidad de información que tenemos sobre una de ellas si hemos observado la otra. Se define como sigue.
 
-\begin{definition}[Información mutua]
+\begin{definition}[Información mutua]\label{def:im_disc}
   Dadas dos variables aleatorias $X$ e $Y$ discretas con función masa de probabilidad conjunta $p(x,y)$ y funciones masa de probabilidad marginales $p(x)$ y $p(y)$. La información mutua, representada por $I(X;Y)$, es la entropía relativa entre la distribución conjunta y la distribución producto $p(x)p(y)$.
   \begin{align*}
-  I(X;Y) &= D \left ( p(x,y) \Vert p(x)p(y) \right ) = \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(x,y) \log \frac{p(x,y)}{p(x)p(y)}\\ &= E_{p(x,y)} \log \frac{p(X,Y)}{p(X)p(Y)}.
+  I(X;Y) &= D \left ( p(x,y) \Vert p(x)p(y) \right ) = \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(x,y) \log \frac{p(x,y)}{p(x)p(y)}\\ &= E_{p(x,y)} \log \frac{p(X,Y)}{p(X)p(Y)}.\\
   \end{align*}
 \end{definition}
 
-Notamos que la información mutua, al estar definida como una entropía relativa, será no negativa (Lema \ref{l:ent_rel_pos}).
+Notamos que la información mutua, al estar definida como una entropía relativa, será no negativa (Lema \ref{l:ent_rel_pos}).\\
 
 \begin{theorem}[Relación entre entropía e información mutua]\label{t:ent_im}
   La siguiente lista recoge algunas relaciones entre la entropía y la información mutua.
@@ -965,28 +970,30 @@ D(f||g) = \int_{\mathbb{R}^n} \log\left( \frac{f(x)}{g(x)}\right)f(x) dx.\\
 Notamos que $D(f||g)$ es finita si, y solo si, el conjunto soporte de $f$ está contenido en el conjunto soporte de $g$. 
 Al igual que en el caso discreto y motivados por la continuidad consideraremos $0\log\frac{0}{0} = 0$.\\
 
-\begin{definition}[Información mutua]
-  La información mutua, $I(X;Y)$ entre dos variables aleatorias con función de densidad conjunta $f(x,y)$ viene dada por\[
+\begin{definition}[Información mutua]\label{def:im_cont}
+  La información mutua, $I(X;Y)$ entre dos variables aleatorias con función de densidad conjunta $f(x,y)$ y marginales $f(x)$ y $f(y)$ respectivamente, viene dada por\[
 I(X;Y) = \int \int \log \left(\frac{f(x,y)}{f(x)f(y)}\right)f(x,y) dxdy = D(f(x,y)||f(x)f(y)).
   \]
 \end{definition}
 
 \begin{lemma}\label{l:ent_im}
-  La información mutua de dos variables aleatorias $X$, $Y$ verifica:\[
+  Siguiedo la notación anterior, la información mutua de dos variables aleatorias $X$, $Y$ verifica:\[
   I(X;Y) = h(X) + h(Y) - h(X,Y).
   \]
 \end{lemma}
 
 \begin{proof}
   Supongamos que las funciones de densidad marginales de $X$ e $Y$ son $f(x)$, $f(y)$, respectivamente, y la conjunta es $f(x,y)$.
-  Para realizar la prueba partiremos de la definición de información mutua y utilizaremos propiedades del logaritmo y el Teorema de Fubini para llegar al resultado.
+
   \begin{align*}
     I(X;Y) &= \int \int  \log \left(\frac{f(x,y)}{f(x)f(y)}\right)f(x,y)dxdy \\
     &= \int \int  \log \left(f(x,y)\right)f(x,y)dxdy - \int \int  \log \left(f(x)f(y)\right) f(x,y)dxdy\\
     &= -h(X,Y)-\int\int \log \left(f(x)\right)f(x,y)  dy dx - \int \int \log \left(f(y)\right)f(x,y)dxdy\\
     &= -\int  \log f(x)f(x)dx - \int \log f(y) f(y)dy -h(X,Y)\\
-    &= h(X) + h(Y) - h(X,Y).
+    &= h(X) + h(Y) - h(X,Y).\\
   \end{align*}
+
+En la cadena de igualdades anterior hemos utilizado las propiedades de los logaritmos y el Teorema de Fubini.\\
 \end{proof}
 
 \begin{lemma}
@@ -996,8 +1003,8 @@ I(X;Y) = h(X) - h(X|Y) = h(Y) - h(Y|X).
 \end{lemma}
 
 \begin{proof}
-  Sean $f(x)$, $f(y)$ las funciones de densidad de $X$ e $Y$ y $f(x,y)$ la función de densidad conjunta.
-  De manera similar al Lema anterior, partiremos de la definición de información mutua y utlizaremos propiedades del logaritmo, el teorema de Fubini y la definición de función de densidad condicionada.
+  Sean $f(x)$, $f(y)$ las funciones de densidad de $X$ e $Y$ respectivamente y $f(x,y)$ la función de densidad conjunta.
+  Como en el Lema anterior, partiremos de la definición de información mutua y utlizaremos propiedades del logaritmo, el teorema de Fubini y la definición de función de densidad condicionada.
   \begin{align*}
     I(X;Y)&= \int \int  \log\left( \frac{f(x,y)}{f(x)f(y)}\right)f(x,y)dxdy \\
     &= - \int\int \log \left(f(x)\right)f(x,y)  dx dy + \int\int\log \left(\frac{f(x,y)}{f(y)}\right)  f(x,y)dx dy\\
@@ -1008,17 +1015,18 @@ De manera análoga se obtiene la segunda igualdad.
 \end{proof}
 
 \begin{definition}[Variable aleatoria cuantificada]
-  Sea $X$ una variable aleatoria con función de densidad $f$. Si dividimos la imagen de $X$ en intervalos de longitud $\epsilon$ y asumimos que la densidad es continua en cada intervalo, el teorema del valor medio nos dice que, para cada intervalo $\left[i\epsilon, (i+1)\epsilon\right]$ existe un valor $x_i\in \left[i\epsilon, (i+1)\epsilon\right]$ tal que $f(x_i)\epsilon = \int_{i\epsilon}^{(i+1)\epsilon}f(x)dx$.
+  Sea $X$ una variable aleatoria con función de densidad $f$. Si dividimos la imagen de $X$ en intervalos de longitud $\epsilon$ y asumimos que la densidad es continua en cada intervalo, el teorema del valor medio nos dice que, para cada intervalo $\left[i\epsilon, (i+1)\epsilon\right]$ existe un valor $x_i\in \left[i\epsilon, (i+1)\epsilon\right]$ tal que $f(x_i)\epsilon = \int_{i\epsilon}^{(i+1)\epsilon}f(x)dx$.\\
+  
   La variable aleatoria cuantificada, $X^{\epsilon}$, se define de la siguiente forma\[
 X^{\epsilon} = x_i, \quad \text{ si } i\epsilon \leq X  < (i+1)\epsilon.
 \]Su función masa de probabilidad viene dada por \[
-P[X^\epsilon = x_i] = p_i =  \int_{i\epsilon}^{(i+1)\epsilon}f(x)dx = f(x_i)\epsilon.
+P[X^\epsilon = x_i] = p_i =  \int_{i\epsilon}^{(i+1)\epsilon}f(x)dx = f(x_i)\epsilon.\\
 \]
 \end{definition}
 
 \begin{theorem}
   Si la densidad $f$ de una variable aleatoria $X$ es integrable Riemann, entonces\[
-H(X^{\varepsilon}) + \log \epsilon \xrightarrow[]{\epsilon \to 0}  h(X).
+H(X^{\varepsilon}) + \log \epsilon \xrightarrow[]{\epsilon \to 0}  h(X).\\
   \] 
 \end{theorem}
 \begin{proof}
@@ -1027,7 +1035,7 @@ H(X^{\varepsilon}) + \log \epsilon \xrightarrow[]{\epsilon \to 0}  h(X).
     H(X^{\epsilon}) &= - \sum_{-\infty}^{+\infty} p_i \log p_i = - \sum_{-\infty}^{+\infty}f(x_i)\epsilon \log\left ( f(x_i)\epsilon \right )\\
     &= -  \sum_{-\infty}^{+\infty}f(x_i)\epsilon \log\left ( f(x_i) \right ) - \underbrace{\sum_{-\infty}^{+\infty}f(x_i)\epsilon}_{\int_{-\infty}^{+\infty}f(x)dx=1} \log\left ( \epsilon \right ),
   \end{align*}
-  luego, tenemos que $H(X^{\epsilon}) + \log \epsilon  = \sum_{-\infty}^{+\infty}f(x_i)\epsilon \log\left ( f(x_i) \right )$.
+  luego, tenemos que $H(X^{\epsilon}) + \log \epsilon  = \sum_{-\infty}^{+\infty}f(x_i)\epsilon \log\left ( f(x_i) \right )$.\\
 
   Como $f$ es integrable Riemann, tomando $\epsilon \to 0$ obtenemos \[\lim_{\epsilon \to 0}\sum_{-\infty}^{+\infty}f(x_i)\epsilon \log\left ( f(x_i) \right )  = - \int_{-\infty}^{+\infty}\log\left( f(x)\right) f(x)dx = h(X).\]
 
@@ -1036,7 +1044,7 @@ H(X^{\varepsilon}) + \log \epsilon \xrightarrow[]{\epsilon \to 0}  h(X).
   \] 
 \end{proof}
 
-Podemos calcular la información mutua de dos variables aleatorias cuantificadas, 
+Teniendo en cuenta el resultado anterior podemos aproximar la información mutua de dos variables aleatorias por la de sus variables cuantificadas.
 \begin{align}\label{eq:imq}
   I(X^{\epsilon};Y^{\epsilon}) &= H(X^{\epsilon}) - H(X^{\epsilon}|Y^{\epsilon})\nonumber\\&\approx h(X) - \log\epsilon - (h(X|Y) - \log\epsilon) = I(X;Y).
 \end{align}
@@ -1044,14 +1052,14 @@ Podemos calcular la información mutua de dos variables aleatorias cuantificadas
 De forma más general, podemos definir la información mutua en términos de particiones finitas de la imagen de la variable aleatoria. Sea $\mathcal{X}$ la imagen de la variable aleatoria $X$. Una partición $\mathcal{P}$ de $\mathcal{X}$ es una colección finita de conjuntos disjuntos $P_i$ de forma que $\cup_i P_i = \mathcal{X}$. La cuantificación de $X$ dada la partición $\mathcal{P}$, que notaremos $[X]_{\mathcal{P}}$, es la variable aleatoria discreta con función masa de probabilidad\[
 P\left[[X]_{\mathcal{P}} = i\right ] = P [X\in P_i] = \int_{P_i}dF(x).
 \]
-Utilizando esto para dos variables aleatorias con sendas particiones, podremos calcular la información mutua de las variables cuantificadas utilizando \ref{eq:imq}. De esta forma, obtenemos una nueva definición de la información mutua.
+Utilizando esto para dos variables aleatorias con sendas particiones, podremos calcular la información mutua de las variables cuantificadas utilizando \ref{eq:imq}. De esta forma, obtenemos una nueva definición de la información mutua.\\
 
 \begin{definition}[Información mutua]
   La información mutua de dos variables aleatorias $X$ e $Y$ viene dada por \[
 I(X;Y) = \sup_{\mathcal{P},\mathcal{Q}}I\left ( [X]_{\mathcal{P}}, [Y]_{\mathcal{Q}} \right),
-  \]donde el supremo es sobre todas las particiones finitas $\mathcal{P}$ y $\mathcal{Q}$.
+  \]donde el supremo es sobre todas las particiones finitas $\mathcal{P}$ y $\mathcal{Q}$.\\
 \end{definition}
-Notamos que esta definición será válida cuando las variables aleatorias no tengan definida su función de densidad.
+Notamos que esta definición también será válida cuando las variables aleatorias no tengan definida su función de densidad. Esta definición es equivalente a la Definición \ref{def:im_disc} para variables aleatorias discretas y a la Definición \ref{def:im_cont} para variables aleatorias continuas.\\
 
 %REVIEW
 %---Lo que viene a continuación no lo tengo del todo claro---
@@ -1067,11 +1075,11 @@ con igualdad si, y solo si, $f = g$ en casi todo punto.
 \end{proof}
 
 \begin{corollary}\label{c:im_indc}
-$I(X;Y)\ge 0$ con igualdad si, y solo si, $X$ e $Y$ son independientes.
+$I(X;Y)\ge 0$ con igualdad si, y solo si, $X$ e $Y$ son independientes.\\
 \end{corollary}
 
 \begin{corollary}
-$h(X|Y) \le 0$ con igualdad si, y solo si, $X$ e $Y$ son independientes.
+$h(X|Y) \le 0$ con igualdad si, y solo si, $X$ e $Y$ son independientes.\\
 \end{corollary}
 
 \begin{theorem}[Regla de la cadena para la entropía diferencial] Sean $X_1,\dots, X_n$ variables aleatorias, entonces
@@ -1091,7 +1099,7 @@ h(X_1,\dots,X_n) &= h(X_n|X_1,\dots, X_{n-1}) + h(X_1,\dots, X_{n-1})\\ &= h(X_n
   \end{itemize}
 \end{proof}
 
-\begin{corollary}
+\begin{corollary} Se tiene que
   \[h(X_1,\cdots, X_n) \leq \sum_i h(X_i),\]
   dándose la igualdad si, y solo si, $X_1,\cdots, X_n$ son independientes.
 \end{corollary}
@@ -1147,7 +1155,7 @@ h(AX) = h(X) + \log|det(A)|.
 
 \section{Estimación de la entropía y de la información mutua}
 
-Generalmente no conocemos las funciones de densidad de las variables aleatorias cuya entropía o información mutua queremos calcular, por ello, tratamos de aproximar este valor a partir de información que sí conocemos, como realizaciones muestrales de las variables. El objetivo es, para dos variables aleatorias $X,Y$ ($d$-dimensionales), estimar $h(X)$ o $I(X;Y)$ a partir de un conjunto de realizaciones muestrales, $\{z_i=(x_i,y_i) : i = 1,\cdots, N\}$, sin conocer las funciones de densidad $f=f_Z, f_X$ y $f_Y$, donde $Z = (X,Y)$ es la distribución conjunta de $X$ e $Y$.
+Generalmente no conocemos las funciones de densidad de las variables aleatorias cuya entropía o información mutua queremos calcular, por ello, tratamos de aproximar este valor a partir de información que sí conocemos, como realizaciones muestrales de las variables. El objetivo es, para dos variables aleatorias $X,Y$ ($d$-dimensionales), estimar $h(X)$ o $I(X;Y)$ a partir de un conjunto de realizaciones muestrales, $\{z_i=(x_i,y_i) : i = 1,\cdots, N\}$, sin conocer las funciones de densidad $f_z, f_x$ y $f_y$, donde $Z = (X,Y)$ es la distribución conjunta de $X$ e $Y$. Asumiremos en el desarrollo a continuación que todas las funciones de densidad son propias, es decir, que no son idénticamente $-\infty$.\\
 
 Presentaremos brevemente un estimador basado en particiones antes de estudiar estimadores basados en los $k$ vecinos más cercanos y del tipo de Kozachenko - Leonenko.
 
@@ -1166,7 +1174,7 @@ Aproximamos \begin{align*}
   p(i,j) &\approx \frac{n(i,j)}{N}.
   \end{align*}
 
-Si todas las densidades son funciones propias (todos sus valores son distintos de $-\infty$ y al menos un valor es menor que $+\infty$), cuando $N$ tienda a infinito y el tamaño de cada partición converja a cero, la estimación $I_{\textit{binned}}(X,Y) \to I(X;Y)$.---Referenciar---¿Teorema 1 - Estimation of Entropy and Mutual Information - Liam Paninski?---
+Cuando $N$ tienda a infinito y el tamaño de cada partición converja a cero, la estimación $I_{\textit{binned}}(X,Y) \to I(X;Y)$, véase el Teorema 1 de \cite{paninski}.
 
 
 \subsection{Estimadores de la entropía basados en los $k$ vecinos más cercanos}
@@ -1174,55 +1182,53 @@ Si todas las densidades son funciones propias (todos sus valores son distintos d
 Introducimos a continuación estimadores de la entropía, $h(X)$, basados en los $k$ vecinos más cercanos. Para ello, consideramos $X$ una variable aleatoria $d$-dimensional, con función de densidad $f(x)$. Queremos estimar la entropía\[
 h(X) = - \int \log\left(f(x)\right)f(x)dx
 \]
-a partir de una muestra aleatoria simple\[
-X_1,\dots,X_N \text{ de } X.
-\]
+a partir de una muestra aleatoria simple $X_1,\dots,X_N \text{ de } X$.\\
 
-Para ello, teniendo en cuenta el Teorema \ref{t:mmlog}, si tenemos un estimador consistente de $\log f(X_i)$, que notaremos por $\widehat{\log f(X_i)}$, podemos estimar $h(X)$ mediante\[
--\frac{1}{N}\sum_{i=1}^N\widehat{\log f}(X_i).
+Teniendo en cuenta el Teorema \ref{t:mmlog}, si tenemos un estimador consistente de $\log f(X_i)$, que notaremos por $\widehat{\log f(X_i)}$, podemos estimar $h(X)$ mediante\[
+-\frac{1}{N}\sum_{i=1}^N\widehat{\log f}(X_i).\\
 \]
 
 Para obtener el estimador $\widehat{\log f(X)}$, partimos de los estimadores de la función de densidad $\hat{f}(X)$ basados en los $k$ vecinos más cercanos.\\
 
-Sea $X_1,\dots,X_N$ una muestra aleatoria simple y $x_1,\dots, x_N$ una observación de dicha muestra. Consideramos en $\mathbb{R}^d$, la métrica inducida por una norma $\Vert \cdot \Vert$ (euclídea, del máximo,...). Fijado $x_i\in \mathbb{R}^d$, ordenamos el resto de observaciones de la muestra en orden creciente de la distancia a este punto y llamamos $\epsilon_k(x_i)$ a la distancia de $x_i$ a su $k$ vecino más próximo, que notamos por $x_{i_k}$. Llamamos ahora $\mathcal{E}_{i_k}$ a la variable aleatoria $\left \Vert X_i - X_{i_k} \right \Vert$.\\
+Sea $X_1,\dots,X_N$ una muestra aleatoria simple y $x_1,\dots, x_N$ una observación de dicha muestra. Consideramos en $\mathbb{R}^d$, la métrica inducida por una norma $\Vert \cdot \Vert$ (euclídea, del máximo,...). Fijado $x_i\in \mathbb{R}^d$, ordenamos el resto de observaciones de la muestra en orden creciente de la distancia a este punto y llamamos $\epsilon_k(x_i)$ a la distancia de $x_i$ a su $k$ vecino más próximo, que notamos por $x_{i_k}$.\\
 
 Consideramos la bola de centro $x_i$ y radio $\epsilon_k(x_i)$,\[
 B(x_i, \epsilon_k(x_i)) = \{y \in \R^d: \Vert x_i - y\Vert \leq \epsilon_k(x_i)\}.\]
 
-Comenzaremos aproximando \[
-P[X_i\in B(x_i,\epsilon_k(x_i))] \approx \int_{B(x_i,\epsilon_k(x_i))}f(y)dy.
+Comenzaremos aproximando, para cualquier $j=1,\dots, N$,\[
+P[X_j\in B(x_i,\epsilon_k(x_i))] \approx \int_{B(x_i,\epsilon_k(x_i))}f(y)dy.
 \]
 
 Podemos ver \[
-\frac{1}{N} \sum_{i=1}^NI\left(X_i\in B(x_i,\epsilon_k(x_i))\right),\]donde $I$ es la función indicadora, como un estimador de $P[X_i\in B(x_i,\epsilon_k(x_i))]$. Por la definición de $\epsilon_k(x_i)$ tenemos que \begin{align}\label{eq:knn-ind}
- \frac{1}{N} \sum_{i=1}^NI\left(X_i\in B\left(x_i,\epsilon_k(x_i)\right)\right) = \frac{k}{N}.
+\frac{1}{N} \sum_{j=1}^NI\left(X_j\in B(x_i,\epsilon_k(x_i))\right),\]donde $I$ es la función indicadora, como un estimador de $P[X_j\in B(x_i,\epsilon_k(x_i))]$. Por la definición de $\epsilon_k(x_i)$ tenemos que \begin{align}\label{eq:knn-ind}
+ \frac{1}{N} \sum_{j=1}^NI\left(X_j\in B\left(x_i,\epsilon_k(x_i)\right)\right) = \frac{k}{N}.
 \end{align}
 
 Cuando $N$ es grande y $k$ es relativamente pequeño en comparación, $\epsilon_k(x_i)$ será pequeño porque $\frac{k}{N}$ lo es. Luego, la densidad $f(y)$ en la bola $B(x_i,\epsilon_k(x_i))$ no cambiará demasiado. Para cualquier punto de la bola consideraremos que su densidad coincide con la del centro de la misma, $f(y)\approx f(x_i)$. Tenemos entonces\begin{align*}
-P[X_i\in B(x_i,\epsilon_k(x_i))] &\approx \int_{B(x_i,\epsilon_k(x_i))}f(y)dy\approx f(x_i) \int_{B(x_i,\epsilon_k(x_i))}dy\\ &= f(x_i)\cdot V_d \cdot \epsilon^d_k(x_i),
+P[X_j\in B(x_i,\epsilon_k(x_i))] &\approx \int_{B(x_i,\epsilon_k(x_i))}f(y)dy\approx f(x_i) \int_{B(x_i,\epsilon_k(x_i))}dy\\ &= f(x_i)\cdot V_d \cdot \epsilon^d_k(x_i),
 \end{align*}
 donde $V_d\cdot \epsilon^d_k(x_i)$ es el volumen de la bola $d$ dimensional de radio $\epsilon_k(x_i)$ (este volumen depende la norma utilizada).\\
 
-Utilizando \ref{eq:knn-ind} para estimar $P[X_i\in B(x_i,\epsilon_k(x_i))]$, tendremos,\[
-f(x_i)\cdot V_d \cdot \epsilon_k(x_i) \approx P[X_i\in B(x_i,\epsilon_k(x_i))]\approx  \frac{1}{N} \sum_{i=1}^NI\left(X_i\in B\left(x_i,\epsilon_k(x_i)\right)\right) = \frac{k}{N}.
+Utilizando \ref{eq:knn-ind} para estimar $P[X_j\in B(x_i,\epsilon_k(x_i))]$, tendremos,\[
+f(x_i)\cdot V_d \cdot \epsilon_k(x_i) \approx P[X_j\in B(x_i,\epsilon_k(x_i))]\approx  \frac{1}{N} \sum_{j=1}^NI\left(X_j\in B\left(x_i,\epsilon_k(x_i)\right)\right) = \frac{k}{N}.
 \]
 Tomando\[
 f(x_i)\cdot V_d \cdot \epsilon^d_k(x_i) \approx \frac{k}{N}
 \]
 se obtiene el estimador de la función de densidad, \[
-\hat{f}(x) = \frac{k}{N}\cdot\frac{1}{V_d \cdot \epsilon^d_k(x)},\quad \forall x\in \R^d.
+\hat{f}(x) = \frac{k}{N}\cdot\frac{1}{V_d \cdot \epsilon^d_k(x)},\quad \forall x\in \R^d.\\
 \]
 
-Este estimador verifica,---Referenciar, lo cogí de la Lec7, pero ahí no hay más referencias---
-\begin{align*}
-  \bias\left(\hat{f}(x)\right) &= O \left(\left(\frac{k}{n}\right)^{\frac{2}{d}} + \frac{1}{k}\right),\\
-  \Var\left(\hat{f}(x)\right) &= O \left(\frac{1}{k}\right).
-\end{align*}
+%% Este estimador verifica,---Referenciar, lo cogí de la Lec7, pero ahí no hay más referencias---
+%% \begin{align*}
+%%   \bias\left(\hat{f}(x)\right) &= O \left(\left(\frac{k}{n}\right)^{\frac{2}{d}} + \frac{1}{k}\right),\\
+%%   \Var\left(\hat{f}(x)\right) &= O \left(\frac{1}{k}\right).
+%% \end{align*}
 
-Su comportamiento asintótico no depende solo del tamaño de la muestra sino también de la dimensión $d$ y del valor $k$ elegido. De hecho, la varianza depende exclusivamente del valor de $k$, la variabilidad del estimador viene dada por el número de vecinos más cercanos a considerar. \\
+El comportamiento asintótico de este estimador no depende solo del tamaño de la muestra sino también de la dimensión $d$ y del valor $k$ elegido. De hecho, la varianza depende exclusivamente del valor de $k$, la variabilidad del estimador viene dada por el número de vecinos más cercanos a considerar. Este estimador es sesgado, aunque es asintóticamente insesgado y $\Var\left (\hat{f}\right)\to 0$ solo si $k\to \infty, N \to \infty$ y $\frac{k}{N} \to 0$, véase el corolario 2 de \cite{inproceedings}. Aumentar el valor de $k$ incrementa el tiempo de cómputo notablemente, dificultando el cálculo efectivo.\\
 
 Como habíamos expuesto, utilizaremos este estimador de la función de densidad de $X$ para obtener un estimador de $\log f(X)$, este es,\[
-\widehat{\log f}(x_i) = \log\left ( \frac{k}{N}\cdot\frac{1}{V_d \cdot \epsilon^d_k(x_i)} \right ) = \log\frac{k}{N} - \log V_d - d\log  \epsilon_k(x_i).
+\widehat{\log f}(x_i) = \log\left ( \frac{k}{N}\cdot\frac{1}{V_d \cdot \epsilon^d_k(x_i)} \right ) = \log\frac{k}{N} - \log V_d - d\log  \epsilon_k(x_i).\\
 \]
 Obteniendo el estimador de la entropía
 \begin{align*}
@@ -1230,39 +1236,44 @@ Obteniendo el estimador de la entropía
   &= - \log\frac{k}{N} + \log V_d +  \frac{d}{N} \sum_{i=1}^N\log  \epsilon_k(x_i).
 \end{align*}
 
-Este estimador es sesgado, aunque es asintóticamente insesgado y con $\Var\left (\hat{h}\right)\to \infty$ solo si $k\to \infty, N \to \infty$ y $\frac{k}{N} \to 0$. Aumentar el valor de $k$ incrementa el tiempo de cómputo notablemente, dificultando el cálculo efectivo. Por ello, se propone la modificación siguiente, basada en el estimador de Kozachenko - Leonenko. ---En el artículo de Fernando Pérez Cruz viene probado lo primero antes de aplicar logaritmo, ¿si tomamos logaritmos se sigue cumpliendo?---
+Como proviene del estimador $\hat{f}$, el estimador $\hat{h}$ mantiene sus propiedades asintóticas. Para corregir en parte el sesgo del estimador y para solucionar los problemas de cómputo de este estimador, se propone la modificación siguiente, basada en el estimador de Kozachenko - Leonenko. 
 
 \subsection{Estimadores de la entropía del tipo de Kozachenko - Leonenko}
 
-Partiendo de un razonamiento similar al anterior, trataremos de estimar la entropía, $h(X)$, a partir de \[
+Consideramos $X_1,\dots, X_n$ una muestra aleatoria simple de la variable aleatoria $X$. Partiendo del mismo razonamiento, trataremos de estimar la entropía, $h(X)$, a partir de \[
 \widehat{h}(X) = -\frac{1}{N}\sum_{i=1}^N\widehat{\log f}(X_i).\]
 
-La diferencia vendrá marcada por la forma de estimar $\widehat{\log f}(X_i)$.\\
+La diferencia vendrá marcada por la forma de estimar $\widehat{\log f}(X_i)$, para corregir el sesgo del estimador anterior.\\
+
+Siguiendo con la notación anterior, llamamos $\mathcal{E}_{i_k}$ a la variable aleatoria $\Vert X_i - X_{i_k} \Vert$ y $P_k(\epsilon)$ a su función de densidad.\\
 
 Para obtener el estimador $\widehat{\log f}(X_i)$, para un $k$ fijo, consideramos la función de densidad, $P_k(\varepsilon)$, de la distancia entre $X_i$ y su $k$-ésimo vecino más cercano, $\epsilon$ será una realización de $\mathcal{E}_{i_k}$.\\
 
-Vamos a calcular $P\left[\epsilon \leq \mathcal{E}_{i_k} \leq \epsilon + h \right]$. Esta probabilidad es igual a la probabilidad de que haya un punto a distancia $r\in \left[ \varepsilon,\varepsilon + h \right ]$ de $X_i$, de que haya otros $k-1$ puntos a menor distancia; y de que $N-k-1$ puntos se encuentren a mayor distancia de $x_i$.\\
+Partimos de una observación $x_1,\dots, x_n$, de la que seleccionamos un punto $x_i$ cualquiera. Vamos a calcular $P\left[\epsilon \leq \mathcal{E}_{i_k} \leq \epsilon + h \right]$. Esta probabilidad es igual a la probabilidad de que haya un punto a distancia $r\in \left[ \varepsilon,\varepsilon + h \right ]$ de $x_i$, de que haya otras $k-1$ observaciones a distancia menor que $\epsilon$; y de que el resto de puntos se encuentren a mayor distancia de $x_i$.\\
 
-Llamamos $p_i(\epsilon) = P\left[X_i \in B(x_i,\epsilon)\right]$ a la distribución de la bola centrada en $x_i$ y radio $\varepsilon$, \[
-p_i(\varepsilon) = \int_{B(x_i,\epsilon)}f(y)dy.\]
+Llamamos \[
+p_i(\varepsilon) = \int_{B(x_i,\epsilon)}f(y)dy.\\
+\]
+Para cada $j = 1,\dots,n$ aproximaremos\[
+P\left[X_j \in B(x_i,\epsilon)\right]\approx p_i(\epsilon),
+\]donde $B(x_i,\epsilon)$ es la bola centrada en $x_i$ y de radio $\varepsilon$.\\
 
-Usaremos la fórmula de la distribución multinomial para expresar $P_k(\varepsilon)$, teniendo en cuenta que, para una muestra aleatoria simple, $p_i(\epsilon) = p_j(\epsilon)$ por ser una muestra idénticamente distribuida.
-
+Usaremos la fórmula de la distribución multinomial para expresar $P_k(\varepsilon)$,
 \begin{align*}
   P_k(\epsilon) &= \lim_{h\to 0}\frac{P\left[\epsilon \leq \mathcal{E}_{i_k} \leq \epsilon + h\right]}{h}\\[5pt] &= \lim_{h\to 0} \left [\frac{(N-1)!}{1!(k-1)!(N-k-1)!}  \cdot p_i(\epsilon)^{k-1} \cdot \left(1-p_i(\epsilon)\right)^{N-k-1}\left(\frac{p_i(\epsilon + h ) - p_i(\epsilon)}{h}\right)\right ]\\[10pt] &= k\binom{N-1}{k}
 \cdot \frac{d p_i(\varepsilon)}{d\varepsilon} \cdot p_i(\epsilon)^{k-1} \cdot \left(1-p_i(\epsilon)\right)^{N-k-1}.\\
 \end{align*}
 
-
-Se comprueba que $\int P_k(\varepsilon)d\varepsilon = 1$, que debe cumplir para ser función de densidad. ---Referenciar, no lo encuentro en el último artículo---
+Observamos que \[
+\int_0^{\infty} P_k(\varepsilon)d\varepsilon = k\binom{N-1}{k} \int_0^1 p^{k-1}(1-p)^{N-k-1}dp = 1,
+\]que debe cumplir para ser función de densidad.\\
 
 Podemos calcular la esperanza de $\log p_i (\varepsilon)$, a partir de la posición de los $N-1$ puntos restantes, con $x_i$ fijo:
----Referenciar, no lo esncuentro en el último artículo---
 \begin{align*}
 \mathbb{E} \left[\log p_i(\epsilon)\right ] &= \int_0^\infty P_k(\varepsilon) \log p_i(\varepsilon) d\varepsilon =  k\binom{N-1}{k} \int_0^1 p^{k-1}(1-p)^{N-k-1}\log p\ dp\\ &= \psi (k) - \psi(N),
 \end{align*}
 
-donde $\psi$ es la función digamma.\\
+donde $\psi$ es la función digamma.\\ %REVIEW : Referenciar artículo de Kozachenko Leonenko\\
 
 Si asumimos que $f(x)$ es constante en la bola de radio $\epsilon$, tendremos \begin{align*}
 p_i(\epsilon) &\approx \int_{B(x_i,\epsilon)}f(y)dy\approx f(x_i) \int_{B(x_i,\epsilon)}dy\\ &= f(x_i)\cdot V_d \cdot \epsilon^d.\\
@@ -1279,21 +1290,23 @@ Continuamos tomando esperanzas respecto de $\varepsilon$ y sustituyendo la esper
 \log f(x_i) \approx \mathbb{E}\left[\log p_i(\epsilon)\right] - \log V_d  - d \mathbb{E} \left[\log \varepsilon\right] = \psi (k) - \psi (N) - \log V_d  - d \mathbb{E} \left[\log \varepsilon\right].
 \]
 
-Hemos calculado un estimador de $\widehat{\log f} (X_i)$, sustituiremos de la forma propuesta para obtener un estimador de la entropía:
+Hemos calculado un estimador de $\widehat{\log f} (X_i)$ que nos permite obtener un estimador de la entropía:
 \begin{align}
   \widehat{h}(X) &= - \frac{1}{N} \sum_{i=1}^N\widehat{\log f} (X_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \psi (N) - \log V_d  - d\log \varepsilon \right ) \nonumber \\
   &= - \psi (k) + \psi (N) + \log V_d + \frac{d}{N} \sum_{i=1}^N \log \varepsilon (x_i). \label{eq:est_ent}
 \end{align}
 
-El estimador anterior es el de Kozachenko - Leonenko en el caso $k=1$.
+El estimador anterior es el de Kozachenko - Leonenko en el caso $k=1$.\\
 
-Por cómo lo hemos obtenido, $\widehat{h}(X)$ será insesgado si la densidad $f(x)$ es constante.
+La forma de estimar $\widehat{\log f} (X_i)$ elimina una parte del sesgo, aunque se mantiene el sesgo proveniente de aproximar\[\int_{B(x_i,\epsilon)}f(y)dy\approx f(x_i) \int_{B(x_i,\epsilon)}dy.\] Si la densidad $f(x)$ es constante, el sesgo proveniente de esta aproximación también desaparece y obtenemos un estimador de la entropía, $\widehat{h}(X)$, insesgado.
 
 \subsection{Estimadores de la información mutua del tipo de Kozachenko - Leonenko}
 
+Extendemos las ideas anteriores para estimar la información mutua.\\
+
 Consideremos ahora la variable aleatoria conjunta $Z=(X,Y)$ con la norma del máximo\[ \Vert Z - Z' \Vert = \max \{\Vert X-X' \Vert, \Vert Y-Y'\Vert\},\] donde las normas en $X$ e $Y$ pueden ser cualesquiera, no necesariamente la misma. \\
 
-Para un $k$ fijo, tomamos uno de los $N$ puntos de la muestra, $z_i$, y notamos $\varepsilon_k(z_i)$ la distancia de este punto a su $k$-ésimo vecino más cercano, esta será una realización de $\mathcal{E}_{i_k}$. $\epsilon_k(x_i)$ y $\epsilon_k(y_i)$ reflejan la misma distancia proyectada en los subespacios $X$ e $Y$ respectivamente. Por la norma elegida, se verifica \[\varepsilon_k(z_i) = \max \{\varepsilon_k(x_i), \varepsilon_k(y_i)\}.\]
+Para un $k$ fijo, tomamos uno de los $N$ puntos de la muestra, $z_i$, y notamos $\varepsilon_k(z_i)$ la distancia de este punto a su $k$-ésimo vecino más cercano, esta será una realización de $\mathcal{E}_{i_k}$. $\epsilon_k(x_i)$ y $\epsilon_k(y_i)$ reflejan la distancia de ese punto proyectada en los subespacios $X$ e $Y$ respectivamente. Por la norma elegida, se verifica \[\varepsilon_k(z_i) = \max \{\varepsilon_k(x_i), \varepsilon_k(y_i)\}.\]
 
 Distinguiremos dos algoritmos diferentes para estimar la información mutua según si consideramos los vecinos que se encuentren en el cuadrado de lado $2\varepsilon(z_i)$, o en el rectángulo de lados $2\varepsilon(x_i)$, $2\varepsilon(y_i)$. 
 
