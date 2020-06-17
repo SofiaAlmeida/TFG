@@ -9,179 +9,141 @@ import cProfile
 import pstats
 from pstats import SortKey
 import pandas as pd
+import numpy as np
 
 #-----------------------------------------------------------------------
-## profiling del tiempo de ejecución de las dos implementaciones de la entropía. Se crean los datos, se activa el profiler, se realizan las ejecuciones, se desactiva el profiler.
-# @param n número de muestras a considerar.
-# @param d dimensión de las muestras.
-# @param k número de vecinos más cercanos con los que calcular la entropía.
-# @param reps número de veces que ejecutar las funciones.
+## profiling del tiempo de ejecución de una función concreta. Se activa el profiler, se ejecuta la función, se desactiva el profiler.
+# @param func función cuyos tiempos de ejecución queremos medir.
+# @param args parámetros que pasar a la función a ejecutar.
 # @return objeto de la clase cProfile.Profile con la información de las medidas realizadas.
-def prof_ent(n, d, k = 3, reps = 10):
-    # Generamos los datos de prueba
-    dat = data.Data('normal', n, d)
-    X = dat.X
-    
+def profile(func, *args):    
     # Activamos el profiler
     pr = cProfile.Profile()
     pr.enable()
     
-    # Ejecutamos ambos estimadores reps veces
-    for i in range(0, reps):
-         mi.entropy(X, k)
-         ee.entropy(X, k)
+    # Ejecutamos el estimador correspondiente
+    func(*args)
     
     # Desactivamos el profiler
     pr.disable()
-    return pr
     
-#-----------------------------------------------------------------------
-## profiling del tiempo de ejecución de las dos implementaciones de la información mutua. Se crean los datos, se activa el profiler, se realizan las ejecuciones, se desactiva el profiler.
-# @param n número de muestras a considerar.
-# @param d dimensión de las muestras.
-# @param k número de vecinos más cercanos con los que calcular la entropía.
-# @param reps número de veces que ejecutar las funciones.
-# @return objeto de la clase cProfile.Profile con la información de las medidas realizadas
-def prof_mi(n, d, k = 3, reps = 10):
-    # Generamos la muestra 
-    dat = data.Data('normal', n, 2*d)
-    X = dat.X[:, 0:d]
-    Y = dat.X[:, d:]
-    
-    # Activamos el profiler
-    pr = cProfile.Profile()
-    pr.enable()
-    
-    # Ejecutamos ambos estimadores reps veces
-    for i in range(0, reps):
-         mi.mutual_information((X, Y), k)
-         ee.mi(X, Y, k=k)
-    
-    # Desactivamos el profiler
-    pr.disable()
+    # Devolvemos el profiler
     return pr
 
-## Almacena el tiempo de ejecución de cada función en la posición adecuada del dataframe correspondiente.
+## Obtiene el tiempo de ejecución de la función indicada.
 # @param p objeto de la clase pstats.Stats con las estadísticas sobre las ejecuciones.
-# @param d dimensión con la que se realizó la medición.
-# @param n número de muestras con la que se realizó la medición.
-# @param df_mi dataframe en el que guardar la información relativa a la implementación mutual_info.py.
-# @param df_ee dataframe en el que almacenar la información sobre la implementación entropy_estimators.py.
-# @param list contiene las funciones de las que queremos obtener información.
-def get_stats(p, d, n, df_mi, df_ee, list):
-     # Para las funciones de la lista
-     for f in list:
-          # cc: número de llamadas excluyendo las recursivas
-          # nc: número de llamadas
-          # tt: tiempo total en la llamada (excluyendo el tiempo en llamadas a subfunciones)
-          # ct: tiempo acumulado pasado en la función y todas sus subfunciones
-          # callers: lista de las funciones que llamaron a esta función
-          cc, nc, tt, ct, callers = p.stats[f]
+# @param f función cuyos tiempos queremos calcular.
+# @return el tiempo de ejecución de la función acumulado, es decir, incluyendo el tiempo de las funciones a las que esta llame.
+def get_cumtime_percall(p, f):
+      # cc: número de llamadas excluyendo las recursivas
+      # nc: número de llamadas
+      # tt: tiempo total en la llamada (excluyendo el tiempo en llamadas a subfunciones)
+      # ct: tiempo acumulado pasado en la función y todas sus subfunciones
+      # callers: lista de las funciones que llamaron a esta función
+      cc, nc, tt, ct, callers = p.stats[f]
 
-          # Si la función es del archivo entropy_estimators.py, almacenamos la información en el df correspondiente
-          if(f[0] == 'entropy_estimators.py'):
-               # El valor que nos interesa es el tiempo pasado en la función (y a las que esta llama) entre el total de ejecuciones de la función
-               df_ee.loc[d][n] = ct / nc
+      # El valor que nos interesa es el tiempo pasado en la función (y a las que esta llama) entre el total de ejecuciones de la función
+      return ct / nc
 
-          # Análogamente, para mutual_info.py
-          if(f[0] == 'mutual_info.py'):
-               df_mi.loc[d][n] = ct / nc
 
 ## Obtiene los tiempos de ejecución de las dos implementaciones de la entropía y de las dos implementaciones de la información mutua. Imprime por pantalla los tiempos de ejecución y los guarda en archivos en la carpeta ./res.
 # @param ds dimensiones que probar.
 # @param ns tamañaos de muestra que probar.
+# @param k valor de k utilizado en las estimaciones.
 # @param reps número de veces que repetir las ejecuciones.
 # @param save si es True se almacenan los resultados en archivos.
-def compare_estimators(ds, ns, reps = 5, save = False):
-     # DataFrames para almacenar estimaciones
-     mi_ent = pd.DataFrame(index = ds, columns = ns)
-     ee_ent = pd.DataFrame(index = ds, columns = ns)
-     mi_mi = pd.DataFrame(index = ds, columns = ns)
-     ee_mi = pd.DataFrame(index = ds, columns = ns)
+def compare_estimators(ds, ns, k = 3, reps = 5, save = False):
+     # DataFrame - MultiIndex para almacenar mediciones
+     # Creamos nombres de filas y columnas
+     iterables = [['ent', 'mi'], ds]
+     index  = pd.MultiIndex.from_product(iterables, names = ['func', 'ds'])
+     iterables2 = [['mi', 'ee'], ns]
+     cols = pd.MultiIndex.from_product(iterables2, names = ['implementación', 'ns'])
+     # Creamos el DataFrame
+     df = pd.DataFrame(index = index, columns = cols)
      
-     # Variables necesarias para recuperar las mediciones con get_stats
+     # Variables necesarias para recuperar las mediciones con get_cumtime_percall
      # Se obtuvieron mediante:
      # width, list = p.sort_stats(SortKey.CUMULATIVE).get_print_list('entropy')
      # p.print_line(list)
      # donde p es un objeto de pstats, entre la lista devuelta se seleccionaron las líneas correspondientes a las funciones a estudiar
-     f_ent = [('entropy_estimators.py', 17, 'entropy'),
-              ('mutual_info.py', 50, 'entropy')]
-     f_mi = [('mutual_info.py', 91, 'mutual_information'),
-             ('entropy_estimators.py', 61, 'mi')]
+     f_ent_mi = ('mutual_info.py', 50, 'entropy')
+     f_ent_ee = ('entropy_estimators.py', 17, 'entropy')
+     
+     f_mi_mi = ('mutual_info.py', 91, 'mutual_information')
+     f_mi_ee = ('entropy_estimators.py', 61, 'mi')
      
      # Realizaremos las medidas para todos los valores de d y n
      for d in ds:
          for n in ns:
-             # Medimos tiempo de cálculos de entropía	
-             pr = prof_ent(n, d, reps = reps)
-             p_ent = pstats.Stats(pr).strip_dirs()
-             get_stats(p_ent, d, n, mi_ent, ee_ent, f_ent)
-          
-             # Medimos tiempo de ejecución de información mutua
-             pr = prof_mi(n, d, reps = reps)
-             p_im = pstats.Stats(pr).strip_dirs()
-             get_stats(p_im, d, n, mi_mi, ee_mi, f_mi)
+             # Vectores para almacenar los tiempos en las diferentes repeticiones
+             times_mi_ent = np.array([])
+             times_ee_ent = np.array([])
+             times_mi_mi = np.array([])
+             times_ee_mi = np.array([])
+             
+             # Tomamos reps medidas
+             for i in range(0, reps):
+                 # Generamos los datos de prueba
+                 dat = data.Data('normal', n, d)
+                 X = dat.X
+                 dat2 = data.Data('normal', n, d)
+                 Y = dat2.X
+                 
+                 # Medimos tiempo de cálculos de entropía	
+                 # mutual_info.py
+                 pr_mi_ent = profile(mi.entropy, X, k)
+                 stats = pstats.Stats(pr_mi_ent).strip_dirs()
+                 times_mi_ent = np.append(times_mi_ent, 
+                                          get_cumtime_percall(stats, f_ent_mi))
+                 # Almacenamos las estadísticas
+                 stats.dump_stats('stats/mutual_info_ent_' + str(n) + '_' + str(d) + '_' + str(i))
+                 
+                 # entropy_estimators.py
+                 pr_ee_ent = profile(ee.entropy, X, k)
+                 stats = pstats.Stats(pr_ee_ent).strip_dirs()
+                 times_ee_ent = np.append(times_ee_ent, 
+                                          get_cumtime_percall(stats, f_ent_ee))
+                                          
+                 stats.dump_stats('stats/ee_ent' + str(n) + '_' + str(d) + '_' + str(i))
+                 
+                 # Medimos tiempos de cálculo de la información mutua
+                 # mutual_info.py 
+                 pr_mi_mi = profile(mi.mutual_information, (X, Y) , k)
+                 stats = pstats.Stats(pr_mi_mi).strip_dirs()
+                 times_mi_mi = np.append(times_mi_mi, 
+                                          get_cumtime_percall(stats, f_mi_mi))
+                 stats.dump_stats('stats/mutual_info_mi_' + str(n) + '_' + str(d) + '_' + str(i))
+                                          
+                 # entropy_estimators.py
+                 pr_ee_mi = profile(ee.mi, X, Y, None, k)
+                 stats = pstats.Stats(pr_ee_mi).strip_dirs()
+                 times_ee_mi = np.append(times_ee_mi, 
+                                          get_cumtime_percall(stats, f_mi_ee))
+                                          
+                 stats.dump_stats('stats/ee_mi' + str(n) + '_' + str(d) + '_' + str(i))
+             
+             # Almacenamos los datos
+             df.loc[('ent', d), ('mi', n)] = times_mi_ent
+             df.loc[('ent', d), ('ee', n)] = times_ee_ent
+             
+             df.loc[('mi', d), ('mi', n)] = times_mi_mi
+             df.loc[('mi', d), ('ee', n)] = times_ee_mi
 
-         # Imprimimos en un archivo por cada función los resultados hasta el momento
-         if (save):
-             print(mi_ent, file=open('./res/mi_ent.txt', 'w'))
-             print(ee_ent, file=open('./res/ee_ent.txt', 'w'))
-             print(mi_mi, file=open('./res/mi_mi.txt', 'w'))
-             print(ee_mi, file=open('./res/ee_mi.txt', 'w'))
-        
-    
-     print("Entropía - mutual_info.py\n", mi_ent, "\n")
-     print("Entropía - entropy_estimators.py\n", ee_ent, "\n")
-     print("Información mutua - mutual_info.py\n", mi_mi, "\n")
-     print("Información mutua - entropy_estimators.py\n", ee_mi, "\n")
 
-     
-## Imprime las 10 funciones que más tiempo consumen en la función que calcule la entropía.
-# @param func función con la que calcular la entropía.
-# @param n tamaño de muestra.
-# @param d dimensión de los datos.
-# @param reps número de veces que repetir la medición.
-# @param k número de vecinos más cercanos con los que estimar la entropía.
-def func_stats(func, reps, *args):
-    # Generamos los datos de prueba
-    
-    # Activamos el profiler
-    pr = cProfile.Profile()
-    pr.enable()
-    
-    # Ejecutamos ambos estimadores reps veces
-    for i in range(0, reps):
-         func(*args)
-         
-    # Desactivamos el profiler
-    pr.disable()
-    
-    p = pstats.Stats(pr).strip_dirs()
-    p.sort_stats(SortKey.TIME).print_stats(10) # Imprime las 10 funciones que más tiempo consumen
-    p.print_callers(10)
+             # Imprimimos en un archivo por cada función los resultados hasta el momento
+             if (save):
+                 df.to_pickle("./stats/times.pkl")
 
     
 def main():
      # Valores de n y d para los que realizar estimaciones
      ns = [1000, 30000, 100000]
-     ds = [2] #, 10, 100]
+     ds = [2, 10, 25]
      reps = 5
-     #compare_estimators(ds, ns, reps)
-     n = 100000
-     d = 4
-     #entropy_stats(mi.entropy, n, d)
-     #entropy_stats(ee.entropy, n, d)
-
-     dat = data.Data('normal', n, d)
-     X = dat.X
-
-     # Vemos qué "subfunciones" de la entropía requieren más tiempo
-     func_stats(mi.entropy, 5, X, 3)
-     func_stats(ee.entropy, 5, X, 3)
-
-     # Vemos qué subfunciones de la información mutua gastan más tiempo
-     func_stats(mi.mutual_information, 5, (X, X), 3)
-     func_stats(ee.mi, 5, X, X, None, 3)
+     k = 3
+     compare_estimators(ds, ns, k, reps, save = True)
+     
      
 if __name__ == "__main__":
     main()
