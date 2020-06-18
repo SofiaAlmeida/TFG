@@ -268,6 +268,14 @@ Esta propiedad se conoce como \textit{ley del estadístico inconsciente}.
   \end{itemize}
   
 \end{proposition}
+
+\begin{theorem}[Desigualdad de Jensen]\label{th:jensen}
+  Si $f$ es una función cóncava y $X$ es una variable aleatoria, entonces\[
+\E\left[f(X)\right]\ge f\left ( \E[X] \right),
+  \]
+dándose la igualdad si, y solo si, $X$ es constante o $f$ es lineal casi seguramente, existe un conjunto Borel en el que es lineal.
+\end{theorem}
+
 \begin{definition}[Esperanza condicionada]
   Se define la esperanza condicionada de la variable aleatoria $Y$ dado $X$ como la variable aleatoria $\mathbb{E}[Y|X] = g(X)$ tal que \[
 \mathbb{E} [ Y | X = x ] = \int y f_Y(y| X = x) dy.
@@ -1071,7 +1079,12 @@ D\left ( f || g \right ) \ge 0
 con igualdad si, y solo si, $f = g$ en casi todo punto.
 \end{theorem}
 \begin{proof}
-%REVIEW  
+Sea $S$ el soporte de $f$, entonces 
+\begin{align*}
+  - D\left ( f || g \right ) &= \int_S \log \left(\frac{f(x)}{g(x)}\right ) f(x) dx  \leq \log \left( \int_S f(x)\cdot \frac{g(x)}{f(x)}dx \right)\\
+  &= \log \left ( \int_Sg(x)dx\right) \leq 1 = 0.
+\end{align*}
+La primera desiguadad es la desigualdad de Jensen, Teorema \ref{th:jensen} aplicada al $\log$ que es una función cóncava, la segunda desigualdad será igualdad si, y solo si, $f = g$ en casi todo punto.
 \end{proof}
 
 \begin{corollary}\label{c:im_indc}
@@ -1174,7 +1187,7 @@ Aproximamos \begin{align*}
   p(i,j) &\approx \frac{n(i,j)}{N}.
   \end{align*}
 
-Cuando $N$ tienda a infinito y el tamaño de cada partición converja a cero, la estimación $I_{\textit{binned}}(X,Y) \to I(X;Y)$, véase el Teorema 1 de \cite{paninski}.
+Cuando $N$ tienda a infinito y el tamaño de cada partición converja a cero, la estimación $I_{\textit{binned}}(X,Y) \to I(X;Y)$, véase el Teorema 1 de \cite{paninski}.\\
 
 
 \subsection{Estimadores de la entropía basados en los $k$ vecinos más cercanos}
@@ -1298,7 +1311,7 @@ Hemos calculado un estimador de $\widehat{\log f} (X_i)$ que nos permite obtener
 
 El estimador anterior es el de Kozachenko - Leonenko en el caso $k=1$.\\
 
-La forma de estimar $\widehat{\log f} (X_i)$ elimina una parte del sesgo, aunque se mantiene el sesgo proveniente de aproximar\[\int_{B(x_i,\epsilon)}f(y)dy\approx f(x_i) \int_{B(x_i,\epsilon)}dy.\] Si la densidad $f(x)$ es constante, el sesgo proveniente de esta aproximación también desaparece y obtenemos un estimador de la entropía, $\widehat{h}(X)$, insesgado.
+La forma de estimar $\widehat{\log f} (X_i)$ elimina una parte del sesgo, aunque se mantiene el sesgo proveniente de aproximar\[\int_{B(x_i,\epsilon)}f(y)dy\approx f(x_i) \int_{B(x_i,\epsilon)}dy.\] Si la densidad $f(x)$ es constante, el sesgo proveniente de esta aproximación también desaparece y obtenemos un estimador de la entropía, $\widehat{h}(X)$, que es insesgado.
 
 \subsection{Estimadores de la información mutua del tipo de Kozachenko - Leonenko}
 
@@ -1329,12 +1342,12 @@ Suponemos que el $k$-ésimo vecino de $x_i$ se encuentra en uno de los lados ver
 
 Para la variable $Y$, $\varepsilon_k(z_i)$ no tendría por qué coincidir con la distancia entre $y_i$ y su $(n_y(i)+1)$-ésimo vecino. Sin embargo, consideramos la ecuación anterior una buena aproximación para $h(Y)$ (cambiando $X$ por $Y$). Esta aproximación será exacta cuando $n_y(i) \to \infty$ y cuando $N\to \infty$.---Referenciar---\\
 
-Usando estas estimaciones en la ecuación correspondiente, obtenemos:
+Usando estas estimaciones en la ecuación correspondiente y notando $\epsilon(i) = \varepsilon_k(z_i)$, obtenemos:
 \begin{align*}
   I^{(1)}(X,Y) \approx& \ \widehat{h}(X) + \widehat{h}(Y) - \widehat{h}(X, Y)\\ =& - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \psi(N) + \log V_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon(i)\\
-  & - \frac{1}{N}\sum_{i=1}^N\psi(n_Y(i)+1) + \psi(N) + \log V_{d_Y} + \frac{d_Y}{N} \sum_{i=1}^N\log \varepsilon(i)\\
+  & - \frac{1}{N}\sum_{i=1}^N\psi(n_y(i)+1) + \psi(N) + \log V_{d_Y} + \frac{d_Y}{N} \sum_{i=1}^N\log \varepsilon(i)\\
   & + \psi(k) - \psi(N) - \log (V_{d_X}V_{d_Y}) - \frac{d_X+d_Y}{N} \sum_{i=1}^N\log(\varepsilon(i))\\
-  =& \ \psi(k) - \frac{1}{k} - \frac{1}{N}\sum_{i=1}^N\left( \psi(n_x(i)+1) + \psi(n_y(i)+1) \right ) + \psi(N).
+  =& \ \psi(k) - \frac{1}{N}\sum_{i=1}^N\left( \psi(n_x(i)+1) + \psi(n_y(i)+1) \right ) + \psi(N).\\
 \end{align*}
 
 Notamos $\langle \cdots \rangle$ a la media sobre todos los $i\in\{1,\cdots,N\}$ y sobre todas las realizaciones de las muestras aleatorias,\[
@@ -1342,60 +1355,53 @@ Notamos $\langle \cdots \rangle$ a la media sobre todos los $i\in\{1,\cdots,N\}$
 \]
 
 Utilizando esta notación la estimación de la entropía quedaría:\[
-I^{(1)}(X,Y) \approx \psi(k) - \langle \psi(n_x+1) + \psi(n_y+1) \rangle + \psi(N).
+I^{(1)}(X,Y) \approx \psi(k) - \langle \psi(n_x+1) + \psi(n_y+1) \rangle + \psi(N).\\
 \]
 
 El principal inconveniente de esta estimación es que solo usamos el estimador de la entropía correctamente en una dirección marginal. Esto parece inevitable si queremos usar (hiper)cubos en el espacio conjunto, como opción alternativa podríamos usar (hiper)rectángulos.
 
 \subsubsection{Segundo algoritmo}
 
-En este caso, $n_x(i)$ y $n_y(i)$ serán el número de puntos con $\Vert x_i - x_j \Vert \leq \varepsilon_k(x_i)$ y $\Vert y_i - y_j \Vert \leq \varepsilon_k(y_i)$ respectivamente. Tenemos que distinguir dos situaciones:
+En este caso, $n_x(i)$ y $n_y(i)$ serán el número de puntos con $\Vert x_i - x_j \Vert \leq \varepsilon_k(x_i)$ y $\Vert y_i - y_j \Vert \leq \varepsilon_k(y_i)$ respectivamente. Seguimos notando $\varepsilon(i) = \max \{\varepsilon_k(X_i), \varepsilon_k(Y_i)\}$. Tenemos que distinguir dos situaciones:
 
 \begin{enumerate}[label={\alph*)}]
-\item Los lados $\varepsilon_k(x_i)$ y $\varepsilon_k(y_i)$ quedan determinados por el mismo punto.
-\item Los lados $\varepsilon_k(x_i)$ y $\varepsilon_k(y_i)$ quedan determinados por puntos diferentes.
+\item Los lados $\varepsilon_k(x_i)$ y $\varepsilon_k(y_i)$ quedan determinados por el mismo punto, lo denotamos suceso $A$.
+\item Los lados $\varepsilon_k(x_i)$ y $\varepsilon_k(y_i)$ quedan determinados por puntos diferentes, lo llamamos suceso $B$.
 \end{enumerate}
 
-En ambos casos tenemos que cambiar $P_k(\varepsilon)$ por una probabilidad 2-dimensional:\[
-P_k(\varepsilon_x, \varepsilon_y) = P_k^{a)}(\varepsilon_x, \varepsilon_y) + P_k^{b)}(\varepsilon_x, \varepsilon_y),
-\]
----Esto no sé por qué---
-con \[
-P_k^{a)}(\varepsilon_x, \varepsilon_y) = \binom{N-1}{k} \frac{d^2[q_i^k]}{d\varepsilon_x d \varepsilon_y}(1-p_i)^{N-k-1}
-\]
-y\[
-P_k^{b)}(\varepsilon_x, \varepsilon_y) = (k-1)\binom{N-1}{k} \frac{d^2[q_i^k]}{d\varepsilon_x d \varepsilon_y}(1-p_i)^{N-k-1},
-\]
-donde $q_i \equiv q_i(\varepsilon_k(X), \varepsilon_k(Y))$ es la función de densidad del rectángulo de lados $\varepsilon_k(X) \times \varepsilon_k(Y)$ centrado en el punto $(X_i, Y_i)$, y $p_i$ es la función de densidad del cuadrado de lado $\varepsilon = \max \{\varepsilon_k(X), \varepsilon_k(Y)\}$. Esta última es necesaria porque usando la norma del máximo garantizamos que no hay puntos en ese cuadrado que no estén en el rectángulo.
+En ambos casos tenemos que cambiar $P_k(\varepsilon)$ por una probabilidad 2-dimensional:
+\begin{align*}
+P_k(\varepsilon_x, \varepsilon_y) &= P_k^{a)}(\varepsilon_x, \varepsilon_y) + P_k^{b)}(\varepsilon_x, \varepsilon_y)\\ &= P_k\left (\epsilon_x, \epsilon_y | A \right) \cdot P (A) + P_k\left (\epsilon_x, \epsilon_y | B \right) \cdot P(B).\\  
+\end{align*}
 
-Se verifica que $\int P_k =1$. Calculamos la esperanza de $\log q_i$:
----No sé por qué se verifican las igualdades siguientes---
+En el artículo \cite{kraskov} se especifican los valores de estas probabilidades, necesarias para llegar a la siguiente expresión sobre $q_i \equiv q_i(\varepsilon_k(X_i), \varepsilon_k(Y_i))$, la función de densidad del rectángulo de lados $2\varepsilon_k(X_i) \times 2\varepsilon_k(Y_i)$ centrado en el punto $(X_i, Y_i)$,
+
 \[
 \mathbb{E}(\log q_i) = \int \int_0^{\infty} P_k(\varepsilon_x, \varepsilon_y) \log q_i(\varepsilon_x, \varepsilon_y) d \varepsilon_x d\varepsilon_y
-= \psi(k) - \frac{1}{k} - \psi(N)
+= \psi(k) - \frac{1}{k} - \psi(N).
 \]
 
-Volviendo a aproximar $\log f(x_i)$ por \[
-\log f(x_i) \approx  \log q_i(\varepsilon) - \log V_d - d \log \varepsilon,
+Aproximamos $\log f(x_i, y_i)$ por \[
+\log f(x_i, y_i) \approx  \log q_i(\varepsilon(i)) - \log V_d - d \log \varepsilon(i),
 \]
+
 tomando esperanzas, obtenemos \[
-\log f(x_i) \approx  \psi(k) - \frac{1}{k} - \psi(N) - \log V_d - d \E\log \varepsilon.
+\log f(x_i, y_i) \approx  \psi(k) - \frac{1}{k} - \psi(N) - \log V_d - d \E\left [ \log \varepsilon(i) \right].
 \]
 Esto nos da el siguiente estimador de la entropía
  \begin{align*}
-  \widehat{h}(X) &= - \frac{1}{N} \sum_{i=1}^N\widehat{\log f} (X_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \frac{1}{k} - \psi (N) - \log V_d  - d\log \varepsilon \right ) \\
-  &= - \psi (k) + \frac{1}{k}+ \psi (N) + \log V_d + \frac{d}{N} \sum_{i=1}^N \log \varepsilon (x_i). 
+  \widehat{h}(X, Y) &= - \frac{1}{N} \sum_{i=1}^N\widehat{\log f} (X_i, Y_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \frac{1}{k} - \psi (N) - \log V_d  - d\log \varepsilon(i) \right ) \\
+  &= - \psi (k) + \frac{1}{k}+ \psi (N) + \log V_d + \frac{d}{N} \sum_{i=1}^N \log \varepsilon (i). 
  \end{align*}
 
- Como ya hicimos en el primer algoritmo, utilizaremos el Lema \ref{l:ent_im} para estimar la información mutua, esta vez a partir del estimador de la entropía recién conseguido.
+ Como ya hicimos en el primer algoritmo, utilizaremos el Lema \ref{l:ent_im} para estimar la información mutua, sustituyendo la entropía conjunta por el estimador recién conseguido y las individuales por el estimador obtenido en el caso anterior, notando que cambia el significado de $n_x$ y $n_y$.
 
 \begin{align*}
-  I^{(2)}(X,Y) \approx& \ \widehat{h}(X) + \widehat{h}(Y) - \widehat{h}(X, Y)\\ =& - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \frac{1}{n_x(i)+1} + \psi(N) + \log V_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon(i)\\
-  & - \frac{1}{N}\sum_{i=1}^N\psi(n_Y(i)+1) + \frac{1}{n_y(i)+1} + \psi(N) + \log V_{d_Y} + \frac{d_Y}{N} \sum_{i=1}^N\log \varepsilon(i)\\
+  I^{(2)}(X,Y) \approx& \ \widehat{h}(X) + \widehat{h}(Y) - \widehat{h}(X, Y)\\ =& - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \psi(N) + \log V_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon(i)\\
+  & - \frac{1}{N}\sum_{i=1}^N\psi(n_y(i)+1)  + \psi(N) + \log V_{d_Y} + \frac{d_Y}{N} \sum_{i=1}^N\log \varepsilon(i)\\
   & + \psi(k) - \frac{1}{k} - \psi(N) - \log (V_{d_X}V_{d_Y}) - \frac{d_X+d_Y}{N} \sum_{i=1}^N\log(\varepsilon(i))\\
-  =& \ \psi(k) - \frac{1}{N}\sum_{i=1}^N\left( \psi(n_x(i)+1) + \psi(n_y(i)+1) \right ) + \psi(N).
+  =& \ \psi(k)  - \frac{1}{k}- \frac{1}{N}\sum_{i=1}^N\left( \psi(n_x(i)+1) + \psi(n_y(i)+1) \right ) + \psi(N).\\
 \end{align*}
---- No llego a la última igualdad---
 
 La información mutua se aproximaría por
 \begin{align}
@@ -1615,11 +1621,24 @@ Una solución para poder ejecutar código en paralelo es usar múltiples proceso
 No solo existen estos módulos para tratar el paralelismo, de hecho, en la documentación de Python se referencian algunas bibliotecas para ello \cite{parallelprocessing}. Entre estas comentaremos \texttt{Joblib}, pues es la que utilizan las funciones de \texttt{sklearn} usadas en las implementaciones estudiadas.\\
 
 Uno de los objetivos principales de \texttt{Joblib} \cite{joblib} es permitir la ejecución en paralelo de forma sencilla. Esta biblioteca nos permite hacer uso de la concurrencia a nivel de hebra o de proceso según le indiquemos, notamos que a nivel de hebra solo será efectivo si el GIL ha sido liberado. Por defecto, utilizará el módulo \texttt{'loky'} para separar procesos y ejecutar tareas simultáneamente en varios procesadores, pero es posible indicarle que utilice el módulo \texttt{threading} o \texttt{multiprocessing}.\\
-
 %----------------------------------------------------------------------
 % Fin de Paralelismo en Python
 %-----------------------------------------------------------------------
 
+\subsection{Cálculo de los vecinos más cercanos en \texttt{scikit-learn}}
+La biblioteca \texttt{scikit-learn} proporciona funcionalidades para el uso métodos basados en los $k$ vecinos más cercanos \cite{doc_nn}.\\
+
+Para el cáclulo de los $k$ vecinos más cercanos de un conjunto de puntos se puede utilizar la clase \texttt{NearestNegihbors} \cite{nearestneighbors} y su método \texttt{kneighbors}, que devuelve los índices y distancias de los vecinos de cada punto. De esta forma se realiza el cálculo de los vecinos más cercanos en la implementación 1 de la entropía. Internamente, la clase \texttt{NearestNegihbors} utiliza las clases \texttt{KDTree} y \texttt{BallTree} para encontrar los vecinos más cercanos.\\
+
+Si nos encontramos con un conjunto de $n$ puntos, cada uno de dimensión $d$, podremos utilizar uno de los tres algoritmos proporcionados por la biblioteca \texttt{scikit-learn} para el cálculo de los vecinos más cercanos: \texttt{brute force}, \texttt{K-D Tree} y \texttt{Ball Tree}.\\
+
+\texttt{Brute force} es un método de búsqueda por fuerza bruta, realizará todos los cálculos para saber qué puntos están más próximos entre sí. Aunque resulta competitivo para muestras pequeñas, su eficiencia en tiempo es $O(dn^2)$.\\
+
+Con el objetivo de obtener algoritmos más eficientes que el de fuerza bruta, se crean estructuras de datos basadas en árboles para tratar de minimizar el número de cálculos de distancias. Se puede utilizar un árbol $k$ dimensional (\texttt{KD Tree}), que es un árbol binario en el que se van repartiendo recursivamente los puntos según su valor respecto de alguno de los ejes. La construcción de este árbol es muy rápida, porque no requiere el cálculo de distancias $d$ dimensionales, s en la búsqueda de un $k$ vecino más cercano cuando hay que calcularlas. El uso de esta estructura será eficiente para dimensiones menores que 20 aproximadamente, con eficiencia en tiempo $O(d\log n)$, sin embargo, a medida que crece la dimensión, se vuelve ineficiente con un coste en tiempo casi de $O(dn)$.\\
+
+Para solucionar la ineficiencia de los árboles $k$ dimensionales para dimensiones altas, se desarrolló la estructura \textit{ball tree}. En ella, en vez de dividir los puntos según sus valores respecto a algún eje, se hace según una serie de hiperesferas. La construcción de este tipo de árboles es más costosa que la de los árboles $k$ dimensionales, pero mejora la eficiencia de estos para realizar búsquedas cuando las dimensiones sean altas, sus tiempos son del orden $O(d\log n)$.\\
+
+Para un número de muestras muy pequeño, $n<30$, los algoritmos de fuerza bruta podrían resultar más eficientes que los basados en árboles. Por ello, las clases utilizadas para implementar todos estos métodos, proporcionan un parámetro \texttt{leaf\_size} que controla el número de muestras para el que utilizar el algoritmo de fuerza bruta, en vez de uno basado en árboles. Este parámetro afecta a los tiempos de ejecución de las aproximaciones basadas en árboles. Cuanto mayor sea \texttt{leaf\_size}, menor será el tiempo de construcción del árbol, ya que se crean menos nodos. Para buscar un $k$ vecino más cercano, si \texttt{leaf\_size} es muy pequeño, el tiempo de recorrer los nodos puede elevar los tiempos de ejecución, pero si es muy grande, las consultas se realizarán prácticamente por fuerza bruta.\\
 
 \chapter{Resultados}
 
@@ -1772,75 +1791,122 @@ Compararemos ambas implementaciones en función al consumo de recursos, como tie
 
 Para realizar la comparación de los tiempos de ejecución de las funciones se ha utilizado el archivo \texttt{profiling.py}.\\
 
-Se ha realizado un análisis de los tiempos de ejecución de las dos implementaciones de la entropía y de las dos implementaciones de la información mutua vistas. Para ello, se han ejecutado 5 veces y nos hemos quedado con los tiempos medios de ejecución para diferentes valores del número de muestras y dimensión de las mismas. Remarcamos que el tiempo de ejecución considerado es el tiempo acumulado por la función a estudiar y todas las funciones a las que esta llame.\\
+Se ha realizado un análisis de los tiempos de ejecución de las dos implementaciones de la entropía y de las dos implementaciones de la información mutua estudiadas. Para ello, se han ejecutado 5 veces y nos hemos quedado con los tiempos medios de ejecución para diferentes valores del número de muestras y dimensión de las mismas. Remarcamos que el tiempo de ejecución considerado es el tiempo acumulado por la función a estudiar y todas las funciones a las que esta llame.\\
 
-Se han considerado tres rangos para el tamaño de las muestras: pequeñas (1000 muestras), medianas (30000 muestras) y grandes (100000). De forma similar, en función a la dimensión, se realizaron estimaciones con tres tipos de dimensiones: pequeñas (dimensión 2), medianas (dimensión 10) y grandes (dimensión 25). Notamos que en el caso de la dimensión 25 debido a los elevados tiempos de ejecución, se repiten las mediciones 3 veces en vez de 5.\\
+Se han considerado tres rangos para el tamaño de las muestras: pequeñas (1000 muestras), medianas (30000 muestras) y grandes (100000). De forma similar, en función a la dimensión, se realizaron estimaciones con tres tipos de dimensiones: pequeñas (dimensión 2), medianas (dimensión 10) y grandes (dimensión 25).\\
 
-Comenzaremos analizando los tiempos obtenidos al calcular la entropía. En la Tabla \ref{tab:tiempos_ent_sep} vemos los tiempos de de ejecución de ambas implementaciones para los valores de $n$ y $d$ estudiados. Como es de esperar, a medida que aumenta el número de muestras y la dimensión, se incrementan los tiempos de ejecución en ambos casos.
+Comenzaremos analizando los tiempos obtenidos al calcular la entropía. En la Tabla \ref{tab:tiempos_ent_1} vemos los tiempos de de ejecución de la función \texttt{entropy} de la primera implementación para los valores de $n$ y $d$ estudiados. Como es de esperar, a medida que aumenta el número de muestras y la dimensión, se incrementan los tiempos de ejecución en ambos casos. Observamos también la desviación típica de las medidas realizadas, para constatar que el número de medidas tomadas es suficiente. Consideramos que las desviaciones típicas obtenidas son lo suficientemente pequeñas en relación a los tiempos medios de ejecución.\\
 
 \begin{table}[!htb]
-  \begin{adjustwidth}{-.5in}{-.5in}  
-    \caption{Tiempos de ejecución de la función \texttt{entropy} para diferentes valores de $n$ y $d$.}
-    \label{tab:tiempos_ent_sep}
-    \begin{subtable}{.5\linewidth}
+%  \begin{adjustwidth}{-.45in}{-.45in}  
+    \caption{Tiempos de ejecución de la función \texttt{entropy} de la implementación 1 para diferentes valores de $n$ y $d$.}
+    \label{tab:tiempos_ent_1}
+    \begin{subtable}{\linewidth}
       \centering
-        \caption{Implementación 1.}
+        \caption{Media de los tiempos obtenidos en las 5 ejecuciones.}
         \begin{tabular}{l|rrr}
-          \toprule
-          \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
-          \midrule
-2 &   0.0022\,s & 0.0589\,s & 0.2340\,s\\
-10 &   0.0144\,s& 2.3644\,s & 13.1121\,s\\
-25 & 0.0703\,s & 32.1099\,s & 633.221\,s\\ 
+\toprule
+\backslashbox{$d$}{$n$} & 1000   &  30000  &   100000 \\
+\midrule
+2 & 0.0020\,s &  0.0774\,s &   0.4067\,s \\
+10  & 0.0149\,s &  2.5013\,s &  16.0703\,s \\
+25 & 0.1158\,s & 34.2677\,s & 654.9519\,s \\
 \bottomrule
-        \end{tabular}
-    \end{subtable}
-    \begin{subtable}{.5\linewidth}
+\end{tabular}
+    \end{subtable}\\[10pt]
+    \begin{subtable}{\linewidth}
       \centering
-        \caption{Implementación 2.}
+        \caption{Desviaciones típicas de los tiempos obtenidos.}
         \begin{tabular}{l|rrr}
-          \toprule
-          \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
-          \midrule
-2 &    0.0017\,s &  0.0503\,s &  0.1838\,s\\
-10 &  0.0068\,s &   0.8612\,s &    4.6004\,s\\
-25 & 0.04\,s & 30.1558\,s &  878.081\,s\\
+\toprule
+\backslashbox{$d$}{$n$} & 1000   & 30000  &  100000 \\
+\midrule
+2 & 0.0003\,s & 0.0064\,s &  0.0119\,s \\
+10  & 0.0005\,s & 0.2573\,s &  0.6337\,s \\
+25 & 0.0019\,s & 2.2058\,s & 10.1255\,s \\
 \bottomrule
-        \end{tabular}
+\end{tabular}
+
     \end{subtable}
-    \end{adjustwidth}
+ %   \end{adjustwidth}
 \end{table}
 
-Para realizar la comparación atenderemos a la Tabla \ref{tab:tiempos_ent}, que contiene la misma información estructurada de forma que resulte más fácil comparar. Cuando la dimensión es 2, los tiempos son similares para muestras pequeñas y medianas, diferenciándose más para muestras grandes. Sin embargo, en casi todos los casos la implementación 1 es más lenta que la 2. Al aumentar la dimensión, se incrementan los tiempos de ejecución de ambas implementaciones, pero también las diferencias entre ellas. Para una muestra pequeña la implementación 1 tarda aproximadamente el doble que la 2. Con muestras mayores la diferencia de tiempo aumenta, para una muestra grande, la implementación 1 tarda casi el triple que la 2. Destaca que para una dimensión grande y un tamaño de muestra grande se invierte la tendencia observada en el resto de combinaciones de tamaño de muestra y dimensión.\\
+La Tabla \ref{tab:tiempos_ent_2} contiene la misma información, esta vez sobre la función \texttt{entropy} de la implementación 2. En esta implementación de la entropía, los tiempos también aumentan al incrementar el número de muestras y la dimensión. Las desviaciones típicas vuelven a ser pequeñas acorde a los datos medios.\\
+
+\begin{table}[!htb]
+%  \begin{adjustwidth}{-.45in}{-.45in}  
+    \caption{Tiempos de ejecución de la función \texttt{entropy} de la implementación 1 para diferentes valores de $n$ y $d$.}
+    \label{tab:tiempos_ent_2}
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Media de los tiempos obtenidos en las 5 ejecuciones.}
+        \begin{tabular}{l|rrr}
+\toprule
+\backslashbox{$d$}{$n$} & 1000   &  30000  &   100000 \\
+\midrule
+2 & 0.0017\,s &  0.0648\,s &   0.2515\,s \\
+10  & 0.0071\,s &  0.8797\,s &   5.6956\,s \\
+25 & 0.0475\,s & 30.6916\,s & 876.7703\,s \\
+\bottomrule
+\end{tabular}
+    \end{subtable}\\[10pt]
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Desviaciones típicas de los tiempos obtenidos.}
+        \begin{tabular}{l|rrr}
+\toprule
+\backslashbox{$d$}{$n$} & 1000   & 30000  &  100000 \\
+\midrule
+2 & 0.0001\,s & 0.0054\,s &  0.0137\,s \\
+10  & 0.0002\,s & 0.0823\,s &  0.2450\,s \\
+25 & 0.0001\,s & 0.1998\,s & 12.1683\,s \\
+\bottomrule
+\end{tabular}
+
+    \end{subtable}
+ %   \end{adjustwidth}
+\end{table}
+
+
+Para realizar la comparación atenderemos a la Tabla \ref{tab:tiempos_ent}, que contiene la información relativa a los tiempos medios de ejecución estructurada de forma que resulte más fácil comparar. Cuando la dimensión es 2, los tiempos son similares para muestras pequeñas y medianas, diferenciándose más para muestras grandes. Sin embargo, en casi todos los casos la implementación 1 es más lenta que la 2. Al aumentar la dimensión, se incrementan los tiempos de ejecución de ambas implementaciones, pero también las diferencias entre ellas. Para una muestra pequeña la implementación 1 tarda aproximadamente el doble que la 2. Con muestras mayores la diferencia de tiempo aumenta más todavía, para una muestra grande, la implementación 1 tarda casi el triple de tiempo que la 2. Para una dimensión grande, los tiempos de ejecución son considerablemente mayores en ambas implementaciones. Destaca que para una dimensión grande y un tamaño de muestra grande se invierte la tendencia observada en el resto de combinaciones de tamaño de muestra y dimensión, en este caso la implementación 1 tarda menos que la 2.\\
 
 \begin{table}[H]
 \centering
-\caption{Tiempos de ejecución de la función \texttt{entropy} en ambas implementaciones para diferentes valores del parámetro $d$ y $n$.}
+\caption{Tiempos de ejecución medios de la función \texttt{entropy} en ambas implementaciones para diferentes valores del parámetro $d$ y $n$.}
 \label{tab:tiempos_ent}
 \begin{tabular}{r|l|rrr}
   \toprule
 Implementación & \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
  \midrule
-1 & 2 &   0.0022\,s & 0.0589\,s & 0.2340\,s\\
-2 & 2  &    0.0017\,s &  0.0503\,s &  0.1838\,s\\[5pt]
-1 & 10 &   0.0144\,s& 2.3644\,s & 13.1121\,s\\
-2 & 10 &  0.0068\,s &   0.8612\,s &    4.6004\,s\\[5pt]
-1 & 25 & 0.0703\,s & 32.1099\,s & 633.221\,s\\
-2 & 25 & 0.04\,s & 30.1558\,s &  878.081\,s\\
+1 & 2 & 0.0020\,s &  0.0774\,s &   0.4067\,s \\
+2 & 2 & 0.0017\,s &  0.0648\,s &   0.2515\,s \\[5pt]
+1 & 10  & 0.0149\,s &  2.5013\,s &  16.0703\,s \\
+2 & 10  & 0.0071\,s &  0.8797\,s &   5.6956\,s \\[5pt]
+1 & 25 & 0.1158\,s & 34.2677\,s & 654.9519\,s \\
+2 & 25 & 0.0475\,s & 30.6916\,s & 876.7703\,s \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 Podemos concluir, por tanto, que la segunda implementación es más rápida que la primera para calcular la entropía, salvo para dimensión y tamaño de muestra grande. El cálculo que realizan ambas estimaciones es el mismo, utilizan el mismo estimador, varía únicamente la forma de implementarlo, en cuanto a tiempo de cómputo será preferible la implementación 2.\\
 
-Si analizamos qué pasos emplean más tiempo en las implementaciones de la entropía nos sorprende descubrir que es en la misma función, el método \texttt{query} de \texttt{sklearn.neighbors.\_kd\_tree.BinaryTree}. Sin embargo, aunque ambas implementaciones llaman a este método, la primera pasa más tiempo en ella que la segunda. Por ejemplo, para $d=10$ y $n = 100000$, la implementación 1 empleó $17.075\,$s (de una ejecución de $17.2516\,$s) en la función \texttt{query}, mientras que la implementación 2 usó $6.057\,$s en esta función (de una ejecución que en total duró $6.2308\,$s). \\
+Si analizamos qué pasos emplean más tiempo en las implementaciones de la entropía nos sorprende descubrir que es en la misma función, el método \texttt{query} de \texttt{sklearn.neighbors.\_kd\_tree.BinaryTree}. Sin embargo, aunque ambas implementaciones llaman a este método, la primera pasa más tiempo en ella que la segunda. Por ejemplo, en una ejecución de la implementación 1 para muestras y dimensiones medianas que duró $2.2\,$s, esta función utilizó $2.125\,$s., mientras que la implementación 2 pasó $0.739\,$s en esta función de una ejecución que en total duró $0.776\,$s.\\
 
-En la implementación 1 se obtienen los vecinos más cercanos utilizando la clase \texttt{sklearn.neighbors.NearestNeighbors}, llamando al método \texttt{kneighbors}. Este método realiza una serie de comprobaciones antes de llamar al método \texttt{query} para obtener realmente los vecinos más cercanos y sus distancias. Además, la llamada a \texttt{query} se realiza usando métodos que proporcionan paralelismo de la biblioteca \texttt{joblib}, indicando que se utilizará paralelismo a nivel de hebra.\\
+En la implementación 1 se obtienen los vecinos más cercanos utilizando la clase \texttt{sklearn.neighbors.NearestNeighbors}, llamando al método \texttt{kneighbors} \cite{imp_kneighbors}. Este método realiza una serie de comprobaciones antes de llamar al método \texttt{query} para obtener realmente los vecinos más cercanos y sus distancias. Además, la llamada a \texttt{query} se realiza usando métodos que proporcionan paralelismo de la biblioteca \texttt{joblib}, indicando que se utilizará paralelismo a nivel de hebra. En este caso, al crear el árbol con las opciones por defecto, se utiliza la métrica de Minkoswki con $p=2$, es decir, la distancia euclídea. Además, el parámetro \texttt{leaf\_size} se inicializa a 30.\\
 
-En la implementación 2, se crea un árbol de tipo \texttt{sklearn.neighbors.BallTree} y luego se calculan los vecinos más cercanos llamando directamente al método \texttt{query}.\\
+En la implementación 2, en primer lugar, se crea un árbol, que será de tipo \texttt{sklearn.neighbors.BallTree} cuando la dimensión sea mayor que 20 y de tipo \texttt{sklearn.neighbors.KDTree} cuando la dimensión sea mejor que 20; y a continuación, se calculan los vecinos más cercanos llamando directamente al método \texttt{query} de la clase correspondiente. La métrica utilizada es la de Chebyshev y \texttt{leaf\_size = 40}.\\
 
-Suponemos que el coste de realizar la llamada en paralelo sin aprovechar realmente el paralelismo es el que provoca el incremento en las llamadas a \texttt{query} en la primera implementación y que por eso en la segunda implementación, en la que se llama al método directamente, es más rápida. No se llega a concluir nada acerca de la anomalía para tamaños de muestra grandes y dimensión grande.\\
+Suponemos que el coste de realizar la llamada en paralelo sin aprovechar realmente el paralelismo es el que provoca el incremento en las llamadas a \texttt{query} en la primera implementación y que por eso en la segunda implementación, en la que se llama al método directamente, es más rápida.---Esto me parece raro pq entiendo que si sklearn usa paralelismo a nivel de hebras es pq GIL estará desactivado---\\
 
+Esta diferencia también podría venir causada por el valor de \texttt{leaf\_size}, la diferencia entre los valores es 10, que comparado con el número de muestras puede parecer pequeño, pero al afectar al cálculo de los vecinos más cercanos de todos los puntos podría afectar notablemente.\\
+
+La métrica utilizada podría generar diferencias en los tiempos de ejecución. La métrica de Minkowski requiere calcular la raíz cuadrada de las diferencias al cuadrado, mientras que la de Chebyshev el máximo de las diferencias.\\ 
+
+El tipo de árbol utilizado para buscar los vecinos más cercanos puede afectar bastante, de hecho, aunque la documentación recomiende usar \texttt{BallTree} para dimensiones mayores que 20, este parámetro no es exacto y es posible que en este caso llegue a resultar más costoso utilizarlo frente a \texttt{KDTree}, como en el caso de muestras grandes de dimensiones altas.\\
+
+
+---
+%-----------------------------------------------------------------------
 Pasamos a estudiar qué implementación es más rápida en el cálculo de la información mutua. Recordamos que en este caso las implementaciones no realizan el mismo cálculo. La primera implementación halla la información mutua a través de las entropías de las variables marginales, mientras que la segunda implementación lo hace a través de $I^{(2)}$.\\
 
 En la Tabla \ref{tab:tiempos_im_sep} se recogen los tiempos de ejecución de las dos implementaciones para los valores de $n$ y $d$ considerados.
