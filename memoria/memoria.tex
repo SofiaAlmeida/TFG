@@ -63,6 +63,7 @@
 %%% Gráficas
 \usepackage{graphicx} % Required for including pictures
 \graphicspath{{../fig/}}
+\usepackage[section]{placeins} % Floats no pasen de sección
 
 %%% Bibliografía
 \usepackage[backend=biber]{biblatex}
@@ -1598,9 +1599,29 @@ En primer lugar, se calcula la entropía de variables con una distribución unif
 
 Puesto que estamos comparando dos implementaciones diferentes que deben realizar el mismo cálculo, además de la precisión de sus resultados, podemos medir sus tiempos de ejecución para ver si hay o no diferencias significativas entre ellos. Para ello, se utilizará la herramienta \texttt{cProfile}, que nos permite hacer \textit{profiling} determinístico de programas escritos en Python, y la clase \texttt{Stats} que nos permite acceder a los medidas realizadas por la herramienta anterior \cite{profilers}.\\
 
-\texttt{cProfile} mide el número de veces que se ejecuta cada función, el tiempo total empleado en cada función, el tiempo empleado en cada función cada vez que se llamó a la función, el tiempo acumulado de cada función y todas a las que estas llamen y el tiempo acumulado entre el número de veces que se llame a esta función. Esta herramienta será precisa incluso en el caso de funciones recursivas, al distinguir el número de veces que se llama a la función del número de veces que fue invocada de forma recursiva.\\
+\texttt{cProfile} mide el número de veces que se ejecuta cada función (\texttt{ncalls}), el tiempo total empleado en cada función(\texttt{tottime}), el tiempo empleado en cada función cada vez que se llamó a la función (\texttt{percall}), el tiempo acumulado de cada función y todas a las que estas llamen (\texttt{cumtime}) y el tiempo acumulado entre el número de veces que se llame a esta función (\texttt{percall}). Esta herramienta será precisa incluso en el caso de funciones recursivas, al distinguir el número de veces que se llama a la función del número de veces que fue invocada de forma recursiva.\\
 
-El uso de esta herramienta se complementa con la utilización de la clase \texttt{Stats}, que permite trabajar con las medidas realizadas por \texttt{cProfile}. Usando esta clase podremos ordenar y especificar el número o nombre de las funciones cuyos tiempo queremos observar, así como almacenar en archivos la información para consultarla más adelante.
+El uso de esta herramienta se complementa con la utilización de la clase \texttt{Stats}, que permite trabajar con las medidas realizadas por \texttt{cProfile}. Usando esta clase podremos ordenar y especificar el número o nombre de las funciones cuyos tiempo queremos observar, así como almacenar en archivos la información para consultarla más adelante.\\
+
+Por ejemplo, si quisiéramos obtener información sobre los tiempos de ejecución de la función \texttt{function} y todas a las que esta llama para saber dónde se emplea más tiempo, podríamos ejecutar el siguiente código:\\
+
+\begin{lstlisting}[language=Python]
+  # Activamos el profiler
+  pr = cProfile.Profile()
+  pr.enable()
+  
+  # Ejecutamos la función
+  function(*args)
+  
+  # Desactivamos el profiler
+  pr.disable()
+
+  # Creamos objeto de la clase Stats
+  stats = pstats.Stats(pr).strip_dirs()
+
+  # Imprimimos las 10 subfunciones que consuman más tiempo
+  stats.sort_stats(pstats.SortKey.TIME).print_stats(10)
+\end{lstlisting}
 
 %----------------------------------------------------------------------
 % PARALELISMO EN PYTHON
@@ -1890,63 +1911,163 @@ Implementación & \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
 
 Podemos concluir, por tanto, que la segunda implementación es más rápida que la primera para calcular la entropía, salvo para dimensión y tamaño de muestra grande. El cálculo que realizan ambas estimaciones es el mismo, utilizan el mismo estimador, varía únicamente la forma de implementarlo, en cuanto a tiempo de cómputo será preferible la implementación 2.\\
 
-Si analizamos qué pasos emplean más tiempo en las implementaciones de la entropía nos sorprende descubrir que es en la misma función, el método \texttt{query} de \texttt{sklearn.neighbors.\_kd\_tree.BinaryTree}. Sin embargo, aunque ambas implementaciones llaman a este método, la primera pasa más tiempo en ella que la segunda. Por ejemplo, en una ejecución de la implementación 1 para muestras y dimensiones medianas que duró $2.2\,$s, esta función utilizó $2.125\,$s., mientras que la implementación 2 pasó $0.739\,$s en esta función de una ejecución que en total duró $0.776\,$s.\\
+Si analizamos qué pasos emplean más tiempo en las implementaciones de la entropía nos sorprende descubrir que es en la misma función, el método \texttt{query} de \texttt{sklearn.neighbors.\_kd\_tree.BinaryTree}. Sin embargo, aunque ambas implementaciones llaman a este método, la primera pasa más tiempo en ella que la segunda. Por ejemplo, en una ejecución de la implementación 1 para muestras y dimensiones medianas que duró $2.2\,$s, esta función utilizó $2.125\,$s., mientras que la implementación 2 pasó $0.739\,$s en esta función de una ejecución que en total duró $0.776\,$s, véase Tabla \ref{tab:profile-ent-22}. Destaca que esta función no es solo la que más tiempo consume sino que la mayor parte del tiempo del cálculo de la entropía se emplea en realizar este cálculo, siendo los tiempos de las siguientes funciones mucho menores.\\
+
+\begin{table}[!htb]
+ %\begin{adjustwidth}{-.3in}{-.3in}  
+    \caption{Resultados \texttt{cProfiler}. Funciones que consumen más tiempo en el cálculo de la entropía para ambas implementaciones, caso $d = 10$, $n = 30000$, tiempos en segundos.}
+    \label{tab:profile-ent-22}
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Implementación 1, tiempo total de ejecución $2.202$\,s.}
+        \begin{tabular}{lllp{0.55\textwidth}}
+\toprule
+\texttt{ncalls} &  \texttt{tottime} & \texttt{percall} & \texttt{filename:lineno(function)} \\
+\midrule
+1 &   2.125 &   2.125 &  \texttt{method 'query' of 'sklearn.neighbors.\_kd\_tree.BinaryTree' objects}\\
+1 &   0.072 &   0.072 &   \texttt{\_base.py:349(\_fit)}\\
+10 &   0.002 &   0.000 &  \texttt{built-in method numpy.array}\\
+\bottomrule
+\end{tabular}
+    \end{subtable}\\[10pt]
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Implementación 2, tiempo total de ejecución $0.776$\,s.}
+        \begin{tabular}{lllp{0.55\textwidth}}
+\toprule
+\texttt{ncalls} &  \texttt{tottime} & \texttt{percall} & \texttt{filename:lineno(function)} \\
+\midrule
+1  &  0.739 & 0.739 & \texttt{method 'query' of 'sklearn.neighbors.\_kd\_tree.BinaryTree' objects}\\
+1 & 0.034 & 0.034 & \texttt{entropy\_estimators.py:280(build\_tree)}\\
+1 & 0.002 & 0.002 & \texttt{method 'random\_sample' of 'numpy.random.mtrand.RandomState' objects}\\
+\bottomrule
+\end{tabular}
+
+    \end{subtable}
+ %  \end{adjustwidth}
+\end{table}
 
 En la implementación 1 se obtienen los vecinos más cercanos utilizando la clase \texttt{sklearn.neighbors.NearestNeighbors}, llamando al método \texttt{kneighbors} \cite{imp_kneighbors}. Este método realiza una serie de comprobaciones antes de llamar al método \texttt{query} para obtener realmente los vecinos más cercanos y sus distancias. Además, la llamada a \texttt{query} se realiza usando métodos que proporcionan paralelismo de la biblioteca \texttt{joblib}, indicando que se utilizará paralelismo a nivel de hebra. En este caso, al crear el árbol con las opciones por defecto, se utiliza la métrica de Minkoswki con $p=2$, es decir, la distancia euclídea. Además, el parámetro \texttt{leaf\_size} se inicializa a 30.\\
 
-En la implementación 2, en primer lugar, se crea un árbol, que será de tipo \texttt{sklearn.neighbors.BallTree} cuando la dimensión sea mayor que 20 y de tipo \texttt{sklearn.neighbors.KDTree} cuando la dimensión sea mejor que 20; y a continuación, se calculan los vecinos más cercanos llamando directamente al método \texttt{query} de la clase correspondiente. La métrica utilizada es la de Chebyshev y \texttt{leaf\_size = 40}.\\
+En la implementación 2, en primer lugar, se crea un árbol, que será de tipo \texttt{sklearn.neighbors.BallTree} cuando la dimensión sea mayor que 20 y de tipo \texttt{sklearn.neighbors.KDTree} cuando la dimensión sea menor que 20; y a continuación, se calculan los vecinos más cercanos llamando directamente al método \texttt{query} de la clase correspondiente. La métrica utilizada es la de Chebyshev y \texttt{leaf\_size = 40}.\\
 
-Suponemos que el coste de realizar la llamada en paralelo sin aprovechar realmente el paralelismo es el que provoca el incremento en las llamadas a \texttt{query} en la primera implementación y que por eso en la segunda implementación, en la que se llama al método directamente, es más rápida.---Esto me parece raro pq entiendo que si sklearn usa paralelismo a nivel de hebras es pq GIL estará desactivado---\\
+El incremento de tiempo en las llamadas a \texttt{query} en la primera implementación podría provenir del coste de realizar las llamadas en paralelo y no aprovecharlo realmente, sabemos que el paralelismo a nivel de hebra en Python depende de si el cerrojo global del intérprete (GIL) está activado o desactivado. En la segunda implementación,  se llama al método directamente y no existe este coste.\\
 
-Esta diferencia también podría venir causada por el valor de \texttt{leaf\_size}, la diferencia entre los valores es 10, que comparado con el número de muestras puede parecer pequeño, pero al afectar al cálculo de los vecinos más cercanos de todos los puntos podría afectar notablemente.\\
+La diferencia de tiempos también podría venir causada por el valor de \texttt{leaf\_size}. La diferencia entre los valores de este parámetro en ambas implementaciones es 10, comparado con el número de muestras puede parecer pequeño, pero al influir en el cálculo de los vecinos más cercanos de todos los puntos podría afectar notablemente.\\
 
 La métrica utilizada podría generar diferencias en los tiempos de ejecución. La métrica de Minkowski requiere calcular la raíz cuadrada de las diferencias al cuadrado, mientras que la de Chebyshev el máximo de las diferencias.\\ 
 
-El tipo de árbol utilizado para buscar los vecinos más cercanos puede afectar bastante, de hecho, aunque la documentación recomiende usar \texttt{BallTree} para dimensiones mayores que 20, este parámetro no es exacto y es posible que en este caso llegue a resultar más costoso utilizarlo frente a \texttt{KDTree}, como en el caso de muestras grandes de dimensiones altas.\\
+El tipo de árbol utilizado para buscar los vecinos más cercanos puede afectar bastante, de hecho, aunque la documentación recomiende usar \texttt{BallTree} para dimensiones mayores que 20, este parámetro no es exacto y es posible que en este caso llegue a resultar más costoso utilizarlo frente a \texttt{KDTree}.\\
 
+Analizamos específicamente el caso en el que tamaño de muestra y dimensión son grandes, a ver si descubrimos qué ocurre exactamente para que la implementación 1 sea más rápida que la 2 solo en este caso. En la Tabla \ref{tab:profile-ent-33} observamos que en las dos implementaciones es el método \texttt{query} el que más tiempo emplea. Con la diferencia de que en la implementación 1 es el método \texttt{query} de \texttt{KDTree} y en la 2 de \texttt{BallTree}. Sin embargo, sabemos que la implementación 2 utiliza el método \texttt{query} de la clase \texttt{BallTree} en todas las ejecuciones en las que $d= 25$ y en las demás sigue siendo más rápida que la implementación 1. Sospechamos que el incremento en el número de muestras provoca que esta implementación sea más lenta únicamente en este caso.\\
 
----
+\begin{table}[!htb]
+    \caption{Resultados \texttt{cProfiler}. Funciones que consumen más tiempo en el cálculo de la entropía para ambas implementaciones, caso $d = 25$, $n = 100000$, tiempos en segundos.}
+    \label{tab:profile-ent-33}
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Implementación 1, tiempo total de ejecución 643.479\,s.}
+        \begin{tabular}{lllp{0.55\textwidth}}
+\toprule
+\texttt{ncalls} &  \texttt{tottime} & \texttt{percall} & \texttt{filename:lineno(function)} \\
+\midrule
+1 & 643.026 & 643.026 & \texttt{method 'query' of 'sklearn.neighbors.\_kd\_tree.BinaryTree' objects}\\
+1  &  0.440  &  0.440  & \texttt{\_base.py:349(\_fit)}\\
+10 &   0.007 &   0.001 & \texttt{built-in method numpy.array}\\
+\bottomrule
+\end{tabular}
+    \end{subtable}\\[10pt]
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Implementación 2, tiempo total de ejecución $867.12$\,s.}
+        \begin{tabular}{lllp{0.55\textwidth}}
+\toprule
+\texttt{ncalls} &  \texttt{tottime} & \texttt{percall} & \texttt{filename:lineno(function)} \\
+\midrule
+ 1 & 866.847 & 866.847 & \texttt{method 'query' of 'sklearn.neighbors.\_ball\_tree.BinaryTree' objects}\\
+1 &   0.249 &   0.249 & \texttt{entropy\_estimators.py:280(build\_tree)}\\1 & 0.016 &   0.016 & \texttt{method 'random\_sample' of 'numpy.random.mtrand.RandomState' objects}\\
+\bottomrule
+\end{tabular}
+    \end{subtable}
+    \end{table}
+    
 %-----------------------------------------------------------------------
 Pasamos a estudiar qué implementación es más rápida en el cálculo de la información mutua. Recordamos que en este caso las implementaciones no realizan el mismo cálculo. La primera implementación halla la información mutua a través de las entropías de las variables marginales, mientras que la segunda implementación lo hace a través de $I^{(2)}$.\\
 
-En la Tabla \ref{tab:tiempos_im_sep} se recogen los tiempos de ejecución de las dos implementaciones para los valores de $n$ y $d$ considerados.
-Al igual que para la entropía, los tiempos en todos los casos aumentan al considerar muestras más grandes y de mayor dimensión. Además, notamos que los tiempos de ejecución son superiores a los necesitados para calcular la entropía, esto no es de extrañar, en uno de los casos se calcula la entropía de varias variables y luego se opera con ellas para obtener la información mutua.\\
+En la Tabla \ref{tab:tiempos_im_1} se recogen los tiempos de ejecución de la implementación 1 para los valores de $n$ y $d$ considerados.
+Al igual que para la entropía, los tiempos en todos los casos aumentan al considerar muestras más grandes y de mayor dimensión. Además, notamos que los tiempos de ejecución son superiores a los necesitados para calcular la entropía, esto no es de extrañar, en uno de los casos se calcula la entropía de varias variables y luego se opera con ellas para obtener la información mutua. Las desviaciones típicas son pequeñas en relación a los valores medios.\\
+
 \begin{table}[!htb]
-  \begin{adjustwidth}{-.5in}{-.5in}  
-    \caption{Tiempos de ejecución del cálculo de la información mutua para diferentes valores de $n$ y $d$.}
-    \label{tab:tiempos_im_sep}
-    \begin{subtable}{.5\linewidth}
+%  \begin{adjustwidth}{-.5in}{-.5in}  
+    \caption{Tiempos de ejecución del cálculo de la información mutua para diferentes valores de $n$ y $d$, implementación 1.}
+    \label{tab:tiempos_im_1}
+    \begin{subtable}{\linewidth}
       \centering
-        \caption{Implementación 1.}
+        \caption{Tiempos medios de ejecución.}
         \begin{tabular}{l|rrr}
           \toprule
           \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
           \midrule
-2 &   0.0066\,s &  0.2852\,s &  1.1668\,s\\
-10 &   0.091\,s &   28.3134\,s &  380.604\,s\\
-25 & 0.2218\,s & 177.259\,s & 3194.09\,s\\
+2  & 0.0067\,s &   0.3754\,s &    1.3876\,s \\
+10  & 0.0681\,s &  24.1955\,s &  344.3863\,s \\
+25 & 0.2173\,s & 173.4488\,s & 2811.0427\,s \\
 \bottomrule
 \end{tabular}
-\end{subtable}
-    \begin{subtable}{.5\linewidth}
+\end{subtable}\\[10pt]
+    \begin{subtable}{\linewidth}
       \centering
-        \caption{Implementación 2.}
+        \caption{Desviaciones típicas de los tiempos de ejecución.}
         \begin{tabular}{l|rrr}
           \toprule
           \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
           \midrule
-2  &    0.0065\,s &  0.4432\,s &  2.2371\,s \\
-10 &  0.0504\,s &  32.9856\,s &  783.608\,s\\
-25 & 0.1213\,s & 153.015\,s & 3044.07\,s\\
+2 & 0.0008\,s & 0.0089\,s &  0.0833\,s \\
+10  & 0.0013\,s & 1.5809\,s & 10.2065\,s \\
+25 & 0.0013\,s & 4.2758\,s & 87.2810\,s \\
 \bottomrule
         \end{tabular}
     \end{subtable}
-    \end{adjustwidth}
+%    \end{adjustwidth}
 \end{table}
 
-Compararemos los tiempos de ejecución de ambas implementaciones utilizando la Tabla \ref{tab:tiempos_mi}. Para un tamaño de muestra pequeña y dimensión pequeña, los tiempos son muy similares, pero a medida que van aumentando, tanto dimensión como tamaño de muestra, aumenta también la diferencia entre los tiempos de ejecución de las dos implementaciones. En este caso ocurre al contrario que al calcular la entropía, la implementación que tarda más en estimar la información mutua es, en todos los casos menos para una muestra grande y dimensión grande, la segunda, tardando el doble para muestras grandes con dimensión 10 y más del cuádruple para muestras medianas y dimensión grande.\\
+De la misma forma, en la Tabla \ref{tab:tiempos_im_2} encontramos los tiempos de ejecución de la información mutua en el caso de la implementación 2. Atendiendo a los tiempos medios de ejecución, vemos que crecen a medida que aumenta el tamaño de muestra y dimensión, siendo más altos que los tiempos de cálculo de la entropía. Las desviaciones típicas son también, en este caso, pequeñas en comparación a los tiempos que comparan, por tanto, concluimos que 5 mediciones han sido suficientes para conocer los tiempos de ejecución de las diferentes funciones con precisión.\\
 
-\begin{table}[H]
+\begin{table}[!htb]
+%  \begin{adjustwidth}{-.5in}{-.5in}  
+    \caption{Tiempos de ejecución del cálculo de la información mutua para diferentes valores de $n$ y $d$, implementación 2.}
+    \label{tab:tiempos_im_2}
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Tiempos medios de ejecución.}
+        \begin{tabular}{l|rrr}
+          \toprule
+          \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
+          \midrule
+2 & 0.0066\,s &   0.6363\,s &    2.7960\,s \\
+10  & 0.0485\,s &  33.6843\,s &  798.8034\,s \\
+25 & 0.1271\,s & 154.2582\,s & 3036.5627\,s \\
+\bottomrule
+\end{tabular}
+\end{subtable}\\[10pt]
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Desviaciones típicas de los tiempos de ejecución.}
+        \begin{tabular}{l|rrr}
+          \toprule
+          \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
+          \midrule
+2 & 0.0012\,s & 0.0256\,s &  0.1403\,s \\
+10  & 0.0005\,s & 0.6881\,s & 15.5813\,s \\
+25 & 0.0010\,s & 0.4396\,s & 22.6054\,s \\
+\bottomrule
+        \end{tabular}
+    \end{subtable}
+%    \end{adjustwidth}
+\end{table}
+
+Compararemos los tiempos de ejecución de ambas implementaciones utilizando la Tabla \ref{tab:tiempos_mi}. Para un tamaño de muestra pequeña y dimensión pequeña, los tiempos son muy similares, pero a medida que van aumentando, tanto dimensión como tamaño de muestra, aumenta también la diferencia entre los tiempos de ejecución de las dos implementaciones. Si nos fijamos en el tamaño de muestra pequeño, la implementación 1 resulta más lenta que la 2 para todas las dimensiones consideradas, ocurriendo lo contrario cuando nos fijamos en un tamaño de muestra grande, en los que la implementación 1 resulta más rápida que la 2 para todas las dimensiones. Para un tamaño de muestra mediano, el comportamiento varía según la dimensión, para $d=2, d= 10$ la implementación 1 resulta más rápida que la 2, mientras que para $d=25$ ocurre lo contrario.\\
+
+\begin{table}[!htb]
 \centering
 \caption{Tiempos de ejecución del cálculo de la información mutua en ambas implementaciones para diferentes valores del parámetro $d$ y $n$.}
 \label{tab:tiempos_mi}
@@ -1954,18 +2075,151 @@ Compararemos los tiempos de ejecución de ambas implementaciones utilizando la T
   \toprule
 Implementación & \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
  \midrule
-1 & 2 &   0.0066\,s &  0.2852\,s &  1.1668\,s\\
-2 & 2  &    0.0065\,s &  0.4432\,s &  2.2371\,s \\[5pt]
-1 & 10 &   0.091\,s &   28.3134\,s &  380.604\,s\\
-2 & 10 &  0.0504\,s &  32.9856\,s &  783.608\,s\\[5pt]
-1 & 25 & 0.2218\,s & 177.259\,s & 3194.09\,s\\
-2 & 25 & 0.1213\,s & 153.015\,s & 3044.07\,s\\
+1 & 2  & 0.0067\,s &   0.3754\,s &    1.3876\,s \\
+2 & 2 & 0.0066\,s &   0.6363\,s &    2.7960\,s \\[5pt]
+1 & 10  & 0.0681\,s &  24.1955\,s &  344.3863\,s \\
+2 & 10  & 0.0485\,s &  33.6843\,s &  798.8034\,s \\[5pt]
+1 & 25 & 0.2173\,s & 173.4488\,s & 2811.0427\,s \\
+2 & 25 & 0.1271\,s & 154.2582\,s & 3036.5627\,s \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-En la primera implementación, es el método \texttt{query} el que emplea más tiempo de ejecución (69.5\,s de una ejecución de 70.2\,s para dimensión 10), se llama a este método 3 veces, una para cada entropía a estimar, las marginales y la conjunta. En la segunda implementación, además de usar el método \texttt{query} (en este caso una sola vez) para calcular los vecinos más cercanos se utiliza el método \texttt{query\_radius} para calcular el valor de la media de $\psi$ (es necesario calcular 2 valores diferentes). Para una ejecución con $n=100000$ y $d=10$ que tardó $425.95\,$s, se emplearon $414.94\,s$ en la función \texttt{query} y $10.45\,$s en \texttt{query\_radius}, el cuello de botella es, por tanto, la función \texttt{query}.---¿Por qué tarda mucho más para la segunda implementación que para la primera?---
+En la primera implementación, vuelve a ser el método \texttt{query} de \texttt{KDTree} el que requiere más tiempo de ejecución, aunque destacamos que esta vez el número de veces que se llama a esta función es 3, ya que se calculan tres entropías. Dos de estas llamadas serán sobre puntos de dimensión $d$, cuando calculemos $h(X)$ y $h(Y)$, mientras que la restante es sobre puntos de dimensión $2d$, en el cálculo de $h(X, Y)$.\\
 
+En la segunda implementación la función que más tiempo consume es también el método \texttt{query}, de la clase \texttt{KDTree} o \texttt{BallTree} según la dimensión. Notamos que en esta implementación, antes de llamar al método \texttt{query}, se unen los puntos de las variables para las que calculamos la información mutua, por tanto, para $d=10$ se consideraría un árbol con puntos de dimensión $20$. Además, la segunda función que más tiempo consume se aproxima, en tiempo total, a \texttt{query}; es la función  \texttt{query\_radius}, utilizada para calcular el valor de la media de $\psi(n)$. Esta función se llama dos veces, una para contar los puntos de la primera variable que están a menor distancia que el $k$-ésimo vecino y otra para realizar el mismo cálculo respecto de los puntos de la segunda variable. Cada una de estas llamadas individuales a \texttt{query\_radius}, donde consideramos puntos de dimensión $d$, será más rápida que la llamada a \texttt{query}, donde se consideran puntos de dimensión $2d$.\\
+
+En resumen, las funciones que más tiempo consumen son: en la implementación 1 son las 2 llamadas a \texttt{query} para puntos de dimensión $d$ y la llamada a \texttt{query} para puntos de dimensión $2d$, en la implementación 2 la llamada a \texttt{query} sobre puntos de dimensión $2d$ y las 2 llamadas a \texttt{query\_radius} para puntos de dimensión $d$.\\
+
+Comenzamos analizando qué ocurre para un número de muestras pequeño, $n=1000$, en la Tabla \ref{tab:profile-im-21} los resultados del \textit{profiling} para muestras de dimensión 10. Por un lado, al estudiar el caso de la entropía vimos que los tiempos del cálculo de \texttt{query} en la implementación 1 eran más lentos que en la 2. Por otro lado, es posible que para muestras pequeñas el cálculo de \texttt{query\_radius} sea más rápido que el de \texttt{query}. Estos motivos nos permiten justificar que la implementación 2 haya resultado más rápida para este tamaño de muestra.\\
+
+\begin{table}[!htb]
+    \caption{Resultados \texttt{cProfiler}. Funciones que consumen más tiempo en el cálculo de la información mutua para ambas implementaciones, caso $d = 10$, $n = 1000$, tiempos en segundos.}
+    \label{tab:profile-im-21}
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Implementación 1, tiempo total de ejecución $0.069$\,s.}
+        \begin{tabular}{lllp{0.55\textwidth}}
+\toprule
+\texttt{ncalls} &  \texttt{tottime} & \texttt{percall} & \texttt{filename:lineno(function)} \\
+\midrule
+3 &   0.064 &   0.021 &   \texttt{method 'query' of 'sklearn.neighbors.\_kd\_tree.BinaryTree' objects}\\
+3 &   0.003 &   0.001 &   \texttt{\_base.py:349(\_fit)}\\
+12 &   0.000 &   0.000 &   \texttt{method 'reduce' of 'numpy.ufunc' objects}\\
+\bottomrule
+\end{tabular}
+    \end{subtable}\\[10pt]
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Implementación 2, tiempo total de ejecución $0.049$\,s.}
+        \begin{tabular}{lllp{0.55\textwidth}}
+\toprule
+\texttt{ncalls} &  \texttt{tottime} & \texttt{percall} & \texttt{filename:lineno(function)} \\
+\midrule
+1 &   0.025 &   0.025 & \texttt{method 'query' of 'sklearn.neighbors.\_ball\_tree.BinaryTree' objects}\\
+2 &   0.022 &   0.011 &  \texttt{method 'query\_radius' of 'sklearn.neighbors.\_kd\_tree.BinaryTree' objects}\\
+3 &   0.002 &   0.001 &  \texttt{entropy\_estimators.py:280(build\_tree)}\\
+\bottomrule
+\end{tabular}
+    \end{subtable}
+    \end{table}
+
+Para tamaños de muestras grandes, $n = 100000$, se observa el comportamiento contrario, la implementación 1 es más rápida que la 2. Si observamos en la Tabla \ref{tab:profile-im-31} los tiempos de las funciones que emplearon más tiempo, vemos claramente el motivo. El tiempo de ejecución de \texttt{query\_radius} en la implementación 2 supera a los tiempos de ejecución de \texttt{query} en la implementación 1. De hecho, el cálculo de 2 \texttt{query\_radius} supera en tiempo de ejecución al cálculo de 3 \texttt{query}.\\
+
+\begin{table}[!htb]
+    \caption{Resultados \texttt{cProfiler}. Funciones que consumen más tiempo en el cálculo de la información mutua para ambas implementaciones, caso $d = 2$, $n = 100000$, tiempos en segundos.}
+    \label{tab:profile-im-31}
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Implementación 1, tiempo total de ejecución $1.348$\,s.}
+        \begin{tabular}{lllp{0.55\textwidth}}
+\toprule
+\texttt{ncalls} &  \texttt{tottime} & \texttt{percall} & \texttt{filename:lineno(function)} \\
+\midrule
+        3 &   1.125 &   0.375 &  \texttt{method 'query' of 'sklearn.neighbors.\_kd\_tree.BinaryTree' objects}\\
+        3 &   0.205 &   0.068 &   \texttt{\_base.py:349(\_fit)}\\
+36/22 &   0.006  &  0.000  &  \texttt{built-in method numpy.core.\_multiarray\_umath.implement\_array\_function}\\
+\bottomrule
+\end{tabular}
+    \end{subtable}\\[10pt]
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Implementación 2, tiempo total de ejecución $02.650$\,s.}
+        \begin{tabular}{lllp{0.55\textwidth}}
+\toprule
+\texttt{ncalls} &  \texttt{tottime} & \texttt{percall} & \texttt{filename:lineno(function)} \\
+\midrule
+2 &   2.010 &   1.005 &  \texttt{method 'query\_radius' of 'sklearn.neighbors.\_kd\_tree.BinaryTree' objects}\\
+1 &   0.424 &   0.424 &   \texttt{method 'query' of 'sklearn.neighbors.\_kd\_tree.BinaryTree' objects}\\
+3 &   0.204 &   0.068 &  \texttt{entropy\_estimators.py:280(build\_tree)}\\
+\bottomrule
+\end{tabular}
+    \end{subtable}
+\end{table}
+
+Para tamaños de muestras medianos, $n = 30000$, tendremos que distinguir según la dimensión. Para dimensiones pequeñas y medianas la implementación 1 resulta más rápida debido a que los tiempos de cómputo de \texttt{query\_radius} superan a los de \texttt{query}, véase Tabla \ref{tab:profile-im-21}. Sin embargo, para dimensiones grandes, la implementación 1 resulta más lenta, esto se debe a que al cambiar el tipo de árbol con el que se realiza \texttt{query\_radius} de \texttt{KDTree} a \texttt{BallTree} disminuye su tiempo de cálculo, siendo inferior que los \texttt{query} que realiza la implementación 1, como vemos en la Tabla \ref{tab:profile-im-23}.\\
+
+\begin{table}[!htb]
+    \caption{Resultados \texttt{cProfiler}. Funciones que consumen más tiempo en el cálculo de la información mutua para ambas implementaciones, caso $d = 2$, $n = 30000$, tiempos en segundos.}
+    \label{tab:profile-im-21}
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Implementación 1, tiempo total de ejecución $0.37$\,s.}
+        \begin{tabular}{lllp{0.55\textwidth}}
+\toprule
+\texttt{ncalls} &  \texttt{tottime} & \texttt{percall} & \texttt{filename:lineno(function)} \\
+\midrule
+         3 &   0.325 &   0.108 & \texttt{method 'query' of 'sklearn.neighbors.\_kd\_tree.BinaryTree' objects}\\
+        3 &   0.039 &   0.013 &  \texttt{\_base.py:349(\_fit)}\\
+        36/22  &  0.002 &   0.000  & \texttt{built-in method numpy.core.\_multiarray\_umath.implement\_array\_function}\\
+        \bottomrule
+\end{tabular}
+    \end{subtable}\\[10pt]
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Implementación 2, tiempo total de ejecución $0.635$\,s.}
+        \begin{tabular}{lllp{0.55\textwidth}}
+\toprule
+\texttt{ncalls} &  \texttt{tottime} & \texttt{percall} & \texttt{filename:lineno(function)} \\
+\midrule
+        2 &   0.455 &   0.228 & \texttt{method 'query\_radius' of 'sklearn.neighbors.\_kd\_tree.BinaryTree' objects}\\
+        1 &   0.134 &   0.134 &   \texttt{method 'query' of 'sklearn.neighbors.\_kd\_tree.BinaryTree' objects}\\
+        3 &   0.043 &   0.014 &  \texttt{entropy\_estimators.py:280(build\_tree)}\\
+\bottomrule
+\end{tabular}
+    \end{subtable}
+\end{table}
+
+\begin{table}[!htb]
+    \caption{Resultados \texttt{cProfiler}. Funciones que consumen más tiempo en el cálculo de la información mutua para ambas implementaciones, caso $d = 25$, $n = 30000$, tiempos en segundos.}
+    \label{tab:profile-im-23}
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Implementación 1, tiempo total de ejecución $172.812$\,s.}
+        \begin{tabular}{lllp{0.55\textwidth}}
+\toprule
+\texttt{ncalls} &  \texttt{tottime} & \texttt{percall} & \texttt{filename:lineno(function)} \\
+\midrule
+         3 &   0.325 &   0.108 & \texttt{method 'query' of 'sklearn.neighbors.\_kd\_tree.BinaryTree' objects}\\
+        3 &   0.039 &   0.013 & \texttt{\_base.py:349(\_fit)}\\
+        36/22  &  0.002 &   0.000  & \texttt{built-in method numpy.core.\_multiarray\_umath.implement\_array\_function}\\
+        \bottomrule
+\end{tabular}
+    \end{subtable}\\[10pt]
+    \begin{subtable}{\linewidth}
+      \centering
+        \caption{Implementación 2, tiempo total de ejecución $154.347$\,s.}
+        \begin{tabular}{lllp{0.55\textwidth}}
+\toprule
+\texttt{ncalls} &  \texttt{tottime} & \texttt{percall} & \texttt{filename:lineno(function)} \\
+\midrule
+1 &  95.822 &  95.822 &  \texttt{method 'query' of 'sklearn.neighbors.\_ball\_tree.BinaryTree' objects}\\
+        2 &  58.309 &  29.154 & \texttt{method 'query\_radius' of 'sklearn.neighbors.\_ball\_tree.BinaryTree' objects}\\
+        3 &   0.197 &   0.066 &   \texttt{entropy\_estimators.py:280(build\_tree)}\\
+\bottomrule
+\end{tabular}
+    \end{subtable}
+\end{table}
 
 
 
