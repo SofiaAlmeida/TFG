@@ -92,138 +92,127 @@
 ---Hablar de: Shannon, teoría de la información, relevancia que ha tenido,...---
 \section{Motivación del trabajo}
 \section{Objetivos}
----objetivos, planificación (también se podría poner en objetivos) -> hacer un diagrama de Gantt (revisar bibliografía, adquirir conocimmiento, escribir memoria, búsqueda de implementaciones, escribir código)---
+---objetivos, planificación (también se podría poner en objetivos) -> hacer un diagrama de Gantt (revisar bibliografía, adquirir conocimiento, escribir memoria, búsqueda de implementaciones, escribir código)---
 
 %--------------------------- FUNDAMENTOS--------------------------------
-\chapter{Funtamentos y estado del arte}
+\chapter{Fundamentos y estado del arte}
 
 ---(De lo de estado del arte comentar que es un tema que se sigue investigando y poner referencias al respecto)---
 
 \section{Conceptos previos}
 
-Antes de entrar en materia, se recogen una serie de definiciones y resultados que se utilizarán a lo largo del trabajo.
+Antes de entrar en materia, se recogen una serie de definiciones y resultados que se utilizarán a lo largo del trabajo.\\
 
 \begin{definition}[$\sigma$-álgebra]
   Sea $\Omega$ un conjunto no vacío. Una $\sigma$-álgebra $\mathcal{A}$ sobre $\Omega$ es una familia de subconjuntos de $\Omega$ que verifica:
   \begin{itemize}
   \item  El conjunto vacío, $\emptyset$, pertenece a $\mathcal{A}$,
   \item  si $A$ pertenece a $\mathcal{A}$, entonces su complementario $\Omega\ \backslash\ A$ también pertenece a $\mathcal{A}$,
- \item si tomamos una serie de conjuntos $\{A_i\}_{i\in \mathbb{N}}$ de $\mathcal{A}$, entonces su unión numerable $\cup_{i\in \mathbb{N}}A_i$ también pertenece a $\mathcal{A}$.
+ \item si tomamos una serie de conjuntos $\{A_i\}_{i\in \mathbb{N}}$ de $\mathcal{A}$, entonces su unión numerable $\cup_{i\in \mathbb{N}}A_i$ también pertenece a $\mathcal{A}$.\\
   \end{itemize}
   
 \end{definition}
 
 \begin{example}
-  La familia de conjuntos Borel $\mathcal{A} = \mathcal{B}(\mathbb{R}^n)$ es una $\sigma$-álgebra sobre $\mathbb{R}^n$.
-  %Un conjunto Borel sobre un espacio topológico es aquel formado por todos los conjuntos abiertos con las operaciones de unión numerable, intersección numerable y complementario relativo.
+  La familia de conjuntos Borel $\mathcal{A} = \mathcal{B}(\mathbb{R}^n)$ es una $\sigma$-álgebra sobre $\mathbb{R}^n$.\\
+
 \end{example}
 
 \begin{definition}[Medida de probabilidad]
-  Sea $\mathcal{A}$ una $\sigma$-álgebra sobre $\Omega$. Una medida de probabilidad $P$ es una función $P:\mathcal{A} \to [0,1]$ tal que
+  Sea $\mathcal{A}$ una $\sigma$-álgebra sobre un conjunto no vacío $\Omega$. Una medida de probabilidad $P$ es una función $P:\mathcal{A} \to [0,1]$ tal que
   \begin{itemize}
-  \item $P(\Omega) = 1$,
-   \item si  $\{A_i\}_{i\in \mathbb{N}}$ son conjuntos de $\mathcal{A}$ disjuntos dos a dos, entonces $P(\cup_{i\in \mathbb{N}}A_i) = \sum_{i\in\mathbb{N}}P(A_i)$. 
+  \item $P[\Omega] = 1$,
+  \item si $\{A_i\}_{i\in \mathbb{N}}$  son conjuntos de $\mathcal{A}$ disjuntos dos a dos, entonces\[
+    P\left[\bigcup_{i\in \mathbb{N}}A_i\right] = \sum_{i\in\mathbb{N}}P[A_i].\]\\[-10pt]
   \end{itemize}
 \end{definition}
 
-La tupla $(\Omega, \mathcal{A}, P)$ se llama espacio de probabilidad. Los conjuntos de $\mathcal{A}$ se llaman sucesos.\\% Se dice que un suceso$A$ ocurrirá casi seguramente cuando $P(A)=1$.\\
-
-%% \begin{definition}[Variable aleatoria]
-%%   Sea $(\Omega, \mathcal{A}, P)$ un espacio de probabilidad. Una variable aleatoria $X$ es una función medible \[
-%% X:(\Omega, \mathcal{A}) \to (\mathbb{R}, \mathcal{B}).
-%% \]
-%% La condición de medibilidad quiere decir que $X^{-1}(B) \in \mathcal{A}\quad \forall B\in \mathcal{B}$.\\
-%% \end{definition}
-
-%% Podemos extender esta definición y obtener el concepto de vector aleatorio.
+La tupla $(\Omega, \mathcal{A}, P)$ se llama espacio de probabilidad. Los conjuntos de $\mathcal{A}$ se llaman sucesos.\\
 
 \begin{definition}[Variable aleatoria]
-    Sea $(\Omega, \mathcal{A}, P)$ un espacio de probabilidad. Un variable aleatoria $X=(X_1,\cdots, X_n)$ es una función medible \[
+    Sea $(\Omega, \mathcal{A}, P)$ un espacio de probabilidad. Un variable aleatoria $X=(X_1,\dots, X_n)$ es una función medible \[
 X:(\Omega, \mathcal{A}) \to (\mathbb{R}^n, \mathcal{B}(\mathbb{R}^n)).
 \]
-La condición de medibilidad quiere decir que $X^{-1}(B) \in \mathcal{A}\quad \forall B\in \mathcal{B}(\mathbb{R}^n)$.
+La condición de medibilidad quiere decir que $X^{-1}(B) \in \mathcal{A}\quad \forall B\in \mathcal{B}(\mathbb{R}^n)$.\\
 \end{definition}
 
-Cuando $n=1$ diremos que la variable aleatoria es unidimensional, mientras que cuando $n >1$ diremos que la variable aleatoria es multidimensional, en ocasiones también denominada, vector aleatorio. En el caso de la variable aleatoria multidimensional podremos querer información sobre ella misma, $X=(X_1,\cdots, X_n)$, lo que llamaremos variable aleatoria conjunta, o sobre alguna de las variables aleatoria $X_i$, que denominaremos variable aleatoria marginal.\\
+Cuando $n=1$ diremos que la variable aleatoria es unidimensional, mientras que cuando $n >1$ diremos que la variable aleatoria es multidimensional, en ocasiones también denominada, vector aleatorio. En el caso de la variable aleatoria multidimensional podremos querer información sobre ella misma, $X=(X_1,\dots, X_n)$, lo que llamaremos variable aleatoria conjunta, o sobre alguna de las variables aleatoria $X_i$, que denominaremos variable aleatoria marginal.\\
 
 Cuando la imagen de la variable aleatoria $X$ sea numerable, diremos que la variable aleatoria es \textit{discreta}, será descrita por la función masa de probabilidad que asigna una probabilidad a cada valor de la imagen de $X$. Por otro lado, cuando la imagen de la variable aleatoria $X$ sea infinita no numerable, diremos que la variable aleatoria es \textit{continua}. Si además puede ser descrita por una función de densidad, será \textit{absolutamente continua}.\\
 
-Cada variable aleatoria nos da una medida de probabilidad, su probabilidad inducida.
+Cada variable aleatoria nos da una medida de probabilidad, su probabilidad inducida.\\
 
 \begin{definition}[Probabilidad inducida]
-  La probabilidad inducida por un variable aleatoria $X=(X_1,\cdots, X_n)$, o distribución de $X$, se define como la función \[
+  La probabilidad inducida por un variable aleatoria $X=(X_1,\dots, X_n)$, o distribución de $X$, se define como la función \[
 P_X[B]:= P[X^{-1}(B)],
   \]
-para todo $B \in \mathcal{B}(\mathbb{R}^n)$.
+para todo $B \in \mathcal{B}(\mathbb{R}^n)$.\\
 \end{definition}
 
 \begin{definition}[Función de distribución]
-  La función de distribución de la variable aleatoria unidimensional $X$ es la aplicación $F_X:\mathbb{R}\to[0,1]$ definida como:\[
+  La función de distribución de una variable aleatoria unidimensional $X$ es la aplicación $F_X:\mathbb{R}\to[0,1]$ definida como:\[
 F_X(x) = P[X\leq x].
-  \]
-Para una variable aleatoria multidimensional,  $X=(X_1,\cdots,X_n)$, la función de distribución es $F_X:\mathbb{R}^n\to[0,1]$ y está dada por\[
-F_X(x_1,\cdots,x_n) = P[X_1\leq x_1,\cdots, X_n\leq x_n].
-  \]
+  \]\\[-5pt]
+Para una variable aleatoria multidimensional,  $X=(X_1,\dots,X_n)$, la función de distribución es $F_X:\mathbb{R}^n\to[0,1]$ y está dada por\[
+F_X(x_1,\dots,x_n) = P[X_1\leq x_1,\dots, X_n\leq x_n].
+  \]\\[-10pt]
 \end{definition}
-
-%La distribución de $X$ queda completamente determinada por su distribución.
 
 \begin{proposition}
   La función de distribución $F_X$ de la variable aleatoria $X$ es no decreciente, continua a la derecha y $\lim_{x\to - \infty}F_X(x) = 0$, $\lim_{x\to +\infty}F_X(x) = 1$.\\
-  Si la variable aleatoria $X$ es discreta, la función de distribución tendrá puntos de discontinuidad es los valores de la imagen de $X$. Mientras que si la variable aleatoria es continua, su función de distribución será continua.
+  
+  Si la variable aleatoria $X$ es discreta, la función de distribución tendrá puntos de discontinuidad en los valores de la imagen de $X$. Mientras que si la variable aleatoria es continua, su función de distribución será continua.\\
 \end{proposition}
 
 \begin{definition}[Función Borel]
-  Una función $f:\mathbb{R}^n\to \mathbb{R}^n$ será Borel si la imagen inversa $f^{-1}(B)$ de cualquier conjunto Borel $B\in \mathbb{R}^n$ es un conjunto Borel.
+  Una función $f:\mathbb{R}^n\to \mathbb{R}^m$ será Borel si la imagen inversa $f^{-1}(B)$ de cualquier conjunto Borel $B\in \mathbb{R}^m$ es un conjunto Borel.\\
 \end{definition}
 
 \begin{definition}[Función de densidad y función masa de probabilidad]
   Si hay una función Borel $f_X:\mathbb{R}^n\to \mathbb{R}$ tal que para cualquier conjunto Borel $B\subset \mathbb{R}$\[
 P[X\in B] = \int_B f_X(x) dx,
 \]
-se dice que $X$ es una variable aleatoria con distribución absolutamente continua y $f_X$ se llama función de densidad de $X$. Si hay una secuencia (finita o infinita) de vectores $x_1,x_2,\cdots$ tal que para cualquier conjunto Borel $B\subset \mathbb{R}^n$\[
+se dice que $X$ es una variable aleatoria con distribución absolutamente continua y $f_X$ se llama función de densidad de $X$. Si hay una secuencia (finita o infinita) de vectores $x_1,x_2,\dots$ tal que para cualquier conjunto Borel $B\subset \mathbb{R}^n$\[
 P[X\in B] = \sum_{x_i\in B}P[X = x_i],
 \]
-entonces decimos que $X$ tiene una distribución discreta con valores $x_1,x_2\cdots$ y función masa de probabilidad $P[X=x_i]=p(x_i)$ en $x_i$.
+entonces decimos que $X$ tiene una distribución discreta que toma los valores $x_1,x_2,\dots$ y cuya función masa de probabilidad es $P[X=x_i]=p(x_i)$ en $x_i$.\\
 \end{definition}
 
 \begin{definition}[Soporte]
-Llamamos soporte de una variable aleatoria $X$ al conjunto de puntos donde $f(x)>0$, lo notaremos $sop(X)$.
+Llamamos soporte de una variable aleatoria $X$ al conjunto de puntos donde $f(x)>0$, lo notaremos $sop(X)$.\\
 \end{definition}
 
-%% \begin{definition}[Probabilidad conjunta]
-%%   La probabilidad conjunta de varios vectores aleatorios $X_1,\cdots, X_n$ es una medida de probabilidad 
-  
-%% \end{definition}
 
 \begin{definition}[Probabilidad condicionada]
-  Para cualesquiera dos sucesos $A,B \in \mathcal{A}$ tal que $P(B)\neq 0$, la probabilidad condicionada de A por B se define como\[
-P(A|B) = \frac{P(A\cap B)}{P(B)}.
-  \]
+  Para cualesquiera dos sucesos $A,B \in \mathcal{A}$ tal que $P[B]\neq 0$, la probabilidad condicionada de A por B se define como\[
+P[A|B] = \frac{P[A\cap B]}{P[B]}.
+  \]\\[-10pt]
 \end{definition}
 
 \begin{definition}[Función de densidad condicionada]
-  Para cualesquiera dos variables aleatorias $X$,$Y$ con función de densidad $f_X$ y $f_Y$ respectivamente y función de densidad conjunta $f$, la densidad de $X$ condicionada a que $Y=y$ viene dada por\[
+  Para cualesquiera dos variables aleatorias $X$, $Y$ con función de densidad $f_X$ y $f_Y$ respectivamente y función de densidad conjunta $f$, la densidad de $X$ condicionada a que $Y=y$ viene dada por\[
 f_X(x|Y=y) = \frac{f(x,y)}{f_Y(y)}.
-  \]
+  \]\\[-10pt]
 \end{definition}
 
 \begin{definition}[Sucesos independientes]
-  Los sucesos $A_1,\cdots,A_n\in \mathcal{A}$ se dicen independientes si\[
-P\left (\cap_{j=1}^kA_{i_j} \right ) = \prod_{j=1}^kP\left (A_{i_j} \right),
+  Los sucesos $A_1,\dots,A_n\in \mathcal{A}$ se dicen independientes si\[
+P\left [\bigcap_{j=1}^kA_{i_j} \right ] = \prod_{j=1}^kP\left [A_{i_j} \right],
 \]
-para cualesquiera índices $1\leq i_1\leq \cdots \leq i_k\leq n$.
+para cualesquiera índices $1\leq i_1\leq \dots \leq i_k\leq n$.\\
 \end{definition}
 
 \begin{definition}[Variables aleatorias independientes]
-  Dos variables aleatorias $X$ e $Y$ son independientes si para cualesquiera conjuntos de Borel $A, B \in \mathcal{B}(\mathbb{R}^n)$ los sucesos $[X\in A]$ e $[Y\in B]$ son independientes. De forma general, $k$ variables aleatorias $X_1,\cdots,X_k$ serán independientes si para cualesquiera conjuntos de Borel $B_1,\cdots,B_k \in \mathcal{B}(\mathbb{R}^n)$ los sucesos $[X_1 \in B_1],\cdots,[X_k\in B_k]$ son independientes.
+  Dos variables aleatorias $X$ e $Y$ son independientes si para cualesquiera conjuntos Borel $A, B \in \mathcal{B}(\mathbb{R}^n)$ los sucesos $[X\in A]$ e $[Y\in B]$ son independientes.\\
+
+De forma general, $k$ variables aleatorias $X_1,\dots,X_k$ serán independientes si para cualesquiera conjuntos de Borel $B_1,\dots,B_k \in \mathcal{B}(\mathbb{R}^n)$ los sucesos $[X_1 \in B_1],\dots,[X_k\in B_k]$ son independientes.\\
 \end{definition}
 
 \begin{proposition}[Caracterizaciones de independencia]
-  Dado un variable aleatoria $X =(X_1,\cdots,X_n)$ sus componentes son independientes si, y solo si, se da alguna de las siguientes condiciones:
+  Dada una variable aleatoria $X =(X_1,\dots,X_n)$ sus componentes son independientes si, y solo si, se da alguna de las siguientes condiciones:
   \begin{itemize}
-  \item La función de distribución verifica $F_X(x) = F_{X_1}(x_1)\cdots F_{X_n}(x_n)$ para todo $x \in \mathbb{R}^n$.
-  \item $X$ tiene función de densidad y $f_X(x) = f_{X_1}(x_1)\cdots f_{X_n}(x_n)$ para todo $x \in \mathbb{R}^n$, salvo, a lo sumo, en un conjunto de medida nula.
+  \item La función de distribución verifica $F_X(x) = F_{X_1}(x_1)\cdot \ldots\cdot F_{X_n}(x_n)$ para todo $x \in \mathbb{R}^n$.
+  \item $X$ tiene función de densidad y $f_X(x) = f_{X_1}(x_1)\cdot \ldots\cdot f_{X_n}(x_n)$ para todo $x \in \mathbb{R}^n$, salvo, a lo sumo, en un conjunto de medida nula.\\
   \end{itemize}
 \end{proposition}
 
@@ -232,7 +221,7 @@ para cualesquiera índices $1\leq i_1\leq \cdots \leq i_k\leq n$.
 \mu = \mathbb{E}[X] = \int_{\Omega}X(\omega)dP(\omega) = \int_{\mathbb{R}}xdF(x).
 \]
 
-En el caso discreto, si la variable aleatoria $X$ tiene un número finito de posibles salidas $x_1,\cdots,x_k$ cada una con probabilidad $p_1,\cdots, p_k$ respectivamente, la esperanza es\[
+En el caso discreto, si la variable aleatoria $X$ tiene un número finito de posibles salidas $x_1,\dots,x_k$ cada una con probabilidad $p_1,\dots, p_k$ respectivamente, la esperanza es\[
 \mathbb{E}[X] = \sum_{i=1}^kx_ip_i.
 \]
 
@@ -240,7 +229,7 @@ En el caso de que $X$ sea una variable aleatoria absolutamente continua y admita
 \mathbb{E}[X] = \int_{\mathbb{R}}xf(x)dx.
 \]
   
-  Si  $X=(X_1,\cdots,X_n)^T$ es una variable aleatoria multidimensional. Se define la esperanza de $X$ como:\[
+  Si  $X=(X_1,\dots,X_n)^T$ es una variable aleatoria multidimensional. Se define la esperanza de $X$ como:\[
 \mu_X = \mathbb{E}[X] = \begin{bmatrix}
            \mathbb{E}[X_1] \\
           \vdots \\
@@ -251,7 +240,7 @@ En el caso de que $X$ sea una variable aleatoria absolutamente continua y admita
           \vdots \\
           \mu_n
  \end{bmatrix},  \]
- siempre que existan todas las esperanzas unidimensionales.
+ siempre que existan todas las esperanzas unidimensionales.\\
 \end{definition}
 
 \begin{proposition}[Propiedades de la esperanza]\label{p:prop_esp}
@@ -263,67 +252,66 @@ En el caso de que $X$ sea una variable aleatoria absolutamente continua y admita
 Esta propiedad se conoce como \textit{ley del estadístico inconsciente}.
 \item $\mathbb{E}\left [\sum_{j=1}^kc_jg_j(X) \right] = \sum_{j=1}^k c_j \mathbb{E} \left [ g_j(X_i) \right ]$.
 
-\item Si $X_1,\cdots,X_n$ son variables aleatorias independientes, entonces\[
+\item Si $X_1,\dots,X_n$ son variables aleatorias independientes, entonces\[
 \mathbb{E} \left [ \prod_{i=1}^n X_i \right ] = \prod_{i=1}^k\mathbb{E}[X_i].
-  \]
+  \]\\[-10pt]
   \end{itemize}
   
 \end{proposition}
 
 \begin{theorem}[Desigualdad de Jensen]\label{th:jensen}
-  Si $f$ es una función cóncava y $X$ es una variable aleatoria, entonces\[
-\E\left[f(X)\right]\ge f\left ( \E[X] \right),
+  Si $g$ es una función convexa y $X$ es una variable aleatoria, entonces\[
+ g\left ( \E[X] \right) \leq \E\left[g(X)\right]
   \]
-dándose la igualdad si, y solo si, $X$ es constante o $f$ es lineal casi seguramente, existe un conjunto Borel en el que es lineal.
+dándose la igualdad si, y solo si, $g$ es una función afín.\\
 \end{theorem}
 
 \begin{definition}[Esperanza condicionada]
   Se define la esperanza condicionada de la variable aleatoria $Y$ dado $X$ como la variable aleatoria $\mathbb{E}[Y|X] = g(X)$ tal que \[
 \mathbb{E} [ Y | X = x ] = \int y f_Y(y| X = x) dy.
-  \] 
+  \] \\[-10pt]
   
 \end{definition}
 \begin{definition}[Varianza y matriz de covarianzas]
   Sea $X$ una variable aleatoria unidimensional de esperanza $\mu_X$, definimos su varianza como\[
 \sigma_X^2 = \Var(X) = \mathbb{E}\left [ (X- \mu_X)^2 \right ].
   \]
-  Se define la matriz de covarianzas de una variable aleatoria multidimensional $X= (X_1,\cdots,X_n)^T$ como\[
-\Sigma = Cov(X) = \mathbb{E}\left [(X-\mu_X)(X-\mu_X)^T \right ] =  \begin{bmatrix} \sigma_{11} & \dots & \sigma_{1n} \\ \vdots& \ddots & \vdots \\ \sigma_{n1} &  \dots & \sigma_{nn}\end{bmatrix}\,,
+  Se define la matriz de covarianzas de una variable aleatoria multidimensional $X= (X_1,\dots,X_n)^T$ como\[
+\Sigma = Cov(X) = \mathbb{E}\left [(X-\mu_X)(X-\mu_X)^T \right ] =  \begin{bmatrix} \sigma_{11} & \dots & \sigma_{1n} \\ \v\dots& \d\dots & \v\dots \\ \sigma_{n1} &  \dots & \sigma_{nn}\end{bmatrix}\,,
 \]
-donde $\sigma_{ij} = Cov(X_i, X_j) = \mathbb{E}\left[(X_i-\mu_i)(X_j-\mu_j)\right]=\sigma_{ji}$ es la covarianza de las variables aleatorias $X_i$ y $X_j$. La podremos definir cuando existan todas las covarianzas.  
+donde $\sigma_{ij} = Cov(X_i, X_j) = \mathbb{E}\left[(X_i-\mu_i)(X_j-\mu_j)\right]=\sigma_{ji}$ es la covarianza de las variables aleatorias $X_i$ y $X_j$. La podremos definir cuando existan todas las covarianzas.\\ 
 \end{definition}
 
 \subsection{Estimadores}
 
-En esta sección recordaremos algunos conceptos sobre estimación puntual que utilizaremos más adelante.
+En esta sección recordaremos algunos conceptos sobre estimación puntual que utilizaremos más adelante.\\
 
 \begin{definition}[Muestra aleatoria simple]
-  Una muestra aleatoria simple de tamaño $n$ de una variable aleatoria $X$ con distribución teórica $F$, son $n$ variables aleatorias $(X_1,\cdots,X_n)$, independientes e idénticamente distribuidas, todas con la misma distribución $F$.
-%Consecuentemente la función de distribución conjunta de una muestra aleatoria simple $(X_1,\cdots, X_m)$, correspondiente a una distribución de la población $F$, es $F(x_1,\cdots,x_n)=F(x_1)\cdots F(x_n)$.
+  Una muestra aleatoria simple de tamaño $n$ de una variable aleatoria $X$ con distribución teórica $F$, son $n$ variables aleatorias $(X_1,\dots,X_n)$, independientes e idénticamente distribuidas, todas con la misma distribución $F$.\\
 \end{definition}
 
-En un amplio número de estudios estadísticos la distribución teórica $F$ de la variable aleatoria a estudiar es desconocida. Notamos $\mathcal{F}$ a la familia de distribuciones candidatas a ser realmente la distribución (se obtiene a partir de información previa). En estadística paramétrica se conoce la forma funcional de $F$ pero se desconocen uno o algunos parámetros de la misma. Para tratar de obtener información sobre este parámetro desconocido a partir de una muestra utilizaremos los \textit{estimadores}.
+En un amplio número de estudios estadísticos la distribución teórica $F$ de la variable aleatoria a estudiar es desconocida. Notamos $\mathcal{F}$ a la familia de distribuciones candidatas a ser realmente la distribución (se obtiene a partir de información previa). En estadística paramétrica se conoce la forma funcional de $F$ pero se desconocen uno o algunos parámetros de la misma. Para tratar de obtener información sobre este parámetro desconocido a partir de una muestra utilizaremos los \textit{estimadores}.\\
 
 \begin{definition}[Estadístico]
-  Se denomina estadístico a cualquier función medible de una muestra aleatoria simple $T(X_1,\cdots,X_n)$, donde $T:\mathbb{R}^n\to \mathbb{R}$ es una determinada función medible.
+  Se denomina estadístico a cualquier función medible de una muestra aleatoria simple $T(X_1,\dots,X_n)$, $T:\mathbb{R}^n\to \mathbb{R}$ es una determinada función medible.\\
 \end{definition}
 
 \begin{example}
   Algunos estadísticos habituales son:
 
   \begin{itemize}
-  \item $T(X_1,\dots,X_n) = \frac{1}{n}\sum_{i=1}^nX_i$, media aritmética o media muestral, denotada por $\bar{X}$.
-  \item $T(X_1,\dots,X_n) = \frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2$, varianza muestral, notada $s^2$.
+  \item $T(X_1,\dots,X_n) = \frac{1}{n}\sum_{i=1}^nX_i$, media aritmética o media muestral, denotada por $\olsi{X}$.
+  \item $T(X_1,\dots,X_n) = \frac{1}{n}\sum_{i=1}^n\left(X_i-\olsi{X} \right)^2$, varianza muestral, notada $s^2$.
   \item $T(X_1,\dots,X_n) = \min (X_1,\dots,X_n)$, el menor valor muestral.
-  \item $T(X_1,\dots,X_n) = \max (X_1,\dots,X_n)$, el mayor valor muestral.
+  \item $T(X_1,\dots,X_n) = \max (X_1,\dots,X_n)$, el mayor valor muestral.\\
   \end{itemize}
 \end{example}
 
 \begin{definition}[Estimador]
-Un estimador es un estadístico $\widehat{\theta}(X_1,\cdots,X_n)$ cuyos valores se utilizan para obtener información (estimación puntual) de un parámetro desconocido $\theta$.\\
+Un estimador es un estadístico cuyos valores se utilizan para obtener información (estimación puntual) de un parámetro desconocido $\theta$, lo notaremos  $\widehat{\theta}(X_1, \dots, X_n)$.\\
 \end{definition}
 
-Como comentamos anteriormente, se usan los valores del estimador para obtener información del parámetro de la población. Las siguientes propiedades nos informan de la ``calidad'' de la estimación y permiten comparar diferentes estimadores de un mismo parámetro.
+Como comentamos anteriormente, se usan los valores del estimador para obtener información del parámetro de la población. Las siguientes propiedades nos informan de la ``calidad'' de la estimación y permiten comparar diferentes estimadores de un mismo parámetro.\\
 
 \begin{definition}[Estimador insesgado]
   Si $\widehat{\theta}$ es un estimador del parámetro $\theta$, la diferencia \[
@@ -332,7 +320,7 @@ Como comentamos anteriormente, se usan los valores del estimador para obtener in
 se denomina sesgo del estimador $\widehat{\theta}$ como estimador de $\theta$. Cuando el sesgo es nulo para cualquier valor del parámetro, es decir, si\[
 \mathbb{E} \left [\widehat{\theta}\right] = \theta\quad \forall\theta \in\Theta,
 \]
-el estimador $\widehat{\theta}$ se dice insesgado para $\theta$.
+el estimador $\widehat{\theta}$ se dice insesgado para $\theta$.\\
 \end{definition}
 
 \begin{example}\label{ej:medest}
@@ -345,71 +333,60 @@ hemos comprobado que la media muestral es un estimador insesgado para $\mu$.\\
 
 \begin{definition}[Eficiencia]
   Si $\hat{\theta}_1, \hat{\theta}_2$ son dos estimadores insesgados del parámetro $\theta$, diremos que $\hat{\theta}_1$ es más eficiente que $\hat{\theta}_2$ si \[
-\Var\left(\hat{\theta}_1\right) < \Var\left(\hat{\theta}_2\right).\\
-  \]
+\Var\left(\hat{\theta}_1\right) < \Var\left(\hat{\theta}_2\right).
+  \]\\[-10pt]
 \end{definition}
 
-El tamaño de la muestra será un factor que influya en la estimación. Por ello, otra propiedad deseable en un estimador es la consistencia. Para definir esta propiedad es necesario conocer la definición de convergencia en probabilidad, una de las diferentes nociones de convergencia de variables aleatorias.
-
-%% \begin{example}
-%%   % Varianza muestral estimador sesgado
-%%   Sean $X_1,\dots,X_n$ variables aleatorias con distribución $F$ y $\sigma^2 = \Var(X_1)$. Si ahora el parámetro de interés es $\sigma^2$ y utilizamos como estimador la varianza muestral, veremos que este estimador es sesgado para $\sigma^2$.
-%%   \[
-%% \bias\left[S^2\right] = \E\left[ S^2\right] - \sigma^2 = \frac{1}{n} \sum_{i=1}^n\left(\E \left [ X_i - \olsi{X}\right]\right)^2 - \sigma^2 = 0 - \sigma^2 \neq 0,
-%% \]
-%% \end{example}
+El tamaño de la muestra será un factor que influya en la estimación. Por ello, otra propiedad deseable en un estimador es la consistencia. Para definir esta propiedad es necesario conocer la definición de convergencia en probabilidad, una de las diferentes nociones de convergencia de variables aleatorias.\\
 
 \begin{definition}[Convergencia en probabilidad]
   Una sucesión de variables aleatorias $\{X_n\}$ converge en probabilidad a la variable $X$ si para todo $\varepsilon > 0$,\[
 \lim_{n\to\infty}P\left[|X_n-X|>\varepsilon \right] = 0. 
-  \] Lo notaremos $X_n\xrightarrow[]{P}X$.
+  \] Lo notaremos $X_n\xrightarrow[]{P}X$.\\
 \end{definition}
 
 
 \begin{definition}[Estimador consistente]
   Sea $\hat{\theta}_n$ un estimador del parámetro $\theta$ para una muestra de tamaño $n$. Diremos que el estimador $\hat{\theta}_n$ es consistente si, cuando $n\to\infty$, se verifica\[
 \hat{\theta}_n\xrightarrow[]{P}\theta.
-  \]
+  \]\\[-10pt]
 \end{definition}
 
 \begin{lemma}\label{l:est_cons}
-  Sea $\hat{\theta}_n$ un estimador del parámetro $\theta$ para una muestra de tamaño $n$. Si $\bias\left(\hat{\theta}_n\right)\to 0$ y $\Var\left(\hat{\theta}_n\right)\to0$, entonces $\hat{\theta}_n\xrightarrow[]{P}\theta$, esto es, el estimador $\hat{\theta}_n$ es consistente.
+  Sea $\hat{\theta}_n$ un estimador del parámetro $\theta$ para una muestra de tamaño $n$. Si $\bias\left(\hat{\theta}_n\right)\to 0$ y $\Var\left(\hat{\theta}_n\right)\to0$, entonces $\hat{\theta}_n\xrightarrow[]{P}\theta$, esto es, el estimador $\hat{\theta}_n$ es consistente.\\
 \end{lemma}
 
-Cuando $\bias\left(\hat{\theta}_n\right)\to 0$ diremos que el estimador $\hat{\theta}_n$ es asintóticamente insesgado.
+Cuando $\bias\left(\hat{\theta}_n\right)\to 0$ diremos que el estimador $\hat{\theta}_n$ es asintóticamente insesgado.\\
 
 \begin{example}
   % Estimadores consistentes
   Consideramos la media muestral, un estimador insesgado de la media de una variable aleatoria $X$. La variable aleatoria $X$, de la que conocemos una muestra $X_1,\dots,X_n$, tendrá varianza $\sigma^2$. Veamos el comportamiento asintótico de la varianza de la media muestral.\[
-\Var(\olsi{X}) = \Var\left(\frac{1}{n}\sum_{i=1}^nX_i\right) = \frac{1}{n^2}\sum_{i=1}^n\Var(X_i) = \frac{\sigma^2}{n}\xrightarrow[]{n\to\infty}0.
+\Var(\olsi{X}) = \Var\left(\frac{1}{n}\sum_{i=1}^nX_i\right) = \frac{1}{n^2}\sum_{i=1}^n\Var(X_i) = \frac{\sigma^2}{n}\xrightarrow[]{n\to\infty}0.\\
 \]
 
 En el Ejemplo \ref{ej:medest} habíamos visto que el sesgo de $\olsi{X}$ era nulo para cualquier tamaño de muestra $n$. Concluimos, aplicando el Lema \ref{l:est_cons}, que $\olsi{X}$ es un estimador consistente de la media de la variable $X$.\\
 \end{example}
 
-La media muestral no es solo un estimador insesgado y consistente de la media teórica de una variable aleatoria $X$. La ley (débil) de los grandes números prueba que este estimador converge en probabilidad a la media teórica.
+La media muestral no es solo un estimador insesgado y consistente de la media teórica de una variable aleatoria $X$. La ley (débil) de los grandes números prueba que este estimador converge en probabilidad a la media teórica.\\
 
 \begin{theorem}[Ley (débil) de los grandes números]\label{t:lgn}
-  Sean $X_1,\cdots,X_n$ variables aleatorias con distribución $F$ y $\mu =\mathbb{E}\left [X_1 \right]$. Si $\mu =\mathbb{E}\left [X_1 \right] < \infty$, entonces la media muestral\[
+  Sean $X_1,\dots,X_n$ variables aleatorias con distribución $F$ y $\mu =\mathbb{E}\left [X_1 \right]$. Si $\mu =\mathbb{E}\left [X_1 \right] < \infty$, entonces la media muestral\[
 \olsi{X}_n = \frac{1}{n}\sum_{i=1}^nX_i
 \]converge en probabilidad a $\mu$, esto es,\[
-\olsi{X}_n\xrightarrow[]{P} \mu.
-\]
-  
+\olsi{X}_n\xrightarrow[]{P} \mu.\]\\  [-10pt]
 \end{theorem}
 
 
 \subsection{Algunas distribuciones discretas y continuas}
 
-Durante el desarrollo del trabajo se utilizarán algunas distribuciones, se presentan a continuación.
+Durante el desarrollo del trabajo se utilizarán algunas distribuciones que se presentan a continuación.\\
 %--------------------------------- Uniforme unidimensional--------------
-
 \begin{definition}[Distribución uniforme discreta]
-Si $X$ es una variable aleatoria con distribución uniforme discreta sobre el intervalo $[a,b]$. $X$ tomará $n$ posibles valores, $x_1,\cdots,x_n$ ($x_i\in [a,b]$ para $i=1,\cdots,n$), con igual probabilidad $\frac{1}{n}$. La función masa de probabilidad será $f(x_i) = \frac{1}{n}$ para todo $i = 1,\cdots, n$. 
+Si $X$ es una variable aleatoria con distribución uniforme discreta sobre el intervalo $[a,b]$. $X$ tomará $n$ posibles valores, $x_1,\dots,x_n$ ($x_i\in [a,b]$ para $i=1,\dots,n$), con igual probabilidad $\frac{1}{n}$. La función masa de probabilidad será $f(x_i) = \frac{1}{n}$ para todo $i = 1,\dots, n$. \\
 \end{definition}
 
 \begin{example}
-  Si tiramos un dado no cargado hay seis posibles valores: 1, 2, 3, 4, 5 y 6; cada vez que lanzamos el dado hay probabilidad $\frac{1}{6}$ de que salga cualquiera de ellos.
+  Si tiramos un dado no cargado hay seis posibles valores: 1, 2, 3, 4, 5 y 6; cada vez que lanzamos el dado hay probabilidad $\frac{1}{6}$ de que salga cualquiera de ellos.\\
 \end{example}
 
 \begin{definition}[Distribución uniforme continua]
@@ -419,18 +396,19 @@ f(x) =
   \frac{1}{b-a},\quad \text{si } x\in [a,b]\\
   0,\quad\quad \text{en otro caso}
 \end{cases}.\\
-  \]
+  \]\\[-10pt]
 \end{definition}
 % ----------------------------- FIN uniforme----------------------------
 
 %---------------------------------Distribución normal-------------------
 \begin{definition}[Distribución normal unidimensional]
-  Una variable aleatoria unidimensional seguirá una distribución normal, o distribución gaussiana,si su función de densidad es \[
+  Una variable aleatoria unidimensional seguirá una distribución normal, o distribución gaussiana, si su función de densidad es \[
 f(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}\left( \frac{x-\mu}{\sigma}\right ) ^2}.
-\]
+\]\\[-10pt]
 \end{definition}
 
-Generalizamos esta definición para el caso multivariante.
+Generalizamos esta definición para el caso multivariante.\\
+
 \begin{definition}[Distribución normal multivariante]
   Una variable aleatoria sigue una distribución normal multivariante si cualquier combinación de sus componentes tiene una distribución normal univariante. Su función de densidad es \[
 f(x) = \frac{1}{\left (\sqrt{2\pi}\right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)},
@@ -439,20 +417,18 @@ f(x) = \frac{1}{\left (\sqrt{2\pi}\right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1
 %--------------------------------Fin - normal---------------------------
 
 %--------------Multinomial - Principio----------------------------------
-La siguiente distribución, la distribución multinomial modela la probabilidad de un número determinado de éxitos para $n$ experimentos independientes, donde hay $k$ posibles éxitos, cada uno de ellos con probabilidad de éxito fija.
+La siguiente distribución, la distribución multinomial, modela la probabilidad de un número determinado de éxitos para $n$ experimentos independientes, donde hay $k$ posibles éxitos, cada uno de ellos con probabilidad de éxito fija.\\
 
 \begin{definition}[Distribución multinomial]
- Sean $n$ experimentos independientes donde cada uno produce uno de los sucesos $S_1,\dots,S_k$ para $k\geq 2$ (estos sucesos son mutuamente excluyentes) y cada suceso $S_i$ ocurre con probabilidad $p_i$ ($p_1+\cdots+p_k = 1$). Definimos las variables aleatorias $X_i,\ i=1,\dots,k$ como el número de experimentos en el que ocurre $S_i$. Entonces $X=(X_1,\cdots,X_k)$ tiene una distribución multinomial con parámetros $n$ y $p = (p_1,\dots, p_k)$. Su función masa de probabilidad viene dada por
-  %Sea $k$ un número fijo y finito, tendremos $k$ posibles salidas mutuamente excluyentes con probabilidades $p_1\cdots p_k$. Si la variable aleatoria $X_i$ indica el número de veces que se observa la salida $i$ en los $n$ experimentos, entonces el vector $X = (X_1, \cdots, X_n)$ sigue una distribución multinomial con parámetros $n$ y $p = (p_1,\cdots, p_n)$. Su función masa de probabilidad viene dada por
-
+ Sean $n$ experimentos independientes donde cada uno produce uno de los sucesos $S_1,\dots,S_k$ para $k\geq 2$ (estos sucesos son mutuamente excluyentes) y cada suceso $S_i$ ocurre con probabilidad $p_i$ ($p_1+\dots+p_k = 1$). Definimos las variables aleatorias $X_i,\ i=1,\dots,k$ como el número de experimentos en el que ocurre $S_i$. Entonces $X=(X_1,\dots,X_k)$ tiene una distribución multinomial con parámetros $n$ y $p = (p_1,\dots, p_k)$. Su función masa de probabilidad viene dada por
 \begin{align*}
-f(x_1,\cdots,x_k; n, p_1,\cdots,p_k) &= P[X_1 = x_1\text{ y } \cdots \text{ y } X_k = x_k]\\ &=
+f(x_1,\dots,x_k; n, p_1,\dots,p_k) &= P[X_1 = x_1\text{ y } \dots \text{ y } X_k = x_k]\\[3pt] &=
 \begin{cases}
-    \frac{n!}{x_1!\cdots x_k!} p_1^{x_1} \cdots  p_k^{x_k},\quad\text{si } \sum_{i=1}^kx_i = n\\
-    0, \qquad \qquad \qquad\text{en otro caso,}
-\end{cases}
+    \frac{n!}{x_1!\dots x_k!} p_1^{x_1} \dots  p_k^{x_k},\quad\text{si } \sum_{i=1}^kx_i = n\\
+    0, \qquad \qquad \qquad\text{en otro caso}
+\end{cases},
 \end{align*}
-donde $x_1,\cdots, x_k$ son enteros no negativos.
+donde $x_1,\dots, x_k$ son enteros no negativos.\\
 \end{definition}
 
 %Notamos que aunque los sucesos sean independientes, sus salidas $X$ son dependientes, ya que deben sumar $n$.
@@ -461,17 +437,17 @@ donde $x_1,\cdots, x_k$ son enteros no negativos.
   Si tenemos un dado de $k$ lados y queremos calcular cuántas veces sale cada uno de ellos en $n$ lanzamientos, tendremos una distribución multinomial.\\
 \end{example}
 
-El valor esperado de observar la salida $i$ en $n$ sucesos es $\mathbb{E}(X_i) = np_i$, luego $\mathbb{E}(X) = np$.
+El valor esperado de observar la salida $i$ en $n$ sucesos es $\mathbb{E}(X_i) = np_i$, luego $\mathbb{E}(X) = np$.\\
 
-Veamos cómo son los elementos de la matriz de covarianzas. Los elementos de la diagonal son la varianza de una variable aleatoria con distribución binomial, luego $\Var(X_i) = np_i(1-p_i)$. Las covarianzas de $X_i, X_j$ para $i\neq j$ son $Cov(X_i, X_j) = - n p_i p_j$. Por tanto, $\Var(X) = n [\text{diag}(p) - p p^T]$, donde diag$(p)$ representa la matriz diagonal que tiene el elemento $p_i$ en la posición $i,i$.
+Veamos cómo son los elementos de la matriz de covarianzas. Los elementos de la diagonal son la varianza de una variable aleatoria con distribución binomial, luego $\Var(X_i) = np_i(1-p_i)$. Las covarianzas de $X_i, X_j$ para $i\neq j$ son $Cov(X_i, X_j) = - n p_i p_j$. Por tanto,\[\Var(X) = n [\text{diag}(p) - p p^T],\] donde diag$(p)$ representa la matriz diagonal que tiene el elemento $p_i$ en la posición $i,i$.\\
 %----------------------MULTINOMIAL-FIN----------------------------------
 
 %--------------------------Estudio de la dependencia--------------------
 \subsection{Estudio de la dependencia}
 
-Dadas dos variables aleatorias nos podemos preguntar si son o no independientes, es decir, si la realización de una de ellas afecta o no a la realización de la otra. En caso de ser dependientes nos gustaría medir qué tipo de relación existe entre ellas. Hay numerosos métodos que nos permiten realizar esta medida, por ejemplo, el \textit{coeficiente de correlación de Pearson} o el \textit{coeficiente de correlación de Spearman}.
+Dadas dos variables aleatorias nos podemos preguntar si son o no independientes, es decir, si la realización de una de ellas afecta o no a la realización de la otra. En caso de ser dependientes nos gustaría medir qué tipo de relación existe entre ellas. Hay numerosos métodos que nos permiten realizar esta medida, por ejemplo, el \textit{coeficiente de correlación de Pearson} o el \textit{coeficiente de correlación de Spearman}.\\
 
-Medir la dependencia entre variables puede ser útil porque nos indica relaciones entre variables que se pueden aprovechar para hacer predicciones de una a partir de la otra. Encontramos infinidad de aplicaciones en el mundo real a conocer una dependencia entre variables. Por ejemplo, para conocer qué efecto tiene un fenómeno sobre otro. También, si conocemos la dependencia entre variables, podemos utilizar aquellas de las que tenemos información más precisa o fiable para explicar aquellas de las que no.
+Medir la dependencia entre variables puede ser útil porque nos indica relaciones entre variables que se pueden aprovechar para hacer predicciones de una a partir de la otra. Encontramos infinidad de aplicaciones en el mundo real a conocer una dependencia entre variables. Por ejemplo, para conocer qué efecto tiene un fenómeno sobre otro. También, si conocemos la dependencia entre variables, podemos utilizar aquellas de las que tenemos información más precisa o fiable para explicar aquellas de las que no.\\
 
 \begin{definition}[Coeficiente de correlación de Pearson]
   Se define el coeficiente de correlación de Pearson para un par de variables aleatorias $(X,Y)$ como\[
@@ -480,18 +456,18 @@ r_{X,Y} = \frac{Cov(X,Y)}{\sigma_X\sigma_Y} = \frac{\mathbb{E}\left [ (X- \mu_X)
 El mismo coeficiente para una realización muestral $\{(x_1,y_1),\dots,(x_n,y_n)\}$ se define como
 \[
 r_{xy}=\frac{\sum_{i=1}^n(x_i-\olsi{x})(y_i-\olsi{y})}{\sqrt{\sum_{i=1}^n(x_i-\olsi{x})^2(y_i-\olsi{y})^2}},
-\] donde $\olsi{x} = \frac{1}{n}\sum_{i=1}^nx_i$ la media muestral, de forma análoga para $\olsi{y}$.
+\] donde $\olsi{x} = \frac{1}{n}\sum_{i=1}^nx_i$ la media muestral, de forma análoga para $\olsi{y}$.\\
 \end{definition}
 
-Este coeficiente mide la correlación lineal entre las variables $X,Y$. Su valor se encuentra entre +1 y -1, donde +1 indica una correlación lineal positiva total, 0 que no hay correlación lineal y -1 correlación lineal total negativa. Si el coeficiente de correlación de Pearson de dos variables aleatorias es 0, sabremos que no existe una dependencia lineal entre ellas, pero no podremos asegurar nada acerca de la independencia, pues podría existir otro tipo de dependencia entre ellas.
+Este coeficiente mide la correlación lineal entre las variables $X,Y$. Su valor se encuentra entre $+1$ y $-1$, donde $+1$ indica una correlación lineal positiva total, $0$ que no hay correlación lineal y $-1$ correlación lineal total negativa. Si el coeficiente de correlación de Pearson de dos variables aleatorias es $0$, sabremos que no existe una dependencia lineal entre ellas, pero no podremos asegurar nada acerca de la independencia, pues podría existir otro tipo de dependencia entre ellas.\\
 
-Este coeficiente es paramétrico, depende de las distribuciones marginales, el que presentamos a continuación será no paramétrico.
+Este coeficiente es paramétrico, depende de las distribuciones marginales, el que presentamos a continuación será no paramétrico.\\
 
-El coeficiente de correlación de Spearman mide la relación entre dos variables más allá de si es lineal o no. Atiende a si ambas variables tienen la misma monotonía, esto es, si a medida que los valores de una de las variables crecen, los de la otra también lo hacen (o al revés). Para ello, tendremos que ordenar los datos de cada variable de menor a mayor.
+El coeficiente de correlación de Spearman mide la relación entre dos variables más allá de si es lineal o no. Atiende a si ambas variables tienen la misma monotonía, esto es, si a medida que los valores de una de las variables crecen, los de la otra también lo hacen (o al revés). Para ello, tendremos que ordenar los datos de cada variable de menor a mayor.\\
 
 
 \begin{definition}[Coeficiente de correlación de Spearman]
-  Sea $(X,Y)$ una variable aleatoria bidimensional con distribución conjunta $F(x,y)$ y distribuciones marginales $F_X(x)$, $F_Y(y)$ respectivamente. Sean ahora $(X_1,Y_1)\sim F$, $(X_2,Y_2)\sim F_X \cdot F_Y$ independientes entre sí, entonces el coeficiente $\rho$ de Spearman se define como\[
+  Sea $(X,Y)$ una variable aleatoria bidimensional con distribución conjunta $F(x,y)$ y distribuciones marginales $F_X(x)$, $F_Y(y)$ respectivamente. Sean ahora $(X_1,Y_1)\sim F$ y $(X_2,Y_2)\sim F_X \cdot F_Y$ independientes entre sí, entonces el coeficiente $\rho$ de Spearman se define como\[
 \rho_{XY} = 3\left ( P\left[(X_1-X_2)(Y_1-Y_2) > 0\right] -  P\left[(X_1-X_2)(Y_1-Y_2) < 0\right]\right).
   \]
   
@@ -499,14 +475,14 @@ El coeficiente de correlación de Spearman mide la relación entre dos variables
 \rho_{XY}=r_{R_xR_y}=\frac{Cov(R_x,R_y)}{\sigma_{R_x}\sigma_{R_y}},
 \] donde $r$ denota el coeficiente de correlación de Pearson. Si todos los puntos son distintos, se puede utilizar la fórmula:\[
 \rho_{XY} = 1 - \frac{6\sum_i d_i^2}{n(n^2-1)},
-\]donde $d_i = R_{x_i}-R_{y_i}$ es la diferencia entre los rangos de $x_i$ e $y_i$.
+\]donde $d_i = R_{x_i}-R_{y_i}$ es la diferencia entre los rangos de $x_i$ e $y_i$.\\
 \end{definition}
 
-Este coeficiente también toma valores entre -1 y +1. Si los valores son cercanos a cero la correlación monótona será muy débil, mientras que si son cercanos a +1 o -1 será muy fuerte, el signo nos indicará si a medida que una crece la otra decrece o viceversa. Al igual que coeficiente de Pearson, el de Spearman no caracteriza la independencia. Aunque ambos coeficientes, si las variables aleatorias son independientes, valdrán 0.
+Este coeficiente también toma valores entre $-1$ y $+1$. Si los valores son cercanos a cero la correlación monótona será muy débil, mientras que si son cercanos a $+1$ o $-1$ será muy fuerte, el signo nos indicará si a medida que una crece la otra decrece o viceversa. Al igual que coeficiente de Pearson, el de Spearman no caracteriza la independencia. Aunque ambos coeficientes, si las variables aleatorias son independientes, valdrán $0$.\\
 
-Así, hemos visto un par de ejemplos de medidas de dependencia que caracterizan adecuadamente tipos concretos de dependencia, pero no caracterizan la independencia.
+Así, hemos visto un par de ejemplos de medidas de dependencia que caracterizan adecuadamente tipos concretos de dependencia, pero no caracterizan la independencia.\\
 
-La información mutua es otra forma de medir la dependencia entre dos variables aleatorias capaz de determinar otros tipos de dependencias, además de las lineales o monótonas. Podríamos decir que es una medida de la dependencia global. Además, esta medida también nos dará información sobre la independencia de las variables aleatorias en estudio (véanse Teorema \ref{t:im_indd} y \ref{c:im_indc}).
+La información mutua es otra forma de medir la dependencia entre dos variables aleatorias capaz de determinar otros tipos de dependencias, además de las lineales o monótonas. Podríamos decir que es una medida de la dependencia global. Además, esta medida también nos dará información sobre la independencia de las variables aleatorias en estudio (véanse Teorema \ref{t:im_indd} y Corolario \ref{c:im_indc}).
 
 %-----------------------------------------------------------------------
 %-----------------------TEORÍA DE LA INFORMACIÓN------------------------
@@ -519,30 +495,30 @@ La información mutua es otra forma de medir la dependencia entre dos variables 
 
     La idea de relacionar el número de estados de un sistema con una medida física viene del siglo XIX, en el que Rudolph Clausius sugirió la denominación ``entropía'' para esta medida. En 1928, Ralph Vinton Lyon Hartley define el término en el contexto de la teoría de la información, básicamente como el logaritmo del tamaño del alfabeto. Aunque no es hasta 1948 cuando Claude Shannon da una definición matemática del concepto de información como lo conocemos hoy en día,  sentando las bases de la teoría de la información, que pasó a formar parte de la teoría de la probabilidad. En su concepto de entropía no todos los símbolos de un alfabeto tienen porqué ser equiprobables. Esto nos permite medir la capacidad de comunicación de un canal. Andrei N. Kolmogorov, en la década de los 60, desarrolló su teoría de la complejidad, otra forma de teoría de la información.\\
 
-A continuación, se explicarán estos conceptos, y algunos relacionados, junto a demostraciones de sus propiedades y algunos ejemplos, tanto para el caso discreto como para el caso continuo. Las principales fuentes consultadas para ello han sido \cite{thomas} y \cite{gray}. Se han estudiado y comprendido los capítulos correspondientes a entropía y entropía diferencial para posteriormente exponer aquí una síntesis de lo aprendido.
+A continuación, se explicarán estos conceptos, y algunos relacionados, junto a demostraciones de sus propiedades y algunos ejemplos, tanto para el caso discreto como para el caso continuo. Las principales fuentes consultadas para ello han sido \cite{thomas} y \cite{gray}. Se han estudiado y comprendido los capítulos correspondientes a entropía y entropía diferencial para posteriormente exponer aquí una síntesis de lo aprendido.\\
 
 \subsection{Caso discreto}
     
-Sea una variable aleatoria discreta, $X$, que toma valores en el alfabeto $\mathcal{X} = \{x_1, \cdots, x_N \}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.
+Sea una variable aleatoria discreta, $X$, que toma valores en el alfabeto $\mathcal{X} = \{x_1, \dots, x_N \}$, con función masa de probabilidad $P_X(x_i) = p(x_i)$.\\
 
 \begin{definition}[Entropía]
-  La entropía de una variable aleatoria discreta $X$ viene dada por \[H(X) = - \sum_{x\in \mathcal{X}} p(x) \log p(x).\]
+  La entropía de una variable aleatoria discreta $X$ viene dada por \[H(X) = - \sum_{x\in \mathcal{X}} p(x) \log p(x).\]\\[-15pt]
 \end{definition}
 
-En la fórmula anterior tomaremos, por continuidad, $0 \log 0 = 0$. Así, la entropía queda definida por un funcional de la distribución de $X$, es decir, que no depende de los valores que tome la variable sino de sus probabilidades.
+En la fórmula anterior tomaremos, por continuidad, $0 \log 0 = 0$. Así, la entropía queda definida por un funcional de la distribución de $X$, es decir, que no depende de los valores que tome la variable sino de sus probabilidades.\\
 
-Según cuál sea la base del logaritmo utilizado en la fórmula de la entropía utilizaremos unas unidades u otras. Notamos $H_b(X) = - \sum_{x\in \mathcal{X}} p(x) \log_b p(x)$. Si el logaritmo tiene base 2, la entropía se medirá en bits, mientras que si la base es $e$, las unidades serán \textit{nats} (unidad natural de información).\\
+Según cuál sea la base del logaritmo utilizado en la fórmula de la entropía utilizaremos unas unidades u otras. Para $b\in \mathbb{N}$, notaremos $H_b(X) = - \sum_{x\in \mathcal{X}} p(x) \log_b p(x)$. Si el logaritmo tiene base 2, la entropía se medirá en \textit{bits}, mientras que si la base es $e$, las unidades serán \textit{nats} (unidad natural de información).\\
 
-Dada la variable aleatoria discreta $X$ con distribución $p(x)$, podemos considerar la variable aleatoria $g(X)$, cuya esperanza, $E$, viene dada por:\[
-E_pg(X) = \sum_{x\in \mathcal{X}}g(x)p(x).
+Dada la variable aleatoria discreta $X$ con distribución $p(x)$, podemos considerar la variable aleatoria $g(X)$, cuya esperanza, $\E$, viene dada por:\[
+\E_p\left[g(X)\right] = \sum_{x\in \mathcal{X}}g(x)p(x).
 \]
 Tomando $g(X) = \log \frac{1}{p(X)}$ obtenemos otra definición de entropía, la usada en termodinámica:\[
-H(X) = E_p \log \frac{1}{p(X)}.
-\]
+H(X) = \E_p \left[\log \frac{1}{p(X)}\right].
+\]\\[-10pt]
 
 La fórmula anterior coincide, efectivamente, con la definición de entropía dada:\[
-H(X) = E_p \log \frac{1}{p(X)} = \sum_{x\in \mathcal{X}}\left ( \log \frac{1}{p(x)} \right ) p(x) = - \sum_{x \in \mathcal{X}}p(x)\log p(x).
-\]
+H(X) = \E_p \left[\log \frac{1}{p(X)}\right] = \sum_{x\in \mathcal{X}}\left ( \log \frac{1}{p(x)} \right ) p(x) = - \sum_{x \in \mathcal{X}}p(x)\log p(x).
+\]\\[-10pt]
 
 \begin{lemma} La entropía de una variable aleatoria discreta es no negativa, $H(X) \ge 0$.
 \end{lemma}
@@ -559,8 +535,8 @@ El siguiente lema, mediante propiedades del logaritmo, nos permitirá cambiar la
 \begin{proof}
   Partiremos de la definición alternativa de $H_b$ y usaremos que $\log_bp = \log_ba\ \log_ap$.
   \[
-  H_b(X) = E_p \left(\log_b \frac{1}{p(X)}\right ) = E_p \left [ \left ( \log_b a \right )\log_a \frac{1}{p(X)} \right ] = \left ( \log_b{a} \right ) H_a(X).
-  \]
+  H_b(X) = \E_p \left[\log_b \frac{1}{p(X)}\right ] = \E_p \left [ \left ( \log_b a \right )\log_a \frac{1}{p(X)} \right ] = \left ( \log_b{a} \right ) H_a(X).
+  \]\\[-10pt]
 \end{proof}
 
 En el siguiente ejemplo calculamos la entropía de una variable aleatoria con probabilidades fijadas.
@@ -573,7 +549,10 @@ En el siguiente ejemplo calculamos la entropía de una variable aleatoria con pr
        d, \quad\text{con probabilidad } \frac{1}{8} \\
      \end{cases}.\]
 
-     Utilizamos la fórmula de la entropía y obtenemos \[H(X) = - \left (\frac{1}{2} \log \frac{1}{2} + \frac{1}{4} \log \frac{1}{4} + \frac{1}{4} \log \frac{1}{8} \right ) = - \left (-\frac{1}{2} - \frac{1}{2} - \frac{3}{4} \right ) = 1 + \frac{3}{4} = \frac{7}{4} \text{ bits}.\]\\
+     Utilizamos la fórmula de la entropía y obtenemos
+     \begin{align*}
+       H(X) &= - \left (\frac{1}{2} \log \frac{1}{2} + \frac{1}{4} \log \frac{1}{4} + \frac{1}{4} \log \frac{1}{8} \right ) = - \left (-\frac{1}{2} - \frac{1}{2} - \frac{3}{4} \right )\\[5pt] &= 1 + \frac{3}{4} = \frac{7}{4} \text{ bits}.\\
+       \end{align*}
 \end{example}
 
 \begin{example}
@@ -582,27 +561,27 @@ En el siguiente ejemplo calculamos la entropía de una variable aleatoria con pr
        1, \quad\text{con probabilidad } p\\
        0, \quad\text{con probabilidad } 1-p \\
      \end{cases}.\]
-     Vamos a analizar la entropía de la variable aleatoria $X$ como función de $p$, es decir, $H:[0,1]\to \mathbb{R}$ estará dada por $H(p)$. Se calcula como sigue: $ H(p) := H(X) = - \left ( p \log p + (1-p) \log (1-p) \right )$.
-     %La entropía de la variable aleatoria $X$ la notaremos $H(p)$
+     Vamos a analizar la entropía de la variable aleatoria $X$ como función de $p$, es decir, $H:[0,1]\to \mathbb{R}$ estará dada por $H(p)$. Se calcula como sigue:\[ H(p) := H(X) = - \left ( p \log p + (1-p) \log (1-p) \right ).\]
      Cuando $p=0$ o $p=1$, $H(p) = 0$, luego no hay incertidumbre, se conoce el valor que tomará la variable $X$. Calcularemos la primera y segunda derivada de $H(p)$ para conocer su comportamiento en el intervalo $(0,1)$.
      \begin{align*}
-       H'(p) &= - \left ( \log p + \frac{p}{p} - \log(1-p) - \frac{1-p}{1-p} \right ) = - \left ( \log \left (\frac{p}{1-p} \right) \right ).\\
+       H'(p) &= - \left ( \log p + \frac{p}{p} - \log(1-p) - \frac{1-p}{1-p} \right ) = - \left ( \log \left (\frac{p}{1-p} \right) \right ),\\
      H''(p) &= - \left ( \frac{1}{p} + \frac{1}{1-p} \right ) \leq 0 \quad \forall p \in (0,1).
      \end{align*}
      
-     Hemos comprobado que la función $H(p)$ es cóncava. La incertidumbre máxima se alcanzará en $p=\frac{1}{2}$: \[H\left (\frac{1}{2}\right ) = - \left ( \frac{1}{2}\log\frac{1}{2} + \frac{1}{2} \log\frac{1}{2} \right ) = - \log \frac{1}{2} = 1.\]\\
+     Hemos comprobado que la función $H(p)$ es cóncava. La incertidumbre máxima se alcanzará en $p=\frac{1}{2}$: \[H\left (\frac{1}{2}\right ) = - \left ( \frac{1}{2}\log\frac{1}{2} + \frac{1}{2} \log\frac{1}{2} \right ) = - \log \frac{1}{2} = 1.\]\\[-10pt]
 \end{example}
 
 
-La definición de entropía de una variable aleatoria se puede aplicar a un par de variables aleatorias dando lugar a la entropía conjunta.
+La definición de entropía de una variable aleatoria se puede aplicar a un par de variables aleatorias dando lugar a la entropía conjunta.\\
 
 \begin{definition}[Entropía conjunta]
   La entropía conjunta, $H(X,Y)$, de un par de variables aleatorias discretas $(X,Y)$ con distribución conjunta $p(x,y)$ se define como \[
   H(X,Y) = - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y), \]
   que podemos expresar también como \[
-  H(X,Y) = - E \log p(X,Y).\]
+  H(X,Y) = - \E \left[\log p(X,Y)\right].\]\\[-10pt]
 \end{definition}
-Presentamos el siguiente lema que será útil para la demostración de propiedades en lo sucesivo.
+
+Presentamos el siguiente lema que será útil para la demostración de propiedades en lo sucesivo.\\
 
 \begin{lemma}[Desigualdad de Gibbs]\label{l:gibbs}
   Dadas dos funciones masa de probabilidad $\{p_i\}$ y $\{q_i\}$, entonces \[
@@ -620,10 +599,10 @@ dándose la igualdad si, y solo si, $q_i = p_i$ para todo $i$.
   \sum_{i\in I}p_i \left ( \frac{q_i}{p_i} - 1 \right )
   = \sum_{i\in I}q_i - \underbrace{\sum_{i \in I}p_i}_{= 1} \leq 0.\]
 
-  Tendremos la igualdad cuando $\frac{q_i}{p_i} = 1$ para todo $i$.
+  Tendremos la igualdad cuando $\frac{q_i}{p_i} = 1$ para todo $i$.\\
 \end{proof}
 
-En el siguiente lema recogemos algunas propiedades de la entropía conjunta.
+En el siguiente lema recogemos algunas propiedades de la entropía conjunta.\\
 
 \begin{lemma}\label{l:prop_ent_conj} Sean $X, Y$ dos variables aleatorias discretas con alfabeto $\mathcal{X}, \mathcal{Y}$ respectivamente. Entonces se verifican:
   \begin{enumerate}
@@ -642,30 +621,28 @@ En el siguiente lema recogemos algunas propiedades de la entropía conjunta.
 
 \item Usando la definición, $\sum_{y \in \mathcal{Y}} p(x,y) = p(x)$ y propiedades del logaritmo:
   \begin{align*}
-    &H(X,Y) - (H(X) + H(Y)) \\ &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) + \sum_{x \in \mathcal{X}} p(x)\log p(x) + \sum_{y \in \mathcal{Y}} p(y)\log p(y)\\
-    &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y)\log p(x) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y)\log p(y)\\
-    &= \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log \frac{p(x)p(y)}{p(x,y)} \leq 0,
+    H&(X,Y) - (H(X) + H(Y)) \\[5pt] =& - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) + \sum_{x \in \mathcal{X}} p(x)\log p(x) + \sum_{y \in \mathcal{Y}} p(y)\log p(y)\\[5pt]
+    = &- \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y)\log p(x)\\ &+ \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y)\log p(y)\\[3pt]
+    = &\sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log \frac{p(x)p(y)}{p(x,y)} \leq 0,
   \end{align*}
   donde la última desigualdad viene de aplicar el Lema \ref{l:gibbs} sobre las funciones masa de probabilidad $p(x,y)$ y $p(x)p(y)$. Esta última sería la función masa de probabilidad conjunta de dos variables aleatorias $X,Y$ con distribuciones $p(x), p(y)$ independientes. La igualdad ocurre si, y solo si, $p(x)p(y) = p(x,y)$, esto es si $X$ e $Y$ son independientes.
   \end{enumerate}
 \end{proof}
 
-Al considerar dos distribuciones distintas, además de su entropía conjunta podemos definir la entropía condicional de una respecto de la otra.
+Al considerar dos distribuciones distintas, además de su entropía conjunta podemos definir la entropía condicional de una respecto de la otra.\\
 
 \begin{definition}[Entropía condicional]
   Si $(X,Y)$ sigue una distribución $p(x,y)$, la entropía condicional de $Y$ con respecto a $X$, $H(Y|X)$, se define como:
   \begin{align*}
-    H(Y|X) &= \sum_{x \in \mathcal{X}} p(x) H(Y | X = x)\\
-    &= - \sum_{x \in \mathcal{X}} p(x) \sum_{y \in \mathcal{Y}} p(y | x) \log p(y | x)\\
-    &=  - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(y | x)\\
-    &=- E \log p(Y|X).
+    H(Y|X) &= \sum_{x \in \mathcal{X}} p(x) H(Y | X = x)\\[5pt]
+    &= - \sum_{x \in \mathcal{X}} p(x) \sum_{y \in \mathcal{Y}} p(y | x) \log p(y | x)\\[5pt]
+    &=  - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(y | x)\\[5pt]
+    &=- \E\left[ \log p(Y|X)\right].
   \end{align*}
 \end{definition}
 
-%En la definición anterior, la probabilidad condicionada $p(y|x)$ viene dada por la función masa de probabilidad $p(y|x) = \frac{p(x,y)}{p(x)}$.
-
 \begin{theorem}[Regla de la cadena]\label{t:regla_cadena}
-  Si $(X,Y)$ sigue una distribución $p(x,y)$, entonces se verifica:\[
+  Si $(X,Y)$ sigue una distribución conjunta $p(x,y)$, entonces se verifica:\[
 H(X,Y) = H(X) + H(Y|X).
   \]
 \end{theorem}
@@ -673,8 +650,8 @@ H(X,Y) = H(X) + H(Y|X).
 \begin{proof}
 Para la prueba utilizaremos que $p(x,y) = p(x)p(y|x)$,
   \begin{align*}
-    H(X,Y) &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y) = - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log \left( p(x)p(y|x) \right )\\
-    &= - \left(\sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(y|x) \right ),\\
+    H(X,Y) &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x,y)\\[5pt] &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log \left( p(x)p(y|x) \right )\\[3pt]
+    &= - \left(\sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(x) + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) \log p(y|x) \right ),
   \end{align*}
 usando que $\sum_{y\in \mathcal{Y}}p(x,y) = p(x)$, obtenemos
 \begin{align*}
@@ -685,7 +662,7 @@ usando que $\sum_{y\in \mathcal{Y}}p(x,y) = p(x)$, obtenemos
 
 \begin{corollary} En las condiciones del Teorema \ref{t:regla_cadena},\[
 H(X,Y|Z) = H(X|Z) + H(Y|X, Z).
-  \]
+  \]\\[-10pt]
 \end{corollary}
 
 \begin{lemma}
@@ -696,12 +673,12 @@ Donde la desigualdad de la derecha es una igualdad si, y solo si, $X$ e $Y$ son 
 \end{lemma}
 
 \begin{proof}
-  La desigualdad izquierda se obtiene de la definición de entropía condicional, \[H(Y|X) = - E \underbrace{\log \overbrace{p(Y|X)}^{\in [0,1]}}_{\leq 0} \ge 0.\]
+  La desigualdad izquierda se obtiene de la definición de entropía condicional, \[H(Y|X) = - \E [\underbrace{\log \overbrace{p(Y|X)}^{\in [0,1]}}_{\leq 0} ]\ge 0.\]
 
   Aplicando el Teorema \ref{t:regla_cadena} y el Lema \ref{l:prop_ent_conj} se obtiene la desigualdad de la derecha:\[
 H(X) + H(Y|X) = H(X,Y) \leq H(X) + H(Y),
 \]
-dándose la igualdad solo en el caso en que las variables $X$ e $Y$ sean independientes.
+dándose la igualdad solo en el caso en que las variables $X$ e $Y$ sean independientes.\\
 \end{proof}
 
 \begin{example}\label{e:dist_conj}
@@ -725,42 +702,41 @@ Sea $(X,Y)$ una variable aleatoria con distribución conjunta:
 \end{tabular}
 \end{table}
 
-  %  La distribución marginal de $X$ es $\left ( \frac{1}{2}, \frac{1}{4}, \frac{1}{8}, \frac{1}{8} \right )$ y la distribución marginal de $Y$ es $\left ( \frac{1}{4}, \frac{1}{4}, \frac{1}{4}, \frac{1}{4} \right )$.
   Calculamos las entropías de las variables marginales:
   \begin{align*}
-    H(X) &= - \frac{1}{2} \log \frac{1}{2} - \frac{1}{4} \log \frac{1}{4} - 2 \frac{1}{8} \log \frac{1}{8} = -\frac{1}{2} - \frac{1}{2} - \frac{6}{8} = \frac{7}{4} \text{ bits}.\\
+    H(X) &= - \frac{1}{2} \log \frac{1}{2} - \frac{1}{4} \log \frac{1}{4} - 2 \frac{1}{8} \log \frac{1}{8} = -\frac{1}{2} - \frac{1}{2} - \frac{6}{8} = \frac{7}{4} \text{ bits}.\\[5pt]
     H(Y) &= - 4 \frac{1}{4} \log \frac{1}{4} = 2 \text{ bits}.
   \end{align*}
   Calculamos la entropía conjunta:
   \begin{align*}
-    H(X,Y) &= - \frac{1}{4} \log \frac{1}{4} - \frac{2}{8} \log \frac{1}{8} - \frac{6}{16} \log \frac{6}{16} - \frac{4}{32} \log \frac{1}{32}\\
-    &= \frac{1}{2} + \frac{3}{4} + \frac{6}{4} + \frac{5}{8} = \frac{27}{8} \text{ bits}.
+    H(X,Y) &= - \frac{1}{4} \log \frac{1}{4} - \frac{2}{8} \log \frac{1}{8} - \frac{6}{16} \log \frac{6}{16} - \frac{4}{32} \log \frac{1}{32}\\[5pt]
+    &= \frac{1}{2} + \frac{3}{4} + \frac{6}{4} + \frac{5}{8} = \frac{27}{8} \text{ bits}.\\
   \end{align*}
 
   Vemos que, efectivamente, la entropía conjunta es mayor que cada una de las individuales, pero menor que su suma $\left( \frac{30}{8} \right )$. Calculamos las entropías condicionales:
   \begin{align*}
-    H(Y|X) = &- \frac{1}{8} \log \frac{1}{4} - \frac{2}{16} \log\frac{1}{8} - \frac{1}{4} \log \frac{1}{2} - \frac{2}{16} \log \frac{1}{4} - \frac{1}{8} \log \frac{1}{2}\\
-    &- \frac{2}{32} \log \frac{1}{4} - \frac{1}{16} \log \frac{1}{2} - \frac{2}{32} \log \frac{1}{4} - \frac{1}{16} \log \frac{1}{2}\\
-    =& \frac{1}{2} + \frac{6}{8} + \frac{3}{8} = \frac{13}{8} \text {bits}.\\
-    H(X|Y) = & - \frac{1}{8} \log \frac{1}{2} - \frac{2}{16} \log \frac{1}{4}- \frac{2}{16} \log \frac{1}{4} - \frac{1}{8} \log \frac{1}{2}\\
-    &- \frac{2}{32} \log \frac{1}{8} - \frac{1}{16} \log \frac{1}{4} - \frac{2}{32} \log \frac{1}{8} - \frac{1}{16} \log \frac{1}{4}\\
-    =& \frac{1}{4} + \frac{6}{8} + \frac{3}{8} = \frac{11}{8} \text{ bits}.
+    H(Y|X) = &- \frac{1}{8} \log \frac{1}{4} - \frac{2}{16} \log\frac{1}{8} - \frac{1}{4} \log \frac{1}{2} - \frac{2}{16} \log \frac{1}{4} - \frac{1}{8} \log \frac{1}{2}\\[5pt]
+    &- \frac{2}{32} \log \frac{1}{4} - \frac{1}{16} \log \frac{1}{2} - \frac{2}{32} \log \frac{1}{4} - \frac{1}{16} \log \frac{1}{2}\\[5pt]
+    =& \frac{1}{2} + \frac{6}{8} + \frac{3}{8} = \frac{13}{8} \text {bits}.\\[10pt]
+    H(X|Y) = & - \frac{1}{8} \log \frac{1}{2} - \frac{2}{16} \log \frac{1}{4}- \frac{2}{16} \log \frac{1}{4} - \frac{1}{8} \log \frac{1}{2}\\[5pt]
+    &- \frac{2}{32} \log \frac{1}{8} - \frac{1}{16} \log \frac{1}{4} - \frac{2}{32} \log \frac{1}{8} - \frac{1}{16} \log \frac{1}{4}\\[5pt]
+    =& \frac{1}{4} + \frac{6}{8} + \frac{3}{8} = \frac{11}{8} \text{ bits}.\\
   \end{align*}
   Observamos que las entropías condicionales son positivas y menores que las entropías individuales, además $H(Y|X) \neq H(X|Y)$. Comprobamos que se verifica el Teorema \ref{t:regla_cadena}:
   \begin{align*}
-    H(X,Y) &= H(X) + H(Y|X) = \frac{7}{4} + \frac{13}{8} = \frac{27}{8} \text{ bits}.\\
-    H(X,Y) &= H(Y) + H(X|Y) = 2 + \frac{11}{8} = \frac{27}{8} \text{ bits}.\\
+    H(X,Y) &= H(X) + H(Y|X) = \frac{7}{4} + \frac{13}{8} = \frac{27}{8} \text{ bits}.\\[5pt]
+    H(X,Y) &= H(Y) + H(X|Y) = 2 + \frac{11}{8} = \frac{27}{8} \text{ bits}.\\[-5pt]
   \end{align*}
 \end{example}
 
-Pasamos a definir otra medida de información, la entropía relativa, esta será una medida de la distancia entre dos distribuciones. La podemos ver como una medida de inteficiencia al asumir que la distribución es $q$ cuando en realidad es $p$. Será una medida de ineficiencia en el sentido de cuánta información perderíamos si utilizáramos la distribución $q$ para aproximar a la distribución $p$.
+Pasamos a definir otra medida de información, la entropía relativa, esta será una medida de la distancia entre dos distribuciones. La podemos ver como una medida de ineficiencia al asumir que la distribución es $q$ cuando en realidad es $p$. Será una medida de ineficiencia en el sentido de cuánta información perderíamos si utilizáramos la distribución $q$ para aproximar a la distribución $p$.\\
 
 \begin{definition}[Entropía relativa]
   La entropía relativa (o ``distancia'' Kullback Leibler) entre dos funciones masa de probabilidad $p(x)$ y $q(x)$ se define como\[
-D(p||q) = \sum_{x \in \mathcal{X}}p(x) \log \frac{p(x)}{q(x)} = E_p \log \frac{p(X)}{q(X)}.
-  \]
+D(p||q) = \sum_{x \in \mathcal{X}}p(x) \log \frac{p(x)}{q(x)} = \E_p \left[\log \frac{p(X)}{q(X)}\right].
+  \]\\[-10pt]
 \end{definition}
-Las posibles indeterminaciones en la fórmula anterior se definen como: $0 \log \frac{0}{0} = 0$ y $p \log \frac{p}{0} = \infty$.
+Las posibles indeterminaciones en la fórmula anterior se definen como: $0 \log \frac{0}{0} = 0$ y $p \log \frac{p}{0} = \infty$.\\
 
 \begin{lemma}\label{l:ent_rel_pos}
   Para dos funciones masa de probabilidad $p(x)$ y $q(x)$ se tiene \[
@@ -768,23 +744,23 @@ Las posibles indeterminaciones en la fórmula anterior se definen como: $0 \log 
   con igualdad si, y solo si, $p(x) = q(x) \quad \forall x \in \mathcal{X}$.
 \end{lemma}
 \begin{proof}
-  Usando la definición de entropía relativa, se obtiene el resultado aplicando el Lema \ref{l:gibbs}.
+  Usando la definición de entropía relativa, se obtiene el resultado aplicando el Lema \ref{l:gibbs}.\\
 \end{proof}
 
-La entropía relativa no es realmente una distancia, ya que no es simétrica ni verifica la desigualdad triangular. Sin embargo, a veces es útil pensar en ella como una medida de distancia entre distribuciones.
+La entropía relativa no es realmente una distancia, ya que no es simétrica ni verifica la desigualdad triangular. Sin embargo, a veces es útil pensar en ella como una medida de distancia entre distribuciones.\\
 
 \begin{example}
-  Sea $\mathcal{X} = \{0,1\}$ y consideramos dos distribuciones $p$ y $q$ en $\mathcal{X}$. Tomamos $p(0) = 1-r$, $p(1) = r$ y $q(0) = 1-s,\ q(1) = s$.
+  Sea $\mathcal{X} = \{0,1\}$ y consideramos dos distribuciones $p$ y $q$ en $\mathcal{X}$. Tomamos $p(0) = 1-r$, $p(1) = r$ y $q(0) = 1-s,\ q(1) = s$, con $r,s \in [0,1]$.
   \begin{align*}
-    D(p \Vert q) &= \sum_{x \in \mathcal{X}} p(x) \log \frac{p(x)}{q(x)} = (1 - r) \log \frac{1-r}{1-s} + r \log \frac{r}{s}.\\
+    D(p \Vert q) &= \sum_{x \in \mathcal{X}} p(x) \log \frac{p(x)}{q(x)} = (1 - r) \log \frac{1-r}{1-s} + r \log \frac{r}{s}.\\[5pt]
     D(q \Vert p) &= \sum_{x \in \mathcal{X}}q(x) \log \frac{q(x)}{p(x)} = (1-s) \log \frac{1-s}{1-r} + s \log \frac{s}{r}.
   \end{align*}
 
   Si tuviéramos $r=s$, entonces $D(p \Vert q) = 0 = D(q \Vert p)$.
   Tomando $r = \frac{1}{2}$ y $s = \frac{1}{4}$ comprobaremos que no se da la simetría de la entropía relativa.
   \begin{align*}
-    D(p \Vert q) &= \frac{1}{2} \log \frac{1/2}{3/4} + \frac{1}{2} \log \frac{1/2}{1/4} = 1 - \frac{1}{2} \log 6 + \frac{1}{2} = 1 - \frac{1}{2} \log 3 = 0.2075 \text{ bits}.\\
-    D(q \Vert p) &= \frac{3}{4} \log \frac{3/4}{1/2} + \frac{1}{4} \log \frac{1/4}{1/2} = \frac{3}{4} \log 6 - \frac{3}{2} - \frac{1}{4} = -1 + \frac{3}{4} \log 3 = 0.1887 \text{ bits}. % \frac{2}{4} - \frac{3}{2} + \frac{3}{4} \log 3 =
+    D(p \Vert q) &= \frac{1}{2} \log \frac{1/2}{3/4} + \frac{1}{2} \log \frac{1/2}{1/4} = 1 - \frac{1}{2} \log 6 + \frac{1}{2} = 1 - \frac{1}{2} \log 3\\ &= 0.2075 \text{ bits}.\\[5pt]
+    D(q \Vert p) &= \frac{3}{4} \log \frac{3/4}{1/2} + \frac{1}{4} \log \frac{1/4}{1/2} = \frac{3}{4} \log 6 - \frac{3}{2} - \frac{1}{4} = -1 + \frac{3}{4} \log 3\\ &= 0.1887 \text{ bits}. % \frac{2}{4} - \frac{3}{2} + \frac{3}{4} \log 3 =
   \end{align*}
 Luego, $D(p\Vert q) \ne D(q \Vert p)$.\\
 \end{example}
@@ -809,14 +785,12 @@ donde $\left\Vert\mathcal{X}\right\Vert$ representa al cardinal de $\mathcal{X}$
     \]
 \end{proof}
 
-%\subsubsection{Información mutua}
-
 La información mutua es una medida de la dependencia entre dos variables aleatorias. Mide la cantidad de información que tenemos sobre una de ellas si hemos observado la otra. Se define como sigue.
 
 \begin{definition}[Información mutua]\label{def:im_disc}
   Dadas dos variables aleatorias $X$ e $Y$ discretas con función masa de probabilidad conjunta $p(x,y)$ y funciones masa de probabilidad marginales $p(x)$ y $p(y)$. La información mutua, representada por $I(X;Y)$, es la entropía relativa entre la distribución conjunta y la distribución producto $p(x)p(y)$.
   \begin{align*}
-  I(X;Y) &= D \left ( p(x,y) \Vert p(x)p(y) \right ) = \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(x,y) \log \frac{p(x,y)}{p(x)p(y)}\\ &= E_{p(x,y)} \log \frac{p(X,Y)}{p(X)p(Y)}.\\
+  I(X;Y) &= D \left ( p(x,y) \Vert p(x)p(y) \right ) = \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(x,y) \log \frac{p(x,y)}{p(x)p(y)}\\ &= \E_{p(x,y)} \left [ \log \frac{p(X,Y)}{p(X)p(Y)}\right].\\
   \end{align*}
 \end{definition}
 
@@ -835,81 +809,79 @@ Notamos que la información mutua, al estar definida como una entropía relativa
 \begin{proof}
    
   \begin{align*}
-    \text{a) }I(X;Y) &= \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}}p(x,y) \log \frac{p(x,y)}{p(x)p(y)} = \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(y) p(x|y) \log \frac{p(y)p(x|y)}{p(x)p(y)}\\
+    \text{a) }I(X;Y) &= \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}}p(x,y) \log \frac{p(x,y)}{p(x)p(y)}\\[3pt] &= \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(y) p(x|y) \log \frac{p(y)p(x|y)}{p(x)p(y)}\\
     &= \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(x,y) \log p(x|y) - \sum_{x \in \mathcal{X}}\underbrace{\left ( \sum_{y \in \mathcal{Y}} p(y) p(x|y) \right)}_{p(x)} \log p(x)\\
     &= - H(X|Y) + H(X).
   \end{align*}
+  
   b) Se obtiene de forma análoga.\\
+  
   c) Se prueba aplicando la regla de la cadena sobre $H(X|Y)$, $I(X;Y) = H(X) - H(X|Y) = H(X) + H(Y) - H(X,Y)$.\\
+  
   d) Se prueba usando el apartado c).\\
-  e) $I(X;X) = H(X) - H(X|X) = H(X)$.
+  
+  e) $I(X;X) = H(X) - H(X|X) = H(X)$.\\
+  
 \end{proof}
 
 \begin{example}
   Para las distribuciones consideradas en el Ejemplo \ref{e:dist_conj}, calculamos la información mutua:
   \begin{align*}
-    I(X;Y) =& \frac{1}{8} \log \frac{1/8}{1/2 \cdot 1/4} + \frac{1}{16} \log \frac{1/16}{1/4 \cdot 1/4} + \frac{2}{32} \log \frac{1/32}{1/8 \cdot 1/4} + \frac{1}{16} \log \frac{1/16}{1/2 \cdot 1/4}\\
-    +& \frac{1}{8} \log \frac{1/8}{1/4 \cdot 1/4} + \frac{2}{32} \log \frac{1/32}{1/8 \cdot 1/4} + \frac{1}{16} \log \frac{1/16}{1/2 \cdot 1/4} + \frac{1}{16} \log \frac{1/16}{1/4 \cdot 1/4}\\
-    +& \frac{2}{16} \log \frac{1/16}{1/8 \cdot 1/4} + \frac{1}{4} \log \frac{1/4}{1/2 \cdot 1/4} = \frac{2}{16} \log \frac{1}{2} + \frac{1}{2} \log 2 = \frac{3}{8} \text{ bits}.
+    I(X;Y) =\ & \frac{1}{8} \log \frac{1/8}{1/2 \cdot 1/4} + \frac{1}{16} \log \frac{1/16}{1/4 \cdot 1/4} + \frac{2}{32} \log \frac{1/32}{1/8 \cdot 1/4}\\[3pt] +& \frac{1}{16} \log \frac{1/16}{1/2 \cdot 1/4} + \frac{1}{8} \log \frac{1/8}{1/4 \cdot 1/4} + \frac{2}{32} \log \frac{1/32}{1/8 \cdot 1/4}\\[3pt] +& \frac{1}{16} \log \frac{1/16}{1/2 \cdot 1/4} + \frac{1}{16} \log \frac{1/16}{1/4 \cdot 1/4} + \frac{2}{16} \log \frac{1/16}{1/8 \cdot 1/4}\\[3pt] +& \frac{1}{4} \log \frac{1/4}{1/2 \cdot 1/4} = \frac{2}{16} \log \frac{1}{2} + \frac{1}{2} \log 2 = \frac{3}{8} \text{ bits}.
   \end{align*}
 
   Vemos que se cumplen las propiedades del Teorema \ref{t:ent_im}:
   \begin{align*}
     H(X) -H(X|Y) &= \frac{7}{4} - \frac{11}{8} = \frac{3}{8} \text{ bits} = I(X;Y).\\
     H(Y) -H(Y|X) &= 2 - \frac{13}{8} = \frac{3}{8} \text{ bits} = I(X;Y).\\
-    H(X) + H(Y) - H(X,Y) &= \frac{7}{4} + 2 - \frac{27}{8} = \frac{3}{8} \text{ bits} = I(X;Y).
+    H(X) + H(Y) - H(X,Y) &= \frac{7}{4} + 2 - \frac{27}{8} = \frac{3}{8} \text{ bits} = I(X;Y).\\
   \end{align*}
-  
 \end{example}
 
 \begin{theorem}\label{t:im_indd}
-  Sean $X$, $Y$ variables aleatorias discretas con alfabeto $\mathcal{X}, \mathcal{Y}$ respectivamente. Entonces se verifica que $I(X;Y)\ge 0$, dádonse la igualdad si, y solo si, $X,Y$ son independientes.
+  Sean $X$, $Y$ variables aleatorias discretas con alfabeto $\mathcal{X}, \mathcal{Y}$ respectivamente. Entonces se verifica que $I(X;Y)\ge 0$, dándose la igualdad si, y solo si, $X,Y$ son independientes.
 \end{theorem}
 \begin{proof}
-%  Supongamos que $I(X;Y)=0$, entonces, por el apartado c) del Teorema \ref{t:ent_im}, tenemos que $0 = H(X)+H(Y)-H(X,Y)$, esto es, $H(X,Y) =H(X)+H(Y)$, en el Lema \ref{l:prop_ent_conj} probamos que esto ocurre si, y solo si, $X,Y$ son independientes.
-
-El apartado c) del Teorema \ref{t:ent_im} nos dice que $I(X;Y) = H(X)+H(Y)-H(X,Y)$, usando el Lema \ref{l:prop_ent_conj}.2 tendremos que $I(X;Y)\ge 0$, dándose la igualdad si, y solo si, $X,Y$ son independientes.
+El apartado c) del Teorema \ref{t:ent_im} nos dice que $I(X;Y) = H(X)+H(Y)-H(X,Y)$, usando el Lema \ref{l:prop_ent_conj}.2 tendremos que $I(X;Y)\ge 0$, dándose la igualdad si, y solo si, $X,Y$ son independientes.\\
 \end{proof}
 %-----------------------------------------------------------------------
 %----------------------- CASO CONTINUO ---------------------------------
 \subsection{Caso continuo}
-Hasta ahora las definiciones dadas eran para variables aleatorias discretas, que solo tomaban un conjunto finito de valores. Podemos extender las definiciones estudiadas al caso continuo, para aplicarlas en variables aleatorias continuas. Trabajaremos en este apartado con una variable aleatoria $X$ absolutamente continua con función de distribución $F$, función de densidad $f$ y conjunto soporte $sop(X)$.
-%Trabajaremos en este caso con una variable aleatoria $X$ con función de distribución $F(x) = Pr[X \leq x]$, si $F$ es continua, la variable aleatoria se dice continua. Sea $f(x) = F'(x)$, cuando la derivada esté definida. Si $\int_{-\infty}^{\infty}f(x)=1,\ f(x)$ se llama la función de densidad de $X$. El conjunto donde $f(x) > 0$ es el soporte de $X$.
+Hasta ahora las definiciones dadas eran para variables aleatorias discretas, que solo tomaban un conjunto finito de valores. Podemos extender las definiciones estudiadas al caso continuo, para aplicarlas en variables aleatorias continuas. Trabajaremos en este apartado con una variable aleatoria $X$ absolutamente continua con función de distribución $F$, función de densidad $f$ y conjunto soporte $sop(X)$.\\
 
-Las definiciones a continuación incluyen integrales, por lo que entenderemos en la redacción que todas ellas existen para no alargar la redacción.\\
+Las definiciones a continuación incluyen integrales, por lo que entenderemos que todas ellas existen para no alargar la redacción.\\
 
-%deberíamos añadirles un \textit{si existe} a todas ellas. Se pueden construir ejemplos de variables aleatorias cuya función de densidad no exista, o para la que no exista la integral a calcular.
-
-La entropía en el caso continuo pasa a llamarse entropía diferencial y podemos definirla como sigue.
+La entropía en el caso continuo pasa a llamarse entropía diferencial y podemos definirla como sigue.\\
 
 \begin{definition}[Entropía diferencial]
   La entropía diferencial $h(X)$ de una variable aleatoria continua $X$ viene dada por \[
-h(X) = - \int_{sop(X)}\log \left(f(x)\right) f(x) dx.\\
-\]
+h(X) = - \int_{sop(X)}\log \left(f(x)\right) f(x) dx.
+\]\\[-10pt]
 \end{definition}
+
 Como en el caso discreto, la entropía diferencial solo depende de la probabilidad de la variable aleatoria, no de los valores que toma. Notamos que en la definición anterior la variable aleatoria $X$ podría ser, o bien, unidimensional, o bien, multidimensional.\\
 
 \begin{example}\label{ej:uni} Consideramos una variable aleatoria $X$ absolutamente continua con una distribución uniforme sobre $[0,a]$. En este intervalo su densidad es $f(x) = \frac{1}{a}$ para $x\in[0,a]$ y para el resto de puntos es nula. La entropía es \[
 h(X) = - \int_0^a\log\left(\frac{1}{a}\right)\frac{1}{a}dx = \log a.
-  \]
+  \]\\[-5pt]
 Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo puede ser negativa, no como en el caso discreto.\\
 \end{example}
 
 \begin{example}\label{ej:norm_uni}
-  Consideramos una variable aleatoria $X$ con distribución normal univariante de media $\mu$ y varianza $\sigma^2$, su función de densidad es $f(x) = \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}$, queremos calcular su entropía.
+  Consideramos una variable aleatoria $X$ con distribución normal univariante de media $\mu$ y varianza $\sigma^2$, su función de densidad es\[ f(x) = \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}},\] queremos calcular su entropía.
   \begin{align*}
-    h(X) &= - \int_{\mathbb{R}} \log \left(f(x)\right) f(x)  dx = - \int_{\mathbb{R}}  \log \left ( \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \right ) \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}dx\\
-    &= -  \frac{1}{\sigma \sqrt{2\pi}} \int_{\mathbb{R}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \left [ \log \left ( e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \right ) - \log \left(\sigma \sqrt{2\pi}\right ) \right ] dx\\
-    &= -  \frac{1}{\sigma \sqrt{2\pi}}\left [ \int_{\mathbb{R}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \left ( -\frac{(x-\mu)^2}{2\sigma ^2} \right )dx - \int_{\mathbb{R}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \log \left ( \sigma \sqrt{2\pi}\right ) dx \right ].\\
+    h(X) &= - \int_{\mathbb{R}} \log \left(f(x)\right) f(x)  dx\\ &= - \int_{\mathbb{R}}  \log \left ( \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \right ) \frac{1}{\sigma \sqrt{2\pi}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}dx\\[5pt]
+    &= -  \frac{1}{\sigma \sqrt{2\pi}} \int_{\mathbb{R}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \left [ \log \left ( e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \right ) - \log \left(\sigma \sqrt{2\pi}\right ) \right ] dx\\[5pt]
+    &= -  \frac{1}{\sigma \sqrt{2\pi}}\left [ \int_{\mathbb{R}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}\! \left ( -\frac{(x-\mu)^2}{2\sigma ^2} \right )\!dx -\!\!\int_{\mathbb{R}} e ^{-\frac{(x-\mu)^2}{2\sigma ^2}} \log \left ( \sigma \sqrt{2\pi}\right ) dx \right]\!.\\[-5pt]
   \end{align*}
 
   Ahora, utilizando la ley del estadístico inconsciente (que recordamos en la Proposición \ref{p:prop_esp}), tenemos,
   \begingroup
 \allowdisplaybreaks
   \begin{align*}
-    h(X) &= \frac{\mathbb{E}\left [ (X-\mu) ^2\right ] }{2\sigma^2} + \log\left( \sigma\sqrt{2\pi} \right )\underbrace{\int_{\mathbb{R}} \frac{1}{\sigma\sqrt{2\pi}}e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}dx}_{1}\\
-    &= \frac{\sigma^2}{2\sigma^2} + \log \sqrt{\sigma^2 2 \pi} = \frac{1}{2} + \frac{1}{2}\log\left(  \sigma^2 2 \pi\right)\\
-    &= \frac{1}{2} \log e + \frac{1}{2} \log\left( \sigma^2 2 \pi\right)\\ &= \frac{1}{2}\log\left({2\pi e\sigma^2} \right) \text{ (nats).}\\
+    h(X) &= \frac{\mathbb{E}\left [ (X-\mu) ^2\right ] }{2\sigma^2} + \log\left( \sigma\sqrt{2\pi} \right )\underbrace{\int_{\mathbb{R}} \frac{1}{\sigma\sqrt{2\pi}}e ^{-\frac{(x-\mu)^2}{2\sigma ^2}}dx}_{1}\\[3pt]
+    &= \frac{\sigma^2}{2\sigma^2} + \log \sqrt{\sigma^2 2 \pi} = \frac{1}{2} + \frac{1}{2}\log\left(  \sigma^2 2 \pi\right)\\[3pt]
+    &= \frac{1}{2} \log e + \frac{1}{2} \log\left( \sigma^2 2 \pi\right)\\ &= \frac{1}{2}\log\left({2\pi e\sigma^2} \right) \text{ nats.}\\
   \end{align*}
   \endgroup
   
@@ -917,44 +889,42 @@ Notamos que si $a<1, \log a < 0$, esto es, la entropía en el caso continuo pued
 
 
 \begin{example}\label{ej:norm_multi}
-  Tomamos una variable aleatoria multidimensional $X = (X_1,\cdots,X_n)$ con distribución normal multivariante de vector de medias $\mu$ y matriz de covarianzas $\Sigma$. Su función de densidad es \[f(x) = \frac{1}{\left (\sqrt{2\pi}\right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)}.\]
+  Tomamos una variable aleatoria multidimensional $X = (X_1,\dots,X_n)$ con distribución normal multivariante de vector de medias $\mu$ y matriz de covarianzas $\Sigma$. Su función de densidad es \[f(x) = \frac{1}{\left (\sqrt{2\pi}\right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)}.\]
     
     Comenzamos los cálculos de la entropía,
   \begin{align*}
     h(X) &= - \int_{\mathbb{R}^n} \log\left( f(x)\right)f(x) dx \\
-    &= - \int_{\mathbb{R}^n} \log \left ( \frac{1}{\left ( \sqrt{2\pi} \right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)} \right )f(x) dx\\
-    &= - \int_{\mathbb{R}^n}\left (- \frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu) - \log\left [ \left (\sqrt{2\pi} \right )^n |\Sigma|^{\frac{1}{2}} \right ]  \right ) f(x) dx\\
-    &= \frac{1}{2} \mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ] + \frac{1}{2}\log\left [(2\pi)^n|\Sigma|\right ].\\
+    &= - \int_{\mathbb{R}^n} \log \left ( \frac{1}{\left ( \sqrt{2\pi} \right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)} \right )f(x) dx\\[3pt]
+    &= - \int_{\mathbb{R}^n}\left (- \frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu) - \log\left [ \left (\sqrt{2\pi} \right )^n |\Sigma|^{\frac{1}{2}} \right ]  \right ) f(x) dx\\[3pt]
+    &= \frac{1}{2} \mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(X-\mu) \right ] + \frac{1}{2}\log\left [(2\pi)^n|\Sigma|\right ].\\[-5pt]
   \end{align*}
 
-  Continuamos desarrollando la expresión $\mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ]$,
-
+  Continuamos desarrollando la expresión $\mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(X-\mu) \right ]$,
   \begin{align*}
-    \mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(x-\mu) \right ] &= \mathbb{E}\left [ \sum_{i,j}(X_i - \mu)(\Sigma^{-1})_{ij}(X_j-\mu)\right ]\\
+    \mathbb{E}\left [ (X-\mu)^T\Sigma^{-1}(X-\mu) \right ] &= \mathbb{E}\left [ \sum_{i,j}(X_i - \mu)(\Sigma^{-1})_{ij}(X_j-\mu)\right ]\\
     &= \mathbb{E}\left[ \sum_{i,j}(X_j-\mu)(X_i-\mu)(\Sigma^{-1})_{ij}\right]\\
     &= \sum_{i,j}\underbrace{\mathbb{E}\left[ \sum_{i,j}(X_j-\mu)(X_i-\mu)\right]}_{Cov(X_j,X_i)}(\Sigma^{-1})_{ij}\\
-    &= \sum_j\sum_i(\Sigma)_{ji}(\Sigma^{-1})_{ij} = \sum_j (\Sigma\Sigma^{-1})_{jj}\\ &= \sum_j (I_n)_{jj} = n.
+    &= \sum_j\sum_i(\Sigma)_{ji}(\Sigma^{-1})_{ij} = \sum_j (\Sigma\Sigma^{-1})_{jj}\\ &= \sum_j (I_n)_{jj} = n.\\[-7pt]
   \end{align*}
 
   Sustituyendo este valor en la expresión de la entropía, obtenemos,
-
   \begin{align*}
-    h(X) &= \frac{n}{2} + \frac{1}{2}\log\left [ (2\pi)^n|\Sigma|\right ] = \frac{1}{2} \left (\log e^n + \log \left[(2\pi)^n|\Sigma|\right] \right)\\
-    &= \frac{1}{2}\log\left[(2\pi e)^n|\Sigma|\right] \text{ (nats).}\\
+    h(X) &= \frac{n}{2} + \frac{1}{2}\log\left [ (2\pi)^n|\Sigma|\right ] = \frac{1}{2} \left (\log e^n + \log \left[(2\pi)^n|\Sigma|\right] \right)\\[3pt]
+    &= \frac{1}{2}\log\left[(2\pi e)^n|\Sigma|\right] \text{ nats.}\\
   \end{align*}
 
   
 \end{example}
 
 \begin{theorem}\label{t:mmlog}
-  Sean $X_1,\cdots, X_n$ una serie de variables aleatorias independientes e idénticamente distribuidas con función de densidad $f_X(x)$. Si notamos por $f(x_1,\dots,x_n)$ a la función de densidad conjunta, entonces\[
--\frac{1}{n}\log f(X_1,\cdots, X_n) \xrightarrow[]{P} \mathbb{E}\left [ - \log f_X(X) \right ] = h(X).
+  Sean $X_1,\dots, X_n$ una serie de variables aleatorias independientes e idénticamente distribuidas con función de densidad $f_X(x)$. Si notamos por $f(x_1,\dots,x_n)$ a la función de densidad conjunta, entonces\[
+-\frac{1}{n}\log f(X_1,\dots, X_n) \xrightarrow[]{P} \mathbb{E}\left [ - \log f_X(X) \right ] = h(X).
   \]
 \end{theorem}
 
 \begin{proof}
   Como las variables son independientes, se verifica\[
--\frac{1}{n}\log f(X_1,\cdots, X_n) = - \frac{1}{n} \sum_{i=1}^n \log f_X(X_i),
+-\frac{1}{n}\log f(X_1,\dots, X_n) = - \frac{1}{n} \sum_{i=1}^n \log f_X(X_i),
 \]
 por el Teorema \ref{t:lgn} tenemos que la expresión anterior converge en probabilidad a $\mathbb{E}\left [ - \log f_X(X) \right ] = h(X)$.\\
 \end{proof}
@@ -972,21 +942,22 @@ siempre que las entropías diferenciales sean finitas.\\
 
 \begin{definition}[Entropía relativa]
   La entropía relativa (o ``distancia'' de Kullback-Leibler) $D(f||g)$ entre dos densidades $f$ y $g$ se define como \[
-D(f||g) = \int_{\mathbb{R}^n} \log\left( \frac{f(x)}{g(x)}\right)f(x) dx.\\
-  \]
+D(f||g) = \int_{\mathbb{R}^n} \log\left( \frac{f(x)}{g(x)}\right)f(x) dx.
+  \]\\[-15pt]
 \end{definition}
 
 Notamos que $D(f||g)$ es finita si, y solo si, el conjunto soporte de $f$ está contenido en el conjunto soporte de $g$. 
 Al igual que en el caso discreto y motivados por la continuidad consideraremos $0\log\frac{0}{0} = 0$.\\
 
 \begin{definition}[Información mutua]\label{def:im_cont}
-  La información mutua, $I(X;Y)$ entre dos variables aleatorias con función de densidad conjunta $f(x,y)$ y marginales $f(x)$ y $f(y)$ respectivamente, viene dada por\[
+  La información mutua, $I(X;Y)$, entre dos variables aleatorias con función de densidad conjunta $f(x,y)$ y marginales $f(x)$ y $f(y)$ respectivamente, viene dada por
+  \[
 I(X;Y) = \int \int \log \left(\frac{f(x,y)}{f(x)f(y)}\right)f(x,y) dxdy = D(f(x,y)||f(x)f(y)).
-  \]
+  \]\\[-15pt]
 \end{definition}
 
 \begin{lemma}\label{l:ent_im}
-  Siguiedo la notación anterior, la información mutua de dos variables aleatorias $X$, $Y$ verifica:\[
+  Siguiendo la notación anterior, la información mutua de dos variables aleatorias $X$, $Y$ verifica:\[
   I(X;Y) = h(X) + h(Y) - h(X,Y).
   \]
 \end{lemma}
@@ -995,11 +966,13 @@ I(X;Y) = \int \int \log \left(\frac{f(x,y)}{f(x)f(y)}\right)f(x,y) dxdy = D(f(x,
   Supongamos que las funciones de densidad marginales de $X$ e $Y$ son $f(x)$, $f(y)$, respectivamente, y la conjunta es $f(x,y)$.
 
   \begin{align*}
-    I(X;Y) &= \int \int  \log \left(\frac{f(x,y)}{f(x)f(y)}\right)f(x,y)dxdy \\
-    &= \int \int  \log \left(f(x,y)\right)f(x,y)dxdy - \int \int  \log \left(f(x)f(y)\right) f(x,y)dxdy\\
-    &= -h(X,Y)-\int\int \log \left(f(x)\right)f(x,y)  dy dx - \int \int \log \left(f(y)\right)f(x,y)dxdy\\
-    &= -\int  \log f(x)f(x)dx - \int \log f(y) f(y)dy -h(X,Y)\\
-    &= h(X) + h(Y) - h(X,Y).\\
+    I(X;Y) =& \int \int  \log \left(\frac{f(x,y)}{f(x)f(y)}\right)f(x,y)dxdy \\[3pt]
+    =& \int \int  \log \left(f(x,y)\right)f(x,y)dxdy\\
+    &- \int \int  \log \left(f(x)f(y)\right) f(x,y)dxdy\\[3pt]
+    =& -h(X,Y)-\int\int \log \left(f(x)\right)f(x,y)  dy dx\\
+    &- \int \int \log \left(f(y)\right)f(x,y)dxdy\\[3pt]
+    =& -\int  \log f(x)f(x)dx - \int \log f(y) f(y)dy -h(X,Y)\\[3pt]
+    =& h(X) + h(Y) - h(X,Y).\\[-10pt]
   \end{align*}
 
 En la cadena de igualdades anterior hemos utilizado las propiedades de los logaritmos y el Teorema de Fubini.\\
@@ -1013,24 +986,25 @@ I(X;Y) = h(X) - h(X|Y) = h(Y) - h(Y|X).
 
 \begin{proof}
   Sean $f(x)$, $f(y)$ las funciones de densidad de $X$ e $Y$ respectivamente y $f(x,y)$ la función de densidad conjunta.
-  Como en el Lema anterior, partiremos de la definición de información mutua y utlizaremos propiedades del logaritmo, el teorema de Fubini y la definición de función de densidad condicionada.
+  Como en el lema anterior, partiremos de la definición de información mutua y utilizaremos propiedades del logaritmo, el teorema de Fubini y la definición de función de densidad condicionada.
+  
   \begin{align*}
-    I(X;Y)&= \int \int  \log\left( \frac{f(x,y)}{f(x)f(y)}\right)f(x,y)dxdy \\
-    &= - \int\int \log \left(f(x)\right)f(x,y)  dx dy + \int\int\log \left(\frac{f(x,y)}{f(y)}\right)  f(x,y)dx dy\\
-    &= - \int  \log \left(f(x)\right)f(x) dx + \int\int \log \left(f(x|y)\right)f(x,y) dx dy\\  
-    &= h(X) - h(X|Y).
+    I(X;Y)=& \int \int  \log\left( \frac{f(x,y)}{f(x)f(y)}\right)f(x,y)dxdy \\[3pt]
+    =& - \int\int \log \left(f(x)\right)f(x,y)  dx dy\\ &+ \int\int\log \left(\frac{f(x,y)}{f(y)}\right)  f(x,y)dx dy\\[3pt]
+    =& - \int  \log \left(f(x)\right)f(x) dx + \int\int \log \left(f(x|y)\right)f(x,y) dx dy\\  
+    =& h(X) - h(X|Y).
   \end{align*}
-De manera análoga se obtiene la segunda igualdad.
+De manera análoga se obtiene la segunda igualdad.\\
 \end{proof}
 
 \begin{definition}[Variable aleatoria cuantificada]
-  Sea $X$ una variable aleatoria con función de densidad $f$. Si dividimos la imagen de $X$ en intervalos de longitud $\epsilon$ y asumimos que la densidad es continua en cada intervalo, el teorema del valor medio nos dice que, para cada intervalo $\left[i\epsilon, (i+1)\epsilon\right]$ existe un valor $x_i\in \left[i\epsilon, (i+1)\epsilon\right]$ tal que $f(x_i)\epsilon = \int_{i\epsilon}^{(i+1)\epsilon}f(x)dx$.\\
+  Sea $X$ una variable aleatoria con función de densidad $f$. Si dividimos la imagen de $X$ en intervalos de longitud $\epsilon$ y asumimos que la densidad es continua en cada intervalo, el teorema del valor medio nos dice que, para cada intervalo $\left[i\epsilon, (i+1)\epsilon\right]$ existe un valor $x_i\in \left[i\epsilon, (i+1)\epsilon\right]$ tal que \[f(x_i)\epsilon = \int_{i\epsilon}^{(i+1)\epsilon}f(x)dx.\]
   
   La variable aleatoria cuantificada, $X^{\epsilon}$, se define de la siguiente forma\[
 X^{\epsilon} = x_i, \quad \text{ si } i\epsilon \leq X  < (i+1)\epsilon.
 \]Su función masa de probabilidad viene dada por \[
-P[X^\epsilon = x_i] = p_i =  \int_{i\epsilon}^{(i+1)\epsilon}f(x)dx = f(x_i)\epsilon.\\
-\]
+P[X^\epsilon = x_i] = p_i =  \int_{i\epsilon}^{(i+1)\epsilon}f(x)dx = f(x_i)\epsilon.
+\]\\[-10pt]
 \end{definition}
 
 \begin{theorem}
@@ -1050,7 +1024,7 @@ H(X^{\varepsilon}) + \log \epsilon \xrightarrow[]{\epsilon \to 0}  h(X).\\
 
   Por tanto,\[
 H(X^{\varepsilon}) + \log \epsilon \xrightarrow[]{\epsilon \to 0}  h(X).
-  \] 
+  \] \\[-10pt]
 \end{proof}
 
 Teniendo en cuenta el resultado anterior podemos aproximar la información mutua de dos variables aleatorias por la de sus variables cuantificadas.
@@ -1061,7 +1035,7 @@ Teniendo en cuenta el resultado anterior podemos aproximar la información mutua
 De forma más general, podemos definir la información mutua en términos de particiones finitas de la imagen de la variable aleatoria. Sea $\mathcal{X}$ la imagen de la variable aleatoria $X$. Una partición $\mathcal{P}$ de $\mathcal{X}$ es una colección finita de conjuntos disjuntos $P_i$ de forma que $\cup_i P_i = \mathcal{X}$. La cuantificación de $X$ dada la partición $\mathcal{P}$, que notaremos $[X]_{\mathcal{P}}$, es la variable aleatoria discreta con función masa de probabilidad\[
 P\left[[X]_{\mathcal{P}} = i\right ] = P [X\in P_i] = \int_{P_i}dF(x).
 \]
-Utilizando esto para dos variables aleatorias con sendas particiones, podremos calcular la información mutua de las variables cuantificadas utilizando \ref{eq:imq}. De esta forma, obtenemos una nueva definición de la información mutua.\\
+Utilizando esto para dos variables aleatorias con sendas particiones, podremos calcular la información mutua de las variables cuantificadas utilizando (\ref{eq:imq}). De esta forma, obtenemos una nueva definición de la información mutua.\\
 
 \begin{definition}[Información mutua]
   La información mutua de dos variables aleatorias $X$ e $Y$ viene dada por \[
@@ -1070,22 +1044,18 @@ I(X;Y) = \sup_{\mathcal{P},\mathcal{Q}}I\left ( [X]_{\mathcal{P}}, [Y]_{\mathcal
 \end{definition}
 Notamos que esta definición también será válida cuando las variables aleatorias no tengan definida su función de densidad. Esta definición es equivalente a la Definición \ref{def:im_disc} para variables aleatorias discretas y a la Definición \ref{def:im_cont} para variables aleatorias continuas.\\
 
-%REVIEW
-%---Lo que viene a continuación no lo tengo del todo claro---
-%De la misma forma, podemos obtener otra definición de la entropía relativa. Considerando para una función de densidad, $f$, su cuantificación dada por una partición, $\mathcal{Q}$, de manera análoga a como lo hicimos para una variable aleatoria. Particionamos el dominio de $f$ 
-
 \begin{theorem}Si $f$ y $g$ son dos funciones de densidad, entonces\[
 D\left ( f || g \right ) \ge 0
 \]
 con igualdad si, y solo si, $f = g$ en casi todo punto.
 \end{theorem}
 \begin{proof}
-Sea $S$ el soporte de $f$, entonces 
+Sea $sop(f)$ el soporte de $f$, entonces 
 \begin{align*}
-  - D\left ( f || g \right ) &= \int_S \log \left(\frac{f(x)}{g(x)}\right ) f(x) dx  \leq \log \left( \int_S f(x)\cdot \frac{g(x)}{f(x)}dx \right)\\
-  &= \log \left ( \int_Sg(x)dx\right) \leq 1 = 0.
+  - D\left ( f || g \right ) &= \int_{sop(f)} \log \left(\frac{g(x)}{f(x)}\right ) f(x) dx  \leq \log \left( \int_{sop(f)} f(x)\cdot \frac{g(x)}{f(x)}dx \right)\\
+  &= \log \left ( \int_{sop(f)}g(x)dx\right) \leq 1 = 0.
 \end{align*}
-La primera desiguadad es la desigualdad de Jensen, Teorema \ref{th:jensen} aplicada al $\log$ que es una función cóncava, la segunda desigualdad será igualdad si, y solo si, $f = g$ en casi todo punto.
+La primera desigualdad es la desigualdad de Jensen, Teorema \ref{th:jensen}, aplicada a $\log$, una función cóncava que no es afín. Por ello, será igualdad si, y solo si, $\log \frac{g}{f} = 0$ para casi todo punto, esto es, $f=g$ en casi todo punto, la misma condición para que la segunda desigualdad sea igualdad.\\
 \end{proof}
 
 \begin{corollary}\label{c:im_indc}
@@ -1098,7 +1068,7 @@ $h(X|Y) \le 0$ con igualdad si, y solo si, $X$ e $Y$ son independientes.\\
 
 \begin{theorem}[Regla de la cadena para la entropía diferencial] Sean $X_1,\dots, X_n$ variables aleatorias, entonces
   \[
-h(X_1,\cdots,X_n) = \sum_{i=1}^n h(X_i|X_1,\cdots, X_{i-1}).
+h(X_1,\dots,X_n) = \sum_{i=1}^n h(X_i|X_1,\dots, X_{i-1}).
   \]
 \end{theorem}
 
@@ -1114,8 +1084,8 @@ h(X_1,\dots,X_n) &= h(X_n|X_1,\dots, X_{n-1}) + h(X_1,\dots, X_{n-1})\\ &= h(X_n
 \end{proof}
 
 \begin{corollary} Se tiene que
-  \[h(X_1,\cdots, X_n) \leq \sum_i h(X_i),\]
-  dándose la igualdad si, y solo si, $X_1,\cdots, X_n$ son independientes.
+  \[h(X_1,\dots, X_n) \leq \sum_i h(X_i),\]
+  dándose la igualdad si, y solo si, $X_1,\dots, X_n$ son independientes.\\
 \end{corollary}
 % EN la prueba se podría usar el leman 2.21 para ver que h(X) >= h(X|Y)
 
@@ -1145,10 +1115,10 @@ h(aX) = h(X) + \log |a|.
 \begin{proof}
   Llamemos $Y = aX$, entonces $f_Y(y) = \frac{1}{|a|}f_X\left (\frac{y}{a} \right )$. Usaremos la definición de entropía, la función de densidad recién calculada y un cambio de variables ($x = \frac{y}{a}$):
   \begin{align*}
-    h(aX) &= h(Y) = -\int \log \left(f_Y(y)\right) f_Y(y)dy\\
-    &=  -\int \log \left ( \frac{1}{|a|}f_X\left (\frac{y}{a} \right ) \right ) \frac{1}{|a|}f_X\left (\frac{y}{a} \right ) dy\\
-    &= -\int  \log \left ( \frac{1}{|a|}f_X\left (x \right ) \right )\frac{|a|}{|a|}f_X\left (x \right ) dx\\
-    &= -\int \log \left (f_X\left (x \right ) \right ) f_X\left (x \right ) dx + \int\log\left({|a|}\right) f_X(x)dx\\
+    h(aX) &= h(Y) = -\int \log \left(f_Y(y)\right) f_Y(y)dy\\[3pt]
+    &=  -\int \log \left ( \frac{1}{|a|}f_X\left (\frac{y}{a} \right ) \right ) \frac{1}{|a|}f_X\left (\frac{y}{a} \right ) dy\\[3pt]
+    &= -\int  \log \left ( \frac{1}{|a|}f_X\left (x \right ) \right )\frac{|a|}{|a|}f_X\left (x \right ) dx\\[3pt]
+    &= -\int \log \left (f_X\left (x \right ) \right ) f_X\left (x \right ) dx + \int\log\left({|a|}\right) f_X(x)dx\\[3pt]
     &= h(X) + \log{|a|}.
   \end{align*}
 \end{proof}
@@ -1156,22 +1126,15 @@ h(aX) = h(X) + \log |a|.
 \begin{corollary}
   Si $X$ es una variable aleatoria multidimensional y $A$ una matriz entonces,\[
 h(AX) = h(X) + \log|det(A)|.
-  \]
+  \]\\[-10pt]
 \end{corollary}
 
-%% Veremos que la distribución normal multivariante maximiza la entropía sobre todas las distribuciones con la misma covarianza.
-
-%% \begin{theorem}
-%%   Sea una variable aleatoria $X\in \mathbb{R}^n$ con media cero y covarianza $\Sigma = \mathbb{E}\left[XX^T\right ]$ (esto es, $\Sigma_{ij} = \mathbb{E}\left[X_iX_j\right ],\ 1\leq i,j \leq n$). Entonces \[
-%%   h(X) \leq \frac{1}{2}\log\left(2\pi e\right ) ^n |\Sigma |,\]
-%%   con igualdad si, y solo si, $X \sim \mathcal{N}(0,\Sigma)$.
-%% \end{theorem}
 
 \section{Estimación de la entropía y de la información mutua}
 
-Generalmente no conocemos las funciones de densidad de las variables aleatorias cuya entropía o información mutua queremos calcular, por ello, tratamos de aproximar este valor a partir de información que sí conocemos, como realizaciones muestrales de las variables. El objetivo es, para dos variables aleatorias $X,Y$ ($d$-dimensionales), estimar $h(X)$ o $I(X;Y)$ a partir de un conjunto de realizaciones muestrales, $\{z_i=(x_i,y_i) : i = 1,\cdots, N\}$, sin conocer las funciones de densidad $f_z, f_x$ y $f_y$, donde $Z = (X,Y)$ es la distribución conjunta de $X$ e $Y$. Asumiremos en el desarrollo a continuación que todas las funciones de densidad son propias, es decir, que no son idénticamente $-\infty$.\\
+Generalmente no conocemos las funciones de densidad de las variables aleatorias cuya entropía o información mutua queremos calcular, por ello, tratamos de aproximar este valor a partir de información que sí conocemos, como realizaciones muestrales de las variables. El objetivo es, para dos variables aleatorias $X,Y$ ($d$-dimensionales) y la variable aleatoria conjunta $Z = (X,Y)$, estimar $h(X)$ o $I(X;Y)$ a partir de un conjunto de realizaciones muestrales, $\{z_i=(x_i,y_i) : i = 1,\dots, N\}$, sin conocer las funciones de densidad $f_z, f_x$ y $f_y$.  Asumiremos en el desarrollo a continuación que todas las funciones de densidad son propias, es decir, que no son idénticamente $-\infty$.\\
 
-Presentaremos brevemente un estimador basado en particiones antes de estudiar estimadores basados en los $k$ vecinos más cercanos y del tipo de Kozachenko - Leonenko.
+Presentaremos brevemente un estimador basado en particiones antes de estudiar estimadores basados en los $k$ vecinos más cercanos y del tipo de Kozachenko - Leonenko.\\
 
 \subsection{Estimador basado en particiones}
 
@@ -1185,7 +1148,7 @@ Llamamos $n_x(i)$ al número de puntos en la i-ésima partición de $X$, análog
 Aproximamos \begin{align*}
   p_x(i) &\approx \frac{n_x(i)}{N},\\
   p_y(j) &\approx \frac{n_y(j)}{N},\\
-  p(i,j) &\approx \frac{n(i,j)}{N}.
+  p(i,j) &\approx \frac{n(i,j)}{N}.\\[-10pt]
   \end{align*}
 
 Cuando $N$ tienda a infinito y el tamaño de cada partición converja a cero, la estimación $I_{\textit{binned}}(X,Y) \to I(X;Y)$, véase el Teorema 1 de \cite{paninski}.\\
@@ -1198,63 +1161,60 @@ h(X) = - \int \log\left(f(x)\right)f(x)dx
 \]
 a partir de una muestra aleatoria simple $X_1,\dots,X_N \text{ de } X$.\\
 
-Teniendo en cuenta el Teorema \ref{t:mmlog}, si tenemos un estimador consistente de $\log f(X_i)$, que notaremos por $\widehat{\log f(X_i)}$, podemos estimar $h(X)$ mediante\[
--\frac{1}{N}\sum_{i=1}^N\widehat{\log f}(X_i).\\
-\]
+Teniendo en cuenta el Teorema \ref{t:mmlog}, si tenemos un estimador consistente de $\log f(X_i)$, que notaremos por $\widehat{\log f}(X_i)$, podemos estimar $h(X)$ mediante\[
+-\frac{1}{N}\sum_{i=1}^N\widehat{\log f}(X_i).
+\]\\[-10pt]
 
-Para obtener el estimador $\widehat{\log f(X)}$, partimos de los estimadores de la función de densidad $\hat{f}(X)$ basados en los $k$ vecinos más cercanos.\\
+Para obtener el estimador $\widehat{\log f}(X)$, partimos de los estimadores de la función de densidad $\hat{f}(X)$ basados en los $k$ vecinos más cercanos.\\
 
 Sea $X_1,\dots,X_N$ una muestra aleatoria simple y $x_1,\dots, x_N$ una observación de dicha muestra. Consideramos en $\mathbb{R}^d$, la métrica inducida por una norma $\Vert \cdot \Vert$ (euclídea, del máximo,...). Fijado $x_i\in \mathbb{R}^d$, ordenamos el resto de observaciones de la muestra en orden creciente de la distancia a este punto y llamamos $\epsilon_k(x_i)$ a la distancia de $x_i$ a su $k$ vecino más próximo, que notamos por $x_{i_k}$.\\
 
 Consideramos la bola de centro $x_i$ y radio $\epsilon_k(x_i)$,\[
-B(x_i, \epsilon_k(x_i)) = \{y \in \R^d: \Vert x_i - y\Vert \leq \epsilon_k(x_i)\}.\]
+B(x_i, \epsilon_k(x_i)) = \{y \in \R^d: \Vert x_i - y\Vert \leq \epsilon_k(x_i)\}.\]\\[-15pt]
 
 Comenzaremos aproximando, para cualquier $j=1,\dots, N$,\[
 P[X_j\in B(x_i,\epsilon_k(x_i))] \approx \int_{B(x_i,\epsilon_k(x_i))}f(y)dy.
 \]
 
 Podemos ver \[
-\frac{1}{N} \sum_{j=1}^NI\left(X_j\in B(x_i,\epsilon_k(x_i))\right),\]donde $I$ es la función indicadora, como un estimador de $P[X_j\in B(x_i,\epsilon_k(x_i))]$. Por la definición de $\epsilon_k(x_i)$ tenemos que \begin{align}\label{eq:knn-ind}
+\frac{1}{N} \sum_{j=1}^NI\left(X_j\in B(x_i,\epsilon_k(x_i))\right),\]donde $I$ es la función indicadora, como un estimador de la distribución $P[X_j\in B(x_i,\epsilon_k(x_i))]$. Por la definición de $\epsilon_k(x_i)$ tenemos que \begin{align}\label{eq:knn-ind}
  \frac{1}{N} \sum_{j=1}^NI\left(X_j\in B\left(x_i,\epsilon_k(x_i)\right)\right) = \frac{k}{N}.
 \end{align}
 
 Cuando $N$ es grande y $k$ es relativamente pequeño en comparación, $\epsilon_k(x_i)$ será pequeño porque $\frac{k}{N}$ lo es. Luego, la densidad $f(y)$ en la bola $B(x_i,\epsilon_k(x_i))$ no cambiará demasiado. Para cualquier punto de la bola consideraremos que su densidad coincide con la del centro de la misma, $f(y)\approx f(x_i)$. Tenemos entonces\begin{align*}
-P[X_j\in B(x_i,\epsilon_k(x_i))] &\approx \int_{B(x_i,\epsilon_k(x_i))}f(y)dy\approx f(x_i) \int_{B(x_i,\epsilon_k(x_i))}dy\\ &= f(x_i)\cdot V_d \cdot \epsilon^d_k(x_i),
+P[X_j\in B(x_i,\epsilon_k(x_i))] &\approx \int_{B(x_i,\epsilon_k(x_i))}f(y)dy\approx f(x_i) \int_{B(x_i,\epsilon_k(x_i))}dy\\[3pt] &= f(x_i)\cdot V_d \cdot \epsilon^d_k(x_i),
 \end{align*}
 donde $V_d\cdot \epsilon^d_k(x_i)$ es el volumen de la bola $d$ dimensional de radio $\epsilon_k(x_i)$ (este volumen depende la norma utilizada).\\
 
-Utilizando \ref{eq:knn-ind} para estimar $P[X_j\in B(x_i,\epsilon_k(x_i))]$, tendremos,\[
-f(x_i)\cdot V_d \cdot \epsilon_k(x_i) \approx P[X_j\in B(x_i,\epsilon_k(x_i))]\approx  \frac{1}{N} \sum_{j=1}^NI\left(X_j\in B\left(x_i,\epsilon_k(x_i)\right)\right) = \frac{k}{N}.
-\]
+Utilizando (\ref{eq:knn-ind}) para estimar $P[X_j\in B(x_i,\epsilon_k(x_i))]$, tendremos,\begin{align*}
+f(x_i)\cdot V_d \cdot \epsilon_k(x_i) &\approx P[X_j\in B(x_i,\epsilon_k(x_i))]\approx  \frac{1}{N} \sum_{j=1}^NI\left(X_j\in B\left(x_i,\epsilon_k(x_i)\right)\right)\\ &= \frac{k}{N}.
+\end{align*}
+
 Tomando\[
 f(x_i)\cdot V_d \cdot \epsilon^d_k(x_i) \approx \frac{k}{N}
 \]
-se obtiene el estimador de la función de densidad, \[
-\hat{f}(x) = \frac{k}{N}\cdot\frac{1}{V_d \cdot \epsilon^d_k(x)},\quad \forall x\in \R^d.\\
-\]
+se obtiene el estimador de la función de densidad,
+\[
+\hat{f}(x) = \frac{k}{N}\cdot\frac{1}{V_d \cdot \epsilon^d_k(x)},\quad \forall x\in \R^d.
+\]\\[-10pt]
 
-%% Este estimador verifica,---Referenciar, lo cogí de la Lec7, pero ahí no hay más referencias---
-%% \begin{align*}
-%%   \bias\left(\hat{f}(x)\right) &= O \left(\left(\frac{k}{n}\right)^{\frac{2}{d}} + \frac{1}{k}\right),\\
-%%   \Var\left(\hat{f}(x)\right) &= O \left(\frac{1}{k}\right).
-%% \end{align*}
-
-El comportamiento asintótico de este estimador no depende solo del tamaño de la muestra sino también de la dimensión $d$ y del valor $k$ elegido. De hecho, la varianza depende exclusivamente del valor de $k$, la variabilidad del estimador viene dada por el número de vecinos más cercanos a considerar. Este estimador es sesgado, aunque es asintóticamente insesgado y $\Var\left (\hat{f}\right)\to 0$ solo si $k\to \infty, N \to \infty$ y $\frac{k}{N} \to 0$, véase el corolario 2 de \cite{inproceedings}. Aumentar el valor de $k$ incrementa el tiempo de cómputo notablemente, dificultando el cálculo efectivo.\\
+El comportamiento asintótico de este estimador no depende solo del tamaño de la muestra sino también de la dimensión $d$ y del valor $k$ elegido. De hecho, la varianza depende exclusivamente del valor de $k$, la variabilidad del estimador viene dada por el número de vecinos más cercanos a considerar. Este estimador es sesgado, aunque es asintóticamente insesgado y $\Var\left (\hat{f}\right)\to 0$ solo si $k\to \infty, N \to \infty$ y $\frac{k}{N} \to 0$, véase el corolario 2 de \cite{inproceedings} para la demostración general o \cite{stat} para el desarrollo del caso $d=1$. Aumentar el valor de $k$ incrementa el tiempo de cómputo notablemente, dificultando el cálculo efectivo.\\
 
 Como habíamos expuesto, utilizaremos este estimador de la función de densidad de $X$ para obtener un estimador de $\log f(X)$, este es,\[
-\widehat{\log f}(x_i) = \log\left ( \frac{k}{N}\cdot\frac{1}{V_d \cdot \epsilon^d_k(x_i)} \right ) = \log\frac{k}{N} - \log V_d - d\log  \epsilon_k(x_i).\\
-\]
+\widehat{\log f}(x_i) = \log\left ( \frac{k}{N}\cdot\frac{1}{V_d \cdot \epsilon^d_k(x_i)} \right ) = \log\frac{k}{N} - \log V_d - d\log  \epsilon_k(x_i).
+\]\\[-10pt]
+
 Obteniendo el estimador de la entropía
 \begin{align*}
 \hat{h}(x) &= -\frac{1}{N} \sum_{i=1}^N \widehat{\log f}(x_i)\\
   &= - \log\frac{k}{N} + \log V_d +  \frac{d}{N} \sum_{i=1}^N\log  \epsilon_k(x_i).
 \end{align*}
 
-Como proviene del estimador $\hat{f}$, el estimador $\hat{h}$ mantiene sus propiedades asintóticas. Para corregir en parte el sesgo del estimador y para solucionar los problemas de cómputo de este estimador, se propone la modificación siguiente, basada en el estimador de Kozachenko - Leonenko. 
+Como proviene del estimador $\hat{f}$, el estimador $\hat{h}$ mantiene sus propiedades asintóticas. Para corregir en parte el sesgo del estimador y para solucionar los problemas de cómputo de este estimador, se propone la modificación siguiente, basada en el estimador de Kozachenko - Leonenko. \\
 
 \subsection{Estimadores de la entropía del tipo de Kozachenko - Leonenko}
 
-Consideramos $X_1,\dots, X_n$ una muestra aleatoria simple de la variable aleatoria $X$. Partiendo del mismo razonamiento, trataremos de estimar la entropía, $h(X)$, a partir de \[
+Consideramos $X_1,\dots, X_n$ una muestra aleatoria simple de la variable aleatoria $X$ con función de densidad $f$. Partiendo del mismo razonamiento, trataremos de estimar la entropía, $h(X)$, a partir de \[
 \widehat{h}(X) = -\frac{1}{N}\sum_{i=1}^N\widehat{\log f}(X_i).\]
 
 La diferencia vendrá marcada por la forma de estimar $\widehat{\log f}(X_i)$, para corregir el sesgo del estimador anterior.\\
@@ -1266,16 +1226,16 @@ Para obtener el estimador $\widehat{\log f}(X_i)$, para un $k$ fijo, consideramo
 Partimos de una observación $x_1,\dots, x_n$, de la que seleccionamos un punto $x_i$ cualquiera. Vamos a calcular $P\left[\epsilon \leq \mathcal{E}_{i_k} \leq \epsilon + h \right]$. Esta probabilidad es igual a la probabilidad de que haya un punto a distancia $r\in \left[ \varepsilon,\varepsilon + h \right ]$ de $x_i$, de que haya otras $k-1$ observaciones a distancia menor que $\epsilon$; y de que el resto de puntos se encuentren a mayor distancia de $x_i$.\\
 
 Llamamos \[
-p_i(\varepsilon) = \int_{B(x_i,\epsilon)}f(y)dy.\\
-\]
+p_i(\varepsilon) = \int_{B(x_i,\epsilon)}f(y)dy.
+\]\\[-10pt]
+
 Para cada $j = 1,\dots,n$ aproximaremos\[
 P\left[X_j \in B(x_i,\epsilon)\right]\approx p_i(\epsilon),
 \]donde $B(x_i,\epsilon)$ es la bola centrada en $x_i$ y de radio $\varepsilon$.\\
 
 Usaremos la fórmula de la distribución multinomial para expresar $P_k(\varepsilon)$,
 \begin{align*}
-  P_k(\epsilon) &= \lim_{h\to 0}\frac{P\left[\epsilon \leq \mathcal{E}_{i_k} \leq \epsilon + h\right]}{h}\\[5pt] &= \lim_{h\to 0} \left [\frac{(N-1)!}{1!(k-1)!(N-k-1)!}  \cdot p_i(\epsilon)^{k-1} \cdot \left(1-p_i(\epsilon)\right)^{N-k-1}\left(\frac{p_i(\epsilon + h ) - p_i(\epsilon)}{h}\right)\right ]\\[10pt] &= k\binom{N-1}{k}
-\cdot \frac{d p_i(\varepsilon)}{d\varepsilon} \cdot p_i(\epsilon)^{k-1} \cdot \left(1-p_i(\epsilon)\right)^{N-k-1}.\\
+  P_k(\epsilon) = \lim_{h\to 0}&\frac{P\left[\epsilon \leq \mathcal{E}_{i_k} \leq \epsilon + h\right]}{h}\\[5pt] = \lim_{h\to 0}& \left [\frac{(N-1)!}{1!(k-1)!(N-k-1)!}  \cdot p_i(\epsilon)^{k-1} \cdot \left(1-p_i(\epsilon)\right)^{N-k-1} \right.\\[3pt] &\left.\left(\frac{p_i(\epsilon + h ) - p_i(\epsilon)}{h}\right)\right ]\\[5pt] = \ \  k\ \ &\binom{N-1}{k} \cdot \frac{d p_i(\varepsilon)}{d\varepsilon} \cdot p_i(\epsilon)^{k-1} \cdot \left(1-p_i(\epsilon)\right)^{N-k-1}.\\[-5pt]
 \end{align*}
 
 Observamos que \[
@@ -1284,13 +1244,13 @@ Observamos que \[
 
 Podemos calcular la esperanza de $\log p_i (\varepsilon)$, a partir de la posición de los $N-1$ puntos restantes, con $x_i$ fijo:
 \begin{align*}
-\mathbb{E} \left[\log p_i(\epsilon)\right ] &= \int_0^\infty P_k(\varepsilon) \log p_i(\varepsilon) d\varepsilon =  k\binom{N-1}{k} \int_0^1 p^{k-1}(1-p)^{N-k-1}\log p\ dp\\ &= \psi (k) - \psi(N),
+\mathbb{E} \left[\log p_i(\epsilon)\right ] &= \int_0^\infty P_k(\varepsilon) \log p_i(\varepsilon) d\varepsilon\\ &=  k\binom{N-1}{k} \int_0^1 p^{k-1}(1-p)^{N-k-1}\log p\ dp\\[5pt] &= \psi (k) - \psi(N),
 \end{align*}
 
-donde $\psi$ es la función digamma.\\ %REVIEW : Referenciar artículo de Kozachenko Leonenko\\
+donde $\psi$ es la función digamma, esta expresión se ha obtenido de \cite{kraskov}.\\ 
 
 Si asumimos que $f(x)$ es constante en la bola de radio $\epsilon$, tendremos \begin{align*}
-p_i(\epsilon) &\approx \int_{B(x_i,\epsilon)}f(y)dy\approx f(x_i) \int_{B(x_i,\epsilon)}dy\\ &= f(x_i)\cdot V_d \cdot \epsilon^d.\\
+p_i(\epsilon) &\approx \int_{B(x_i,\epsilon)}f(y)dy\approx f(x_i) \int_{B(x_i,\epsilon)}dy\\[5pt] &= f(x_i)\cdot V_d \cdot \epsilon^d.\\[-5pt]
 \end{align*}
 
 Tomando logaritmos sobre la aproximación de $p_i(\varepsilon)$, obtenemos:\[
@@ -1300,17 +1260,17 @@ despejando $\log f(x_i)$,\[
 \log f(x_i) \approx  \log p_i(\varepsilon) - \log V_d - d \log \varepsilon.
 \]
 
-Continuamos tomando esperanzas respecto de $\varepsilon$ y sustituyendo la esperanza del logaritmo ya calculada, notamos que $\log f(X_i)$ no depende de $\epsilon$:\[
-\log f(x_i) \approx \mathbb{E}\left[\log p_i(\epsilon)\right] - \log V_d  - d \mathbb{E} \left[\log \varepsilon\right] = \psi (k) - \psi (N) - \log V_d  - d \mathbb{E} \left[\log \varepsilon\right].
-\]
+Continuamos tomando esperanzas respecto de $\varepsilon$ y sustituyendo la esperanza del logaritmo ya calculada, notamos que $\log f(X_i)$ no depende de $\epsilon$:\begin{align*}
+\log f(x_i) &\approx \mathbb{E}\left[\log p_i(\epsilon)\right] - \log V_d  - d \mathbb{E} \left[\log \varepsilon\right]\\[2pt] &= \psi (k) - \psi (N) - \log V_d  - d \mathbb{E} \left[\log \varepsilon\right].\\[-5pt]
+\end{align*}
 
 Hemos calculado un estimador de $\widehat{\log f} (X_i)$ que nos permite obtener un estimador de la entropía:
 \begin{align}
   \widehat{h}(X) &= - \frac{1}{N} \sum_{i=1}^N\widehat{\log f} (X_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \psi (N) - \log V_d  - d\log \varepsilon \right ) \nonumber \\
   &= - \psi (k) + \psi (N) + \log V_d + \frac{d}{N} \sum_{i=1}^N \log \varepsilon (x_i). \label{eq:est_ent}
-\end{align}
+\end{align}\\[-5pt]
 
-El estimador anterior es el de Kozachenko - Leonenko en el caso $k=1$.\\
+El estimador anterior es el de Kozachenko - Leonenko en el caso $k=1$ \cite{kozachenko-leonenko}.\\
 
 La forma de estimar $\widehat{\log f} (X_i)$ elimina una parte del sesgo, aunque se mantiene el sesgo proveniente de aproximar\[\int_{B(x_i,\epsilon)}f(y)dy\approx f(x_i) \int_{B(x_i,\epsilon)}dy.\] Si la densidad $f(x)$ es constante, el sesgo proveniente de esta aproximación también desaparece y obtenemos un estimador de la entropía, $\widehat{h}(X)$, que es insesgado.
 
@@ -1328,38 +1288,39 @@ Distinguiremos dos algoritmos diferentes para estimar la información mutua seg�
 
 Este algoritmo se caracteriza por definir $n_x(i)$ como el número de puntos $x_j$ cuya distancia a $x_i$ es menor que $\varepsilon_k(z_i)$, análogamente se define $n_y(i)$. $\varepsilon_k(z_i)$ es una observación de una variable aleatoria con densidad dada por $P_k(\varepsilon_k(z_i))$, luego $\mathbb{E}\left[\log p_i\left(\varepsilon_k(z_i)\right)\right] = \psi(k) - \psi(N)$ se cumple también en este caso.\\
 
-Para utilizar el estimador de la entropía calculado anteriormente debemos cambiar: $x_i$ por $z_i=(x_i,y_i)$, $d$ por $d_X + d_Y$ y $V_d$ por $V_{d_X}V_{d_Y}$. Con estas modificaciones obtenemos\[
+Para utilizar el estimador de la entropía calculado anteriormente debemos cambiar\!\! : $x_i$ por $z_i=(x_i,y_i)$, $d$ por $d_X + d_Y$ y $V_d$ por $V_{d_X}V_{d_Y}$. Con estas modificaciones obtenemos\[
 \widehat{h}(X,Y) = - \psi(k) + \psi(N) + \log (V_{d_X}V_{d_Y}) + \frac{d_X+d_Y}{N} \sum_{i=1}^N\log\left(\varepsilon_k(z_i)\right).
 \]
 
 Para obtener una estimación de $I(X;Y)$ utilizaremos el Lema \ref{l:ent_im},\[
 \hat{I}(X;Y) = \hat{h}(X) + \hat{h}(Y) - \hat{h}(X,Y).
-\]
+\]\\[-15pt]
+
 Podríamos usar el mismo valor de $k$ para realizar estas estimaciones, pero entonces estaríamos utilizando diferentes escalas en el espacio conjunto y en los marginales. Para un $k$ fijo, la distancia al $k$-ésimo vecino en el espacio conjunto sería mayor que las distancias a los vecinos en los espacios marginales. El sesgo en el estimador de la entropía proveniente de la no uniformidad de la densidad depende de estas distancias, los sesgos en $\widehat{h}(X)$, $\widehat{h}(Y)$, $\widehat{h}(X,Y)$ no se cancelarían. Para evitar eso, notamos que la estimación se cumple para cualquier valor de $k$ y que no tenemos por qué mantenerlo fijo.\\
 
 Suponemos que el $k$-ésimo vecino de $x_i$ se encuentra en uno de los lados verticales del cuadrado de lado $2\varepsilon_k(z_i)$. Entre las rectas verticales $x_i - \varepsilon_k(z_i)$ y $x_i + \varepsilon_k(z_i)$ hay $n_x(i)$ puntos, por definición de $n_x(i)$, luego, $\varepsilon_k(z_i)$ coincide con la distancia entre $x_i$ y su $(n_x(i) + 1)$-ésimo vecino más cercano. Tomando $k = n_x(i)+1$, estimamos la entropía de la variable $X$ mediante\[
 \widehat{h}(X) = - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \psi(N) + \log V_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon_k(z_i).
 \]
 
-Para la variable $Y$, $\varepsilon_k(z_i)$ no tendría por qué coincidir con la distancia entre $y_i$ y su $(n_y(i)+1)$-ésimo vecino. Sin embargo, consideramos la ecuación anterior una buena aproximación para $h(Y)$ (cambiando $X$ por $Y$). Esta aproximación será exacta cuando $n_y(i) \to \infty$ y cuando $N\to \infty$.---Referenciar---\\
+Para la variable $Y$, $\varepsilon_k(z_i)$ no tendría por qué coincidir con la distancia entre $y_i$ y su $(n_y(i)+1)$-ésimo vecino. Sin embargo, consideramos la ecuación anterior una buena aproximación para $h(Y)$ (cambiando $X$ por $Y$). Esta aproximación será exacta cuando $n_y(i) \to \infty$ y cuando $N\to \infty$ \cite{singh_finite-sample_2016}.\\ 
 
 Usando estas estimaciones en la ecuación correspondiente y notando $\epsilon(i) = \varepsilon_k(z_i)$, obtenemos:
 \begin{align*}
-  I^{(1)}(X,Y) \approx& \ \widehat{h}(X) + \widehat{h}(Y) - \widehat{h}(X, Y)\\ =& - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \psi(N) + \log V_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon(i)\\
-  & - \frac{1}{N}\sum_{i=1}^N\psi(n_y(i)+1) + \psi(N) + \log V_{d_Y} + \frac{d_Y}{N} \sum_{i=1}^N\log \varepsilon(i)\\
+  I^{(1)}(X,Y) \approx& \ \widehat{h}(X) + \widehat{h}(Y) - \widehat{h}(X, Y)\\ =& - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \psi(N) + \log V_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log (\varepsilon(i))\\
+  & - \frac{1}{N}\sum_{i=1}^N\psi(n_y(i)+1) + \psi(N) + \log V_{d_Y} + \frac{d_Y}{N} \sum_{i=1}^N\log (\varepsilon(i)(\\
   & + \psi(k) - \psi(N) - \log (V_{d_X}V_{d_Y}) - \frac{d_X+d_Y}{N} \sum_{i=1}^N\log(\varepsilon(i))\\
-  =& \ \psi(k) - \frac{1}{N}\sum_{i=1}^N\left( \psi(n_x(i)+1) + \psi(n_y(i)+1) \right ) + \psi(N).\\
+  =& \ \psi(k) - \frac{1}{N}\sum_{i=1}^N\left( \psi(n_x(i)+1) + \psi(n_y(i)+1) \right ) + \psi(N).\\[-5pt]
 \end{align*}
 
-Notamos $\langle \cdots \rangle$ a la media sobre todos los $i\in\{1,\cdots,N\}$ y sobre todas las realizaciones de las muestras aleatorias,\[
-\langle \cdots \rangle = \frac{1}{N} \sum_{i=1}^N\mathbb{E}[\cdots(i)].
+Notamos $\langle \dots \rangle$ a la media sobre todos los $i\in\{1,\dots,N\}$ y sobre todas las realizaciones de las muestras aleatorias,\[
+\langle \dots \rangle = \frac{1}{N} \sum_{i=1}^N\mathbb{E}[\dots(i)].
 \]
 
 Utilizando esta notación la estimación de la entropía quedaría:\[
 I^{(1)}(X,Y) \approx \psi(k) - \langle \psi(n_x+1) + \psi(n_y+1) \rangle + \psi(N).\\
 \]
 
-El principal inconveniente de esta estimación es que solo usamos el estimador de la entropía correctamente en una dirección marginal. Esto parece inevitable si queremos usar (hiper)cubos en el espacio conjunto, como opción alternativa podríamos usar (hiper)rectángulos.
+El principal inconveniente de esta estimación es que solo usamos el estimador de la entropía correctamente en una dirección marginal. Esto parece inevitable si queremos usar (hiper)cubos en el espacio conjunto, como opción alternativa podríamos usar (hiper)rectángulos.\\
 
 \subsubsection{Segundo algoritmo}
 
@@ -1372,15 +1333,15 @@ En este caso, $n_x(i)$ y $n_y(i)$ serán el número de puntos con $\Vert x_i - x
 
 En ambos casos tenemos que cambiar $P_k(\varepsilon)$ por una probabilidad 2-dimensional:
 \begin{align*}
-P_k(\varepsilon_x, \varepsilon_y) &= P_k^{a)}(\varepsilon_x, \varepsilon_y) + P_k^{b)}(\varepsilon_x, \varepsilon_y)\\ &= P_k\left (\epsilon_x, \epsilon_y | A \right) \cdot P (A) + P_k\left (\epsilon_x, \epsilon_y | B \right) \cdot P(B).\\  
+  P_k(\varepsilon_x, \varepsilon_y) &= P_k^{a)}(\varepsilon_x, \varepsilon_y) + P_k^{b)}(\varepsilon_x, \varepsilon_y)\\[3pt] &= P_k\left (\epsilon_x, \epsilon_y | A \right) \cdot P (A) + P_k\left (\epsilon_x, \epsilon_y | B \right) \cdot P(B)\\
+  &= P_k\left (\epsilon_x, \epsilon_y | A \right) \cdot \frac{1}{k} + P_k\left (\epsilon_x, \epsilon_y | B \right) \cdot \frac{k-1}{k}.\\[-5pt]
 \end{align*}
 
 En el artículo \cite{kraskov} se especifican los valores de estas probabilidades, necesarias para llegar a la siguiente expresión sobre $q_i \equiv q_i(\varepsilon_k(X_i), \varepsilon_k(Y_i))$, la función de densidad del rectángulo de lados $2\varepsilon_k(X_i) \times 2\varepsilon_k(Y_i)$ centrado en el punto $(X_i, Y_i)$,
-
 \[
 \mathbb{E}(\log q_i) = \int \int_0^{\infty} P_k(\varepsilon_x, \varepsilon_y) \log q_i(\varepsilon_x, \varepsilon_y) d \varepsilon_x d\varepsilon_y
 = \psi(k) - \frac{1}{k} - \psi(N).
-\]
+\]\\[-10pt]
 
 Aproximamos $\log f(x_i, y_i)$ por \[
 \log f(x_i, y_i) \approx  \log q_i(\varepsilon(i)) - \log V_d - d \log \varepsilon(i),
@@ -1388,31 +1349,32 @@ Aproximamos $\log f(x_i, y_i)$ por \[
 
 tomando esperanzas, obtenemos \[
 \log f(x_i, y_i) \approx  \psi(k) - \frac{1}{k} - \psi(N) - \log V_d - d \E\left [ \log \varepsilon(i) \right].
-\]
+\]\\[-10pt]
+
 Esto nos da el siguiente estimador de la entropía
  \begin{align*}
-  \widehat{h}(X, Y) &= - \frac{1}{N} \sum_{i=1}^N\widehat{\log f} (X_i, Y_i) = - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \frac{1}{k} - \psi (N) - \log V_d  - d\log \varepsilon(i) \right ) \\
+  \widehat{h}(X, Y) &= - \frac{1}{N} \sum_{i=1}^N\widehat{\log f} (X_i, Y_i)\\ &= - \frac{1}{N} \sum_{i=1}^N\left (\psi (k) - \frac{1}{k} - \psi (N) - \log V_d  - d\log \varepsilon(i) \right ) \\
   &= - \psi (k) + \frac{1}{k}+ \psi (N) + \log V_d + \frac{d}{N} \sum_{i=1}^N \log \varepsilon (i). 
  \end{align*}
 
  Como ya hicimos en el primer algoritmo, utilizaremos el Lema \ref{l:ent_im} para estimar la información mutua, sustituyendo la entropía conjunta por el estimador recién conseguido y las individuales por el estimador obtenido en el caso anterior, notando que cambia el significado de $n_x$ y $n_y$.
-
 \begin{align*}
-  I^{(2)}(X,Y) \approx& \ \widehat{h}(X) + \widehat{h}(Y) - \widehat{h}(X, Y)\\ =& - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)+1) + \psi(N) + \log V_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon(i)\\
-  & - \frac{1}{N}\sum_{i=1}^N\psi(n_y(i)+1)  + \psi(N) + \log V_{d_Y} + \frac{d_Y}{N} \sum_{i=1}^N\log \varepsilon(i)\\
+  I^{(2)}(X,Y) \approx& \ \widehat{h}(X) + \widehat{h}(Y) - \widehat{h}(X, Y)\\ =& - \frac{1}{N}\sum_{i=1}^N\psi(n_x(i)) + \psi(N) + \log V_{d_X} + \frac{d_X}{N} \sum_{i=1}^N\log \varepsilon(i)\\
+  & - \frac{1}{N}\sum_{i=1}^N\psi(n_y(i))  + \psi(N) + \log V_{d_Y} + \frac{d_Y}{N} \sum_{i=1}^N\log \varepsilon(i)\\
   & + \psi(k) - \frac{1}{k} - \psi(N) - \log (V_{d_X}V_{d_Y}) - \frac{d_X+d_Y}{N} \sum_{i=1}^N\log(\varepsilon(i))\\
-  =& \ \psi(k)  - \frac{1}{k}- \frac{1}{N}\sum_{i=1}^N\left( \psi(n_x(i)+1) + \psi(n_y(i)+1) \right ) + \psi(N).\\
+  =& \ \psi(k)  - \frac{1}{k}- \frac{1}{N}\sum_{i=1}^N\left( \psi(n_x(i)) + \psi(n_y(i)) \right ) + \psi(N).\\
 \end{align*}
 
 La información mutua se aproximaría por
 \begin{align}
 I^{(2)}(X,Y) \approx \psi(k) - \frac{1}{k} - \langle \psi(n_x) + \psi(n_y) \rangle + \psi(N). \label{eq:est2}
-\end{align}
+\end{align}\\[-10pt]
 
 
-En general ambas fórmulas dan resultados similares. Para un mismo $k$, $I^{(1)}$ da menores errores estadísticos (porque $n_x(i)$ y $n_y(i)$ tienden a ser más grandes y tener menores variaciones relativas), pero tiene mayores errores sistemáticos. Esto último es grave solo si estamos interesados en variables con dimensiones muy altas, donde $\varepsilon(i)$ es habitualmente más grande que la marginal $\varepsilon_x(i)$. En ese caso, parece preferible el segundo algoritmo, de resto es indiferente usar uno u otro.
+En general ambas fórmulas dan resultados similares. Para un mismo $k$, $I^{(1)}$ da menores errores estadísticos (porque $n_x(i)$ y $n_y(i)$ tienden a ser más grandes y tener menores variaciones relativas), pero tiene mayores errores sistemáticos. Esto último es grave solo si estamos interesados en variables con dimensiones muy altas, donde $\varepsilon(i)$ es habitualmente más grande que la marginal $\varepsilon_x(i)$. En ese caso, parece preferible el segundo algoritmo, de resto es indiferente usar uno u otro.\\
 
 \section{Implementaciones de la entropía y de la información mutua}
+
 En esta sección estudiaremos un par de implementaciones de conceptos anteriores como la entropía o la estimación mutua. En general, dado un número finito de muestras de una variable aleatoria no podemos calcular de forma exacta la entropía o información mutua, ya que no conocemos su distribución. Para implementarlas es necesario usar algún estimador, como los estudiados en el apartado anterior.
 
 \subsection{Implementación 1 - GaelVaroquaux}
@@ -1431,7 +1393,7 @@ h(X) = \frac{1}{2}\log (2\pi e \sigma^2 ),
 coincidiendo con la implementación.
 
 Para el caso en que la matriz \texttt{C} sea no degenerada, utiliza la expresión:\[
-H(X_1,\cdots, X_n) = \frac{n}{2} \left (1 + \log(2\pi) \right) + \frac{1}{2}\log |C|,
+H(X_1,\dots, X_n) = \frac{n}{2} \left (1 + \log(2\pi) \right) + \frac{1}{2}\log |C|,
 \]
 
 Coincidiendo con la fórmula vista en \ref{ej:norm_multi}.
@@ -1649,17 +1611,36 @@ Uno de los objetivos principales de \texttt{Joblib} \cite{joblib} es permitir la
 \subsection{Cálculo de los vecinos más cercanos en \texttt{scikit-learn}}
 La biblioteca \texttt{scikit-learn} proporciona funcionalidades para el uso métodos basados en los $k$ vecinos más cercanos \cite{doc_nn}.\\
 
-Para el cáclulo de los $k$ vecinos más cercanos de un conjunto de puntos se puede utilizar la clase \texttt{NearestNegihbors} \cite{nearestneighbors} y su método \texttt{kneighbors}, que devuelve los índices y distancias de los vecinos de cada punto. De esta forma se realiza el cálculo de los vecinos más cercanos en la implementación 1 de la entropía. Internamente, la clase \texttt{NearestNegihbors} utiliza las clases \texttt{KDTree} y \texttt{BallTree} para encontrar los vecinos más cercanos.\\
+Para el cálculo de los $k$ vecinos más cercanos de un conjunto de puntos se puede utilizar la clase \texttt{NearestNegihbors} \cite{nearestneighbors} y su método \texttt{kneighbors}, que devuelve los índices y distancias de los vecinos de cada punto. De esta forma se realiza el cálculo de los vecinos más cercanos en la implementación 1 de la entropía. Internamente, la clase \texttt{NearestNegihbors} utiliza las clases \texttt{KDTree} y \texttt{BallTree} para encontrar los vecinos más cercanos. La implementación 2 crea directamente uno de estos árboles (según la dimensión) y llama directamente a los métodos que va necesitando.\\
 
 Si nos encontramos con un conjunto de $n$ puntos, cada uno de dimensión $d$, podremos utilizar uno de los tres algoritmos proporcionados por la biblioteca \texttt{scikit-learn} para el cálculo de los vecinos más cercanos: \texttt{brute force}, \texttt{K-D Tree} y \texttt{Ball Tree}.\\
 
 \texttt{Brute force} es un método de búsqueda por fuerza bruta, realizará todos los cálculos para saber qué puntos están más próximos entre sí. Aunque resulta competitivo para muestras pequeñas, su eficiencia en tiempo es $O(dn^2)$.\\
 
-Con el objetivo de obtener algoritmos más eficientes que el de fuerza bruta, se crean estructuras de datos basadas en árboles para tratar de minimizar el número de cálculos de distancias. Se puede utilizar un árbol $k$ dimensional (\texttt{KD Tree}), que es un árbol binario en el que se van repartiendo recursivamente los puntos según su valor respecto de alguno de los ejes. La construcción de este árbol es muy rápida, porque no requiere el cálculo de distancias $d$ dimensionales, s en la búsqueda de un $k$ vecino más cercano cuando hay que calcularlas. El uso de esta estructura será eficiente para dimensiones menores que 20 aproximadamente, con eficiencia en tiempo $O(d\log n)$, sin embargo, a medida que crece la dimensión, se vuelve ineficiente con un coste en tiempo casi de $O(dn)$.\\
+Con el objetivo de obtener algoritmos más eficientes que el de fuerza bruta, se crean estructuras de datos basadas en árboles para tratar de minimizar el número de cálculos de distancias. Se puede utilizar un árbol $k$ dimensional (\texttt{KDTree}), que es un árbol binario en el que se van repartiendo recursivamente los puntos según su valor respecto de alguno de los ejes. La construcción de este árbol es muy rápida, porque no requiere el cálculo de distancias $d$ dimensionales, es en la búsqueda de un $k$ vecino más cercano cuando hay que calcularlas. El uso de esta estructura será eficiente para dimensiones menores que 20 aproximadamente, con eficiencia en tiempo $O(d\log n)$, sin embargo, a medida que crece la dimensión, se vuelve ineficiente con un coste en tiempo casi de $O(dn)$.\\
 
 Para solucionar la ineficiencia de los árboles $k$ dimensionales para dimensiones altas, se desarrolló la estructura \textit{ball tree}. En ella, en vez de dividir los puntos según sus valores respecto a algún eje, se hace según una serie de hiperesferas. La construcción de este tipo de árboles es más costosa que la de los árboles $k$ dimensionales, pero mejora la eficiencia de estos para realizar búsquedas cuando las dimensiones sean altas, sus tiempos son del orden $O(d\log n)$.\\
 
 Para un número de muestras muy pequeño, $n<30$, los algoritmos de fuerza bruta podrían resultar más eficientes que los basados en árboles. Por ello, las clases utilizadas para implementar todos estos métodos, proporcionan un parámetro \texttt{leaf\_size} que controla el número de muestras para el que utilizar el algoritmo de fuerza bruta, en vez de uno basado en árboles. Este parámetro afecta a los tiempos de ejecución de las aproximaciones basadas en árboles. Cuanto mayor sea \texttt{leaf\_size}, menor será el tiempo de construcción del árbol, ya que se crean menos nodos. Para buscar un $k$ vecino más cercano, si \texttt{leaf\_size} es muy pequeño, el tiempo de recorrer los nodos puede elevar los tiempos de ejecución, pero si es muy grande, las consultas se realizarán prácticamente por fuerza bruta.\\
+
+\section{\textit{T-Test} para comparar los estimadores}
+
+Queremos saber si, en media, el comportamiento de ambos estimadores es similar. Para ello, tomaremos como hipótesis nula, $H_0$, que los estimadores en media tienen el mismo comportamiento y como hipótesis alternativa, $H_1$, que las diferencias en el comportamiento de los estimadores son significativas; y realizaremos un contraste de hipótesis. Para llevar a cabo el contraste de hipótesis nos basaremos en un estadístico al que llamaremos \textit{t}. Calcularemos el $p$-valor, la probabilidad de que bajo la hipótesis nula la variable aleatoria $T$, definida a continuación, pudiera obtener valores más extremos que el valor observado en $t$. Cuando este sea muy bajo, la hipótesis nula no se corresponderá con los datos observados y podremos rechazarla.\\
+
+En este caso, los valores de los estimadores dependen de la muestra por ello, en vez de comparar la media de los estimadores en diferentes datos de muestra, para cada muestra se realiza la estimación con ambas implementaciones y se calcula la diferencia entre ellas, emparejando de esta forma las observaciones. Estas son observaciones $d_1,\dots,d_N$ de la muestra aleatoria $D_1,\dots, D_N$ de la variable aleatoria ``diferencia entre ambas estimaciones'', se asumirá que sigue una distribución normal, con media $\mu_D$ y varianza $\sigma^2_D$. La hipótesis nula será,\[
+H_0: \mu_D = 0,\text{ es decir, la diferencia entre las medias es nula}.
+\]
+La variable $T$ se define como\[
+T = \frac{\olsi{D} - \mu_D}{S_d/\sqrt{N}}.
+\]
+El estadístico $t$ vendrá dado por\[
+t = \frac{\olsi{d}}{s_d/\sqrt{N}},
+\]
+donde $s^2_d$ es la varianza muestral. El $p$-valor, $p$, a partir de él se calcula como \[
+p = 2 P \left [ T > t | \mu_D = 0 \right ]. 
+\]
+
+Utilizaremos la implementación del \textit{test} encontrada en \cite{ttest}. Dados dos vectores medirá si la diferencia entre ellos es significativa o no, devuelve el valor del estadístico $t$ y el $p$-valor. Lo utilizaremos dos veces, en un caso pasándole como parámetro las estimaciones de $N$ valores de la entropía realizadas con ambos estimadores, en otro, las estimaciones de $N$ valores de la información  mutua realizadas con ambos estimadores.
 
 \chapter{Resultados}
 
@@ -1803,7 +1784,92 @@ $d$ & Error estimador 1 & Error estimador 2\\ \midrule
     \label{fig:err_im}
 \end{figure}
 
+%-----------------------------------------------------------------------
+\section{Comparación mediante \textit{T-Test}}
 
+Nos preguntamos si el comportamiento en media de los estimadores de ambas implementaciones es el mismo, por ello, en el archivo \texttt{ttest.py} se escribe el código necesario para llevar a cabo un \textit{T-Test}.\\
+
+Tomaremos muestras de tamaño $N=30$, un número superior incrementaría notablemente los tiempos de ejecución. Realizaremos el \textit{test} para diferentes grupos de muestras, según la dimensión $d$ y el tamaño de muestra $n$ utilizado para realizar la estimación. Consideraremos dimensiones pequeñas, $d=2$, medianas, $d=10$, y grandes, $d=25$; a su vez, tamaños de muestra pequeños, $n=1000$, medianos $n=30000$, y grandes, $n=100000$.\\
+
+Realizamos un \textit{test} de normalidad sobre la muestra, de esta forma nos aseguramos de que nos encontramos bajo las condiciones del \textit{T-Test}.\\
+
+Recordamos que el contraste de hipótesis a realizar toma como hipótesis nula que los estimadores son similares y como hipótesis alternativa que los estimadores son significativamente diferentes. Calcularemos el valor del estadístico $t$ y su $p$-valor asociado en los diferentes casos. Si el $p$-valor es menor o igual que $0.05$ supondremos que tenemos evidencia suficiente de que los estimadores son distintos y rechazaremos la hipótesis nula. En caso contrario, no tendremos evidencia suficiente para rechazar la hipótesis nula y concluiremos que los estimadores en media son similares.\\
+
+En la Tabla \ref{tab:ttest-ent} se recogen los valores del estadístico $t$ y el $p$-valor obtenido en los diferentes casos en los que se ha estimado la entropía. Vemos cómo el valor absoluto del estimador $t$ aumenta a medida que aumenta la dimensión. Esto nos dice que la media muestral de las diferencias entre los estimadores crece con la dimensión. El $p$ valor, al contrario, disminuye a medida que aumenta la dimensión. Podemos atender a la Tabla \ref{tab:ttest-ent-reg} para saber en qué casos rechazamos la hipótesis nula y en cuáles no. Para $d=2$ no tenemos evidencia suficiente para rechazar la hipótesis nula, por tanto, concluimos que en media, para dimensiones pequeñas, los estimadores tienen un comportamiento similar. Al aumentar la dimensión, observamos se observa suficiente evidencia de que los estimadores son diferentes, por lo que se rechaza la hipótesis nula y se afirma que su comportamiento es diferente en media. Notamos que estos resultados no varían según la dimensión de la muestra.\\
+
+\begin{table}[!htb]
+\centering
+\caption{Resultados del \textit{T-test} para comparar la diferencia entre las estimaciones de la entropía para diferentes valores de $d$ y $n$.}
+\label{tab:ttest-ent}
+\begin{tabular}{r|l|rrr}
+  \toprule
+\backslashbox{$d$}{$n$} &  & 1000  & 30000 & 100000\\
+\midrule
+2  & $p$ &  $0.77008$ &  $0.051889$ &  $0.97277$ \\
+   & $t$ &  $0.29502$ & $-2.0275$ & $-0.034430$ \\[5pt]
+10 & $p$ &  $8.7473\cdot10^{-22}$ &  $1.2869\cdot10^{-22}$ &  $2.1281\cdot10^{-23}$ \\
+   & $t$ & $-26.302$ & $-28.169$ & $-30.034$ \\[5pt]
+25 & $p$ &  $8.6948\cdot10^{-43}$ &  $2.6519\cdot10^{-61}$ &         NaN \\
+   & $t$ & $-142.08$ & $-618.45$ &         NaN \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb]
+\centering
+\caption{Resultado del contraste de hipótesis para comparar la diferencia entre las estimaciones de la entropía para diferentes valores de $d$ y $n$ mediante el \textit{T-Test}. Rechazo significa que rechazamos la hipótesis nula, No rechazo, que no la rechazamos.}
+\label{tab:ttest-ent-reg}
+\begin{tabular}{r|rrr}
+  \toprule
+\backslashbox{$d$}{$n$}  & 1000  & 30000 & 100000\\
+\midrule
+2  &  No rechazo &  No rechazo &  No rechazo \\
+10 &     Rechazo &     Rechazo &     Rechazo \\
+25 &     Rechazo &     Rechazo &   \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+Veremos ahora qué ocurre en el caso de la estimación de la información mutua. Si ambos estimadores calcularan la información mutua a partir de la entropía podríamos suponer que en los casos en que las diferencias en la estimación de la entropía fueran significativas, también lo serían en el caso de la información mutua; pero como en la implementación 2 la estimación de la información mutua no se hace a partir de la entropía, repetiremos el \textit{test} para el caso de la información mutua para comprobar en qué casos las diferencias son significativas y en qué casos no lo son.\\
+
+Los valores del estadístico $t$ y sus $p$-valores asociados al calcular las diferencias entre las implementaciones de la información mutua se encuentran en la Tabla \ref{tab:ttest-mi}. En este caso, la media de las diferencias entre los estimadores normalizada que nos da el valor $t$ aumenta a medida que crece el tamaño de la muestra y la dimensión. Los $p$-valores en este caso son menores  y disminuyen a medida que aumenta el tamaño de muestra y la dimensión de sus elementos. Los casos en los que se rechaza o no se rechaza la hipótesis nula se encuentran en la Tabla \ref{tab:ttest-mi-reg}. A la vista de los menores $p$ valores no nos extraña que en este caso se rechazará la hipótesis nula en todos los casos. Las diferencias en media entre ambas implementaciones son significativas.\\
+
+\begin{table}[!htb]
+\centering
+\caption{Resultados del \textit{T-test} para comparar la diferencia entre las estimaciones de la información mutua para diferentes valores de $d$ y $n$.}
+\label{tab:ttest-mi}
+\begin{tabular}{r|l|rrr}
+  \toprule
+\backslashbox{$d$}{$n$} &  & 1000  & 30000 & 100000\\
+\midrule
+2  & $p$ &  $1.9822\cdot10^{-05}$ &  $3.5483\cdot10^{-14}$ &  $4.3197\cdot10^{-16}$ \\
+   & $t$ &  $5.0887$ &  $13.676$ &  $16.231$ \\[5pt]
+10 & $p$ &  $9.1502\cdot10^{-43}$ &  $3.7462\cdot10^{-57}$ &  $1.5652\cdot10^{-61}$ \\
+   & $t$ & $-141.83$ & $-444.82$ & $-629.79$ \\[5pt]
+25 & $p$ &  $1.2286\cdot10^{-46}$ &  $6.7789\cdot10^{-73}$ &         NaN \\
+   & $t$ & $-192.95$ & $-1552.6$ &         NaN \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htb]
+\centering
+\caption{Resultado del contraste de hipótesis para comparar la diferencia entre las estimaciones de la información mutua para diferentes valores de $d$ y $n$ mediante el \textit{T-Test}. Rechazo significa que rechazamos la hipótesis nula, No rechazo, que no la rechazamos.}
+\label{tab:ttest-mi-reg}
+\begin{tabular}{r|rrr}
+  \toprule
+\backslashbox{$d$}{$n$}  & 1000  & 30000 & 100000\\
+\midrule
+2  &  Rechazo &  Rechazo &     Rechazo \\
+10 &  Rechazo &  Rechazo &     Rechazo \\
+25 &  Rechazo &  Rechazo &   \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+%-----------------------------------------------------------------------
 \section{Experimentos}
 
 Compararemos ambas implementaciones en función al consumo de recursos, como tiempo y memoria.
