@@ -277,7 +277,7 @@ dándose la igualdad si, y solo si, $g$ es una función afín.\\
 \sigma_X^2 = \Var(X) = \mathbb{E}\left [ (X- \mu_X)^2 \right ].
   \]
   Se define la matriz de covarianzas de una variable aleatoria multidimensional $X= (X_1,\dots,X_n)^T$ como\[
-\Sigma = Cov(X) = \mathbb{E}\left [(X-\mu_X)(X-\mu_X)^T \right ] =  \begin{bmatrix} \sigma_{11} & \dots & \sigma_{1n} \\ \v\dots& \d\dots & \v\dots \\ \sigma_{n1} &  \dots & \sigma_{nn}\end{bmatrix}\,,
+\Sigma = Cov(X) = \mathbb{E}\left [(X-\mu_X)(X-\mu_X)^T \right ] =  \begin{bmatrix} \sigma_{11} & \dots & \sigma_{1n} \\ \vdots& \ddots & \vdots \\ \sigma_{n1} &  \dots & \sigma_{nn}\end{bmatrix}\,,
 \]
 donde $\sigma_{ij} = Cov(X_i, X_j) = \mathbb{E}\left[(X_i-\mu_i)(X_j-\mu_j)\right]=\sigma_{ji}$ es la covarianza de las variables aleatorias $X_i$ y $X_j$. La podremos definir cuando existan todas las covarianzas.\\ 
 \end{definition}
@@ -772,7 +772,7 @@ Luego, $D(p\Vert q) \ne D(q \Vert p)$.\\
 donde $\left\Vert\mathcal{X}\right\Vert$ representa al cardinal de $\mathcal{X}$.
 \end{lemma}
 \begin{proof}
-  Sea $u(x) = \frac{1}{\left\Vert\mathcal{X}\right\Vert}$ la función masa de probabilidad uniforme sobre $\left\Vert\mathcal{X}\right\Vert$, y sea $p(x)$ la función masa de probabilidad de $X$. Entonces,
+  Sea $u(x) = \frac{1}{\left\Vert\mathcal{X}\right\Vert}$ la función masa de probabilidad uniforme sobre $\mathcal{X}$, y sea $p(x)$ la función masa de probabilidad de $X$. Entonces,
   
  \begin{align*}
    D \left ( p \Vert u \right ) &= \sum_{x \in \mathcal{X}}
@@ -1555,17 +1555,28 @@ En primer lugar, se calcula la entropía de variables con una distribución unif
 %-------------------------COMPARACIÓN-----------------------------------
 \chapter{Metodología para la comparación de estimadores}
 \section{Tecnología utilizada}
----python, bibliotecas usadas, git, diseño basado en prototipos---
+
+El lenguaje de programación utilizado para implementar las diferentes pruebas que nos permiten comparar las implementaciones de los estimadores presentadas anteriormente es Python \cite{python}. No solo es el lenguaje en el que están escritas las implementaciones, es un lenguaje con numerosos módulos y paquetes, tanto en su biblioteca estándar como fuera de la misma, que nos ayudarán a realizar la comparativa desde diferentes puntos de vista.\\
+
+Python es un lenguaje interpretado, interativo y orientado a objetos. Incluye módulos, excepciones, tipado dinámico. Soporta varios paradigmas de programación además de la programación orientada a objetos se permite la programación procedural o funcional. Una de las características principales de este lenguaje es su clara sintaxis.\\
+
+Entre las bibliotecas destacamos el uso de NumPy \cite{numpy} y pandas \cite{pandas} para almacenar información, matplotlib \cite{matplotlib} para la generación de gráficas, random \cite{random} para generar los datos con los que realizar pruebas, cProfile y pstats \cite{profilers} para trabajar con las medidas de los tiempos de ejecución.\\
+
+Para la construcción de los programas se ha utilizado un diseño basado en prototipos. El programa inicial es revisado y mejorado sucesivas veces hasta obtener la versión final. De esta forma, podremos ir viendo cómo se desarrollan las diferentes pruebas para comparar los estimadores si lo están haciendo de forma correcta no e ir añadiendo funcionalidades o mejoras a medida que nos demos cuenta de que son necesarias.\\
+
+Para tener control sobre las diferentes versiones se ha utilizado Git \cite{git}, un sistema de control de versiones libre que nos permitirá añadir las nuevas versiones de forma que podamos observar con facilidad los cambios entre las versiones así como deshacerlos si fuera necesario.\\
+
+A continuación, se explica con más detalle las herramientas utilizadas para medir el tiempo de ejecución. Además, se desarrollará cómo funciona el paralelismo en Python y la existencia del cerrojo global del intérprete (GIL) y cómo realizar el cálculo de los vecinos más cercanos utilizando la biblioteca \texttt{scikit-learn}, ya que ambas implementaciones hacen uso de la misma.\\
 
 \subsection{Herramientas para medir el tiempo de ejecución}
 
 Puesto que estamos comparando dos implementaciones diferentes que deben realizar el mismo cálculo, además de la precisión de sus resultados, podemos medir sus tiempos de ejecución para ver si hay o no diferencias significativas entre ellos. Para ello, se utilizará la herramienta \texttt{cProfile}, que nos permite hacer \textit{profiling} determinístico de programas escritos en Python, y la clase \texttt{Stats} que nos permite acceder a los medidas realizadas por la herramienta anterior \cite{profilers}.\\
 
-\texttt{cProfile} mide el número de veces que se ejecuta cada función (\texttt{ncalls}), el tiempo total empleado en cada función(\texttt{tottime}), el tiempo empleado en cada función cada vez que se llamó a la función (\texttt{percall}), el tiempo acumulado de cada función y todas a las que estas llamen (\texttt{cumtime}) y el tiempo acumulado entre el número de veces que se llame a esta función (\texttt{percall}). Esta herramienta será precisa incluso en el caso de funciones recursivas, al distinguir el número de veces que se llama a la función del número de veces que fue invocada de forma recursiva.\\
+La herramienta \texttt{cProfile} mide el número de veces que se ejecuta cada función (\texttt{ncalls}), el tiempo total empleado en cada función (\texttt{tottime}), el tiempo empleado en cada función cada vez que se llamó a la función (\texttt{percall}), el tiempo acumulado de cada función y todas a las que estas llamen (\texttt{cumtime}) y el tiempo acumulado entre el número de veces que se llame a esta función (\texttt{percall}). Esta herramienta será precisa incluso en el caso de funciones recursivas, al distinguir el número de veces que se llama a la función del número de veces que fue invocada de forma recursiva.\\
 
 El uso de esta herramienta se complementa con la utilización de la clase \texttt{Stats}, que permite trabajar con las medidas realizadas por \texttt{cProfile}. Usando esta clase podremos ordenar y especificar el número o nombre de las funciones cuyos tiempo queremos observar, así como almacenar en archivos la información para consultarla más adelante.\\
 
-Por ejemplo, si quisiéramos obtener información sobre los tiempos de ejecución de la función \texttt{function} y todas a las que esta llama para saber dónde se emplea más tiempo, podríamos ejecutar el siguiente código:\\
+Por ejemplo, si quisiéramos obtener información sobre los tiempos de ejecución de la función \texttt{function} y todas a las que esta llama para saber cuáles emplean más tiempo, podríamos ejecutar el siguiente código:\\
 
 \begin{lstlisting}[language=Python]
   # Activamos el profiler
@@ -1589,6 +1600,9 @@ Por ejemplo, si quisiéramos obtener información sobre los tiempos de ejecució
 % PARALELISMO EN PYTHON
 %-----------------------------------------------------------------------
 \subsection{Paralelismo en Python}
+
+El uso del paralelismo a nivel de hebra en Python se ve limitado por el cerrojo global del intérprete (GIL). A continuación, veremos qué es GIL y algunas herramientas para desarrollar código en paralelo, a nivel de hebras o de procesos en Python.\\
+
 GIL, abreviatura de \textit{global interpreter lock}, \cite{glossary_GIL}, \cite{GIL}, es el mecanismo usado por el intérprete de Python para asegurar que solo  se ejecuta una hebra en cada momento. Su objetivo es hacer más seguro el acceso concurrente a memoria y esto lo consigue al poner un cerrojo sobre el intérprete al completo. Sin este cerrojo, se podrían dar problemas de sincronización en programas multihebra.\\
 
 Algunos módulos, de la librería estándar o no, liberan este cerrojo para ejecutar código muy costoso computacionalmente. También es habitual liberarlo en operaciones de entrada o salida, que son más lentas, liberando este cerrojo se permite la ejecución de otras hebras  en lo que se completan las operaciones de entrada o salida.\\
@@ -1638,9 +1652,9 @@ t = \frac{\olsi{d}}{s_d/\sqrt{N}},
 \]
 donde $s^2_d$ es la varianza muestral. El $p$-valor, $p$, a partir de él se calcula como \[
 p = 2 P \left [ T > t | \mu_D = 0 \right ]. 
-\]
+\]\\[-10pt]
 
-Utilizaremos la implementación del \textit{test} encontrada en \cite{ttest}. Dados dos vectores medirá si la diferencia entre ellos es significativa o no, devuelve el valor del estadístico $t$ y el $p$-valor. Lo utilizaremos dos veces, en un caso pasándole como parámetro las estimaciones de $N$ valores de la entropía realizadas con ambos estimadores, en otro, las estimaciones de $N$ valores de la información  mutua realizadas con ambos estimadores.
+Utilizaremos la implementación del \textit{test} encontrada en \cite{ttest}. Dados dos vectores medirá si la diferencia entre ellos es significativa o no, devuelve el valor del estadístico $t$ y el $p$-valor. Lo utilizaremos dos veces, en un caso pasándole como parámetro las estimaciones de $N$ valores de la entropía realizadas con ambos estimadores, en otro, las estimaciones de $N$ valores de la información  mutua realizadas con ambos estimadores.\\
 
 \chapter{Resultados}
 
