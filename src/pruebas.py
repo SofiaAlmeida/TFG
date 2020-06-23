@@ -29,22 +29,6 @@ def ent(k, x, y):
     print("Estimador 1: ", mi.entropy(y, k = k))
     print("Estimador 2: ", ee.entropy(y))
 
-
-#----------------------------------------------------------------------
-## Basada en mutual_info.entropy, añade los detalles que diferían de la teoría.
-# @param X vector de datos cuya entropía vamos a calcular.
-# @param k número de vecinos más cercanos a considerar.
-# @return entropía de X.
-def entropy_mod(X, k=1):
-    # Distance a k-ésimo vecino
-    r = 2 * mi.nearest_distances(X, k) 
-    n, d = X.shape
-    volume_unit_ball = (pi**(.5*d)) / gamma(.5*d + 1) / 2**d
-    
-    return (d*np.mean(np.log(2*(r + np.finfo(X.dtype).eps)))
-            + np.log(volume_unit_ball) + psi(n) - psi(k))
-
-
 #---------------------------------------------------------------------
 ## Adaptación de mutual_info.test_entropy para que se compare también entropy_estimators.entropy con una normal.
 # @param dat objeto de la clase Data generado mediante una distribución normal.
@@ -95,35 +79,6 @@ def err_entropy(dat, k = 3, show = False):
     dif2 = abs(H_th - H_est2)
     
     return dif1, dif2
-
-#---------------------------------------------------------------------
-## Modificación de pruebas.err_entropy para añadir un tercer estimador.
-# Compara tres estimadores de la entropía con la entropía teórica de una variable aleatoria con distribución normal.
-# @param dat objeto de la clase Data siguiendo una distribución normal.
-# @param k número de vecinos más cercanos considerados para realizar las estimacioines.
-# @return [dif1, dif2, dif3] la diferencia entre la estimación teórica y la calculada por cada uno de los estimadores.
-def err_entropy_mod(dat, k = 3):
-    C = dat.C
-    X = dat.X
-    
-    # Calculamos la entropía
-    H_th = mi.entropy_gaussian(C) / np.log(2)
-    H_est = mi.entropy(X, k) 
-    H_est2 = ee.entropy(X, k)
-    H_est3 = entropy_mod(X, k) / np.log(2)
-    
-    print("Entropía gaussiana:")
-    print("Teórica: ", H_th)
-    print("Estimador 1: ", H_est)
-    print("Estimador 2: ", H_est2)
-    print("Estimador 3: ", H_est3)
-
-    # Calculamos las diferencias
-    dif1 = abs(H_th - H_est)
-    dif2 = abs(H_th - H_est2)
-    dif3 = abs(H_th - H_est3)
-    
-    return dif1, dif2, dif3
 
 #---------------------------------------------------------------------
 ## Calcula la diferencia entre la entropía teórica y las estimadas

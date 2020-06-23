@@ -816,7 +816,7 @@ Notamos que la información mutua, al estar definida como una entropía relativa
   
   b) Se obtiene de forma análoga.\\
   
-  c) Se prueba aplicando la regla de la cadena sobre $H(X|Y)$, $I(X;Y) = H(X) - H(X|Y) = H(X) + H(Y) - H(X,Y)$.\\
+  c) Se prueba aplicando la regla de la cadena sobre $H(X|Y)$, \[I(X;Y) = H(X) - H(X|Y) = H(X) + H(Y) - H(X,Y).\]\\[-20pt]
   
   d) Se prueba usando el apartado c).\\
   
@@ -1316,9 +1316,10 @@ Notamos $\langle \dots \rangle$ a la media sobre todos los $i\in\{1,\dots,N\}$ y
 \langle \dots \rangle = \frac{1}{N} \sum_{i=1}^N\mathbb{E}[\dots(i)].
 \]
 
-Utilizando esta notación la estimación de la entropía quedaría:\[
-I^{(1)}(X,Y) \approx \psi(k) - \langle \psi(n_x+1) + \psi(n_y+1) \rangle + \psi(N).\\
-\]
+Utilizando esta notación la estimación de la información mutua quedaría:
+\begin{align}
+I^{(1)}(X,Y) \approx \psi(k) - \langle \psi(n_x+1) + \psi(n_y+1) \rangle + \psi(N).\label{eq:est1}
+\end{align}\\[-10pt]
 
 El principal inconveniente de esta estimación es que solo usamos el estimador de la entropía correctamente en una dirección marginal. Esto parece inevitable si queremos usar (hiper)cubos en el espacio conjunto, como opción alternativa podríamos usar (hiper)rectángulos.\\
 
@@ -1379,38 +1380,38 @@ En esta sección estudiaremos un par de implementaciones de conceptos anteriores
 
 \subsection{Implementación 1 - GaelVaroquaux}
 
-Comenzaremos revisando la implementación \cite{estimating}. Para ello leeremos el código y nos formaremos una idea de qué hace y cómo cada una de las funciones.
+Comenzaremos revisando la implementación encontrada en \cite{estimating}. Para ello leeremos el código y nos formaremos una idea de qué hace y cómo cada una de las funciones.
 
 \begin{itemize}
-\item \texttt{nearest\_distances}: para cada punto de un vector \texttt{X}, devuelve la distancia a su $k$-ésimo vecino más cercano. Se implementa haciendo uso de las funciones de \texttt{scikit-learn}.
+\item \texttt{nearest\_distances(X, k)}: para cada punto de un vector \texttt{X}, devuelve la distancia a su $k$-ésimo vecino más cercano. Se implementa haciendo uso de las funciones de la clase \texttt{NearestNeighbors} de \texttt{scikit-learn} \cite{nearestneighbors}.
 
-\item \texttt{entropy\_gaussian}: entropía de una variable gaussiana, se utilizará para hacer \textit{tests}. Si la matriz de covarianzas \texttt{C} es escalar, se utiliza la siguiente fórmula para la entropía:\[
-  H(X) = \frac{1}{2}\left ( 1 + \log(2\pi) \right )+ \frac{1}{2} \log C.
+\item \texttt{entropy\_gaussian(C)}: entropía de una variable gaussiana, se utilizará para hacer pruebas. Si la matriz de covarianzas \texttt{C} es escalar, se utiliza la siguiente fórmula para la entropía:\[
+  h(X) = \frac{1}{2}\left ( 1 + \log(2\pi) \right )+ \frac{1}{2} \log C.
   \]
-Vimos en \ref{ej:norm_uni} que la entropía de la gaussiana con covarianza $\sigma^2$ es:\[
+Vimos en el ejemplo \ref{ej:norm_uni} que la entropía de la gaussiana con covarianza $\sigma^2$ es:\[
 h(X) = \frac{1}{2}\log (2\pi e \sigma^2 ),
 \]
 coincidiendo con la implementación.
 
 Para el caso en que la matriz \texttt{C} sea no degenerada, utiliza la expresión:\[
-H(X_1,\dots, X_n) = \frac{n}{2} \left (1 + \log(2\pi) \right) + \frac{1}{2}\log |C|,
+h(X_1,\dots, X_n) = \frac{n}{2} \left (1 + \log(2\pi) \right) + \frac{1}{2}\log |C|,
 \]
 
-Coincidiendo con la fórmula vista en \ref{ej:norm_multi}.
+Coincidiendo con la fórmula vista en el ejemplo \ref{ej:norm_multi}.
 
-\item \texttt{entropy}: calcula la entropía de la variable \texttt{X} usando el estimador de Leonenko - Kozachenko \ref{eq:est_ent}. Comienza inicializando los elementos que se necesitan para aplicar la fórmula: vecinos más cercanos para todos los elementos del vector, dimensiones de \texttt{X}, volumen de la bola unidad ($V_d$). Notamos que en el cálculo de la constante $V_d$ (\texttt{volume\_unit\_ball}) falta un $\frac{1}{2^d}$. Otra diferencia es que en el estimador propuesto, $\varepsilon$ era dos veces la distancia del punto al vecino, mientras que en \texttt{r} tenemos la distancia del punto a su vecino más cercano una sola vez. Donde el estimador estudiado ponía $\varepsilon$ en esta implementación pone \texttt{r + eps}, donde \texttt{eps} es el menor valor que al ser sumado varía el resultado (de forma que  \texttt{1+eps $\neq$ 1}). En ambas implementaciones se añade un ínfimo ruido a los datos, para evitar que varios puntos tengan exactamente las mismas coordenadas. Devuelve el resultado de sustituir estos valores en la fórmula \ref{eq:est_ent}.
+\item \texttt{entropy(X, k)}: calcula la entropía de la variable \texttt{X} usando el estimador de tipo de Kozachenko - Leonenko visto en  (\ref{eq:est_ent}). Comienza inicializando los elementos que se necesitan para aplicar la fórmula: vecinos más cercanos para todos los elementos del vector, dimensiones de \texttt{X}, volumen de la bola unidad ($V_d$). Notamos que en el cálculo de la constante $V_d$ (\texttt{volume\_unit\_ball}) se utiliza el volumen dado por la distancia euclídea. Donde en el estimador estudiado ponía $\varepsilon$ en esta implementación pone \texttt{r + eps}, donde \texttt{eps} es el menor valor que al ser sumado varía el resultado (de forma que  \texttt{1+eps $\neq$ 1}). En ambas implementaciones se añade un ínfimo ruido a los datos, para evitar que varios puntos tengan exactamente las mismas coordenadas. Devuelve el resultado de sustituir estos valores en la expresión (\ref{eq:est_ent}).
 
-\item \texttt{mutual\_information}: devuelve la información mutua entre cualquier número de variables. Para ello suma las entropías marginales de cada una de ellas y les resta la entropía conjunta (usando el mismo valor $k$ para ambas estimaciones), aplicando el Lema \ref{l:ent_im} y calculando la entropía llamando a la función \texttt{entropy}.
+\item \texttt{mutual\_information(variables, k)}: devuelve la información mutua entre cualquier número de variables. Para ello suma las entropías marginales de cada una de ellas y les resta la entropía conjunta (usando el mismo valor $k$ para todas las estimaciones), aplicando el Lema \ref{l:ent_im} y calculando la entropía llamando a la función \texttt{entropy}.
 
-\item \texttt{mutual\_information\_2d}: calcula la información mutua entre dos variables unidimensionales a partir de su histograma conjunto. 
+\item \texttt{mutual\_information\_2d(x, y, sigma, normalized)}: calcula la información mutua entre dos variables unidimensionales a partir de su histograma conjunto. 
 
-\item \texttt{test\_entropy}: permite probar la entropía comparando la entropía de una variable aleatoria gaussiana, que conocemos teóricamente y se calcula en \texttt{entropy\_gaussian}, con la entropía estimada por \texttt{entropy}. Si ambos valores difieren demasiado, saltará un \textit{assert}.
+\item \texttt{test\_entropy()}: permite probar la entropía comparando la entropía de una variable aleatoria con distribución normal, que conocemos teóricamente y se calcula en \texttt{entropy\_gaussian}, con la entropía estimada por \texttt{entropy}. Si ambos valores difieren demasiado, saltará un \textit{assert}.
 
-\item \texttt{test\_mutual\_information}: permite probar la información mutua de una variable aleatoria 2 dimensional estimando los resultados para una variable gaussiana y comparándolos con los resultados teóricos.
+\item \texttt{test\_mutual\_information()}: permite probar la información mutua de una variable aleatoria 2 dimensional estimando los resultados para una variable aleatoria con distribución normal y comparándolos con los resultados teóricos.
 
-\item \texttt{test\_degenerate}: comprueba que los estimadores no dan valores degenerados.
+\item \texttt{test\_degenerate()}: comprueba que los estimadores no dan valores infinitos.
 
-\item \texttt{test\_mutual\_information\_2d}: es una función similar a \texttt{test\_mutual\_information}, pero para probar \texttt{mutual\_information\_2d}.
+\item \texttt{test\_mutual\_information\_2d()}: es una función similar a \texttt{test\_mutual\_information}, pero para probar \texttt{mutual\_information\_2d}.
 \end{itemize} 
 
 Si ejecutamos el código como está, se producen como salida dos parejas. La primera es la estimación de la información mutua entre 2 variables normales correladas usando la función \texttt{mutual\_information}. La segunda muestra lo mismos resultados para la función \texttt{mutual\_information\_2d}. En ambos casos a la izquierda está el valor obtenido y a la derecha el valor teórico. Se obtienen los siguientes resultados:
@@ -1431,69 +1432,67 @@ Observamos una pequeña diferencia entre los valores estimados y los teóricos.
 
 Pasamos a revisar la segunda implementación, que encontramos en \cite{npeet}. Como en el caso anterior, comenzamos leyendo el código función por función. 
 \begin{itemize}
-\item \texttt{entropy}: Leonenko - Kozachenko \ref{eq:est_ent} basado en los $k$ vecinos. \texttt{x} debe ser una lista de vectores. En primer lugar, hay un \textit{assert} para que el $k$ sea mayor que el número de muestras. Se convierte la lista \texttt{x} en un \textit{array}, almacena el número de elementos y de características, se añade ruido a los elementos de \texttt{x} (en la función \texttt{add\_noise}), se obtiene el árbol de vecinos usando la función correspondiente de scikit-learn. Se obtienen los $k$ vecinos más cercanos de \texttt{x} usando este árbol y la función \texttt{query\_neighbors} que llama a la función \texttt{query} correspondiente de scikit-learn, esta función devolverá la distancia a los vecinos más cercanos y sus índices, pero nos quedamos solo con las distancias. La función devuelve el siguiente valor:\[
+\item \texttt{entropy(x, k, base)}: utiliza el estimador de tipo Kozachenko - Leonenko visto en (\ref{eq:est_ent}) basado en los $k$ vecinos más cercanos. \texttt{x} debe ser una lista de vectores. En primer lugar, hay un \textit{assert} para que el valor $k$ sea mayor que el número de muestras. Se convierte la lista \texttt{x} en un \textit{array}, se almacena el número de elementos y de características, se añade ruido a los elementos de \texttt{x} (en la función \texttt{add\_noise}), se obtiene el árbol de vecinos más cercanos usando árboles \texttt{KDTree} o \texttt{BallTree} de la biblioteca \texttt{scikit-learn} según la dimensión de los datos (en la función \texttt{build\_tree}). Se obtienen los $k$ vecinos más cercanos de \texttt{x} usando este árbol y la función \texttt{query\_neighbors}, que llama a la función \texttt{query} correspondiente de \texttt{scikit-learn}, esta función devolverá la distancia de Chebyshev a los vecinos más cercanos y sus índices, pero nos quedamos solo con las distancias. La función devuelve el siguiente valor:\[
   \frac{\psi(N) - \psi(k) + d \cdot \log 2 + \frac{d}{N}\sum \varepsilon(i)}{\log(base)}.
   \]
 
-  Este $\log (base)$ se utiliza para que la fórmula pase a estar en base 2. La fórmula coincide con la estudiada salvo porque la constante $\log V_d$ es sustituida por $d \cdot \log 2$.
+  Este $\log (base)$ se utiliza para que la fórmula pase a estar en base 2. La fórmula coincide con la estudiada, notando que la constante $\log V_d$ es sustituida por $d \cdot \log 2$, debido al uso de la normal del máximo.
 
-\item \texttt{centropy}: estima la entropía de $X|Y$, para ello usa la función anterior para calcular las entropías de $(X,Y)$ e $Y$. Estima la entropía condicionada como $H(X|Y) = H(X,Y)-H(Y)$.
-\item \texttt{tc}: calcula la entropía de cada característica, devuelve la suma de las entropías de las características menos la entropía de la variable.
-\item \texttt{ctc}: similar al anterior pero con entropías condicionadas.
-\item \texttt{corex}: similar a \texttt{tc} pero en vez de entropías calcula la información mutua.
-\item \texttt{im}: calcula la información mutua entre \texttt{x, y}, utilizando el estimador \ref{eq:est2}. Comienza comprobando que ambos vectores tienen la misma longitud y que $k$ es menor que la misma. Hace las transformaciones con los datos correspondientes y les añade ruido. Si se ha pasado como parámetro también la  \texttt{z}, la información mutua a calcular será condicionada a este valor así que añadimos el valor z al conjunto de puntos. De forma similar a como lo hizo en \texttt{entropy}, construye el árbol de los vecinos y almacena la distancia de cada elemento al $k$-ésimo vecino más cercano. A continuación, utiliza la función \texttt{avgdigamma} para encontrar el número de puntos a distancia menor que el vecino $k$-ésimo (\texttt{num\_points}, en el espacio marginal) y devuelve la media de $\psi(num\_points)$. Si el parámetro \texttt{alpha $>$ 0} se suma a $\psi(N)$ el valor de \texttt{lnc\_correction} (estudiado más adelante). La función devuelve:\[
+\item \texttt{centropy(x, y, k, base)}: estima la entropía de $X|Y$, para ello usa la función \texttt{entropy} para calcular las entropías de $(X,Y)$ e $Y$. Estima la entropía condicionada usando la definición $h(X|Y) = h(X,Y)-h(Y)$.
+\item \texttt{tc(xs, k, base)}: calcula la entropía de cada característica, devuelve la suma de las entropías de las características menos la entropía de la variable.
+\item \texttt{ctc(xs, y, k, base)}: similar a la función \texttt{tc}, pero calculando las entropías condicionadas.
+\item \texttt{corex(xs, y, k, base)}: análoga a la función \texttt{tc} pero en vez de la entropía calcula la información mutua.
+\item \texttt{mi(x, y, z, k, base, alpha)}: calcula la información mutua entre \texttt{x, y}, utilizando el estimador (\ref{eq:est1}). Comienza comprobando que ambos vectores tienen la misma longitud y que $k$ es menor que la misma. Hace las transformaciones con los datos correspondientes y les añade ruido. Si se ha pasado como parámetro también la  \texttt{z}, la información mutua a calcular será condicionada a este valor así que se añade el valor \texttt{z} al conjunto de puntos. De forma similar a como se hizo en la función \texttt{entropy}, se construye el árbol de los vecinos más cercanos y se almacena la distancia de cada elemento al $k$-ésimo vecino más cercano. A continuación, se utiliza la función \texttt{avgdigamma} para encontrar el número de puntos a distancia menor que el vecino $k$-ésimo (\texttt{num\_points}, en el espacio marginal) haciendo uso de \texttt{count\_neighbors} y devuelve la media de $\psi(num\_points)$. Si el parámetro \texttt{alpha $>$ 0} se suma a $\psi(N)$ el valor de \texttt{lnc\_correction}. La función devuelve:\[
 \frac{- \langle \psi(n_x) \rangle - \langle \psi(n_y) \rangle + \psi(k) + \psi(N)}{\log (base)}.
 \]
-Para que la fórmula coincidiera de forma exacta con la de \ref{eq:est2} faltaría un $-\frac{1}{k}$.
-\item \texttt{cmi}: calcula la información mutua de \texttt{x} e \texttt{y} condicionado a \texttt{z}, hace uso de la anterior función, que en este caso devolvería \[
+\item \texttt{cmi(x, y, z, k, base)}: calcula la información mutua de \texttt{x} e \texttt{y} condicionado a \texttt{z}, hace uso de la anterior función, que en este caso devolvería \[
   \frac{- \langle\psi(n_{xz})\rangle - \langle\psi(n_{yz})\rangle + \langle\psi(n_z)\rangle + \psi(k)}{\log(base)}.
 \]
-\item \texttt{kldiv}: devuelve la distancia de Kullback Leibler o entropía relativa entre \texttt{x} y \texttt{xp}. Comienza comprobando que las distribuciones tienen la misma dimensión y que el $k$ escogido no supera al número de muestras. La implementación es similar a las ya vistas. En este caso se devuelve\[
+\item \texttt{kldiv(x, xp, k, base)}: devuelve la distancia de Kullback Leibler o entropía relativa entre \texttt{x} y \texttt{xp}. Comienza comprobando que las distribuciones tienen la misma dimensión y que el valor $k$ escogido no supera al número de muestras. La implementación es similar a las ya vistas. En este caso se devuelve\[
 \frac{\log len(xp) - \log(len(x) -1) + d \cdot (\mathbb{E}( nnp) - \mathbb{E} (nn))}{\log(base)},
 \]
 
 donde \texttt{nn} y \texttt{nnp} son las distancias a los vecinos más cercanos de los puntos de \texttt{x} y \texttt{xp} respectivamente.
-%En la fórmula anterior aparece $\log base$ en el denominador, además no me termica de cuadrar qué es exactamente \texttt{nnp}, entiendo que pretende ser la distancia del k-ésimo vecino de cada elemento de xp, pero utiliza el árbol de xp y le pasa el vector x, no entiendo por qué. Tampoco sé por qué en ese caso utiliza k-1.
 
-\item \texttt{lnc\_correction}: ---esta función no la entiendo bien---.
+\item \texttt{lnc\_correction(tree, points, k, alpha)}: a partir del árbol de vecinos más cercanos, se queda con los $k$ vecinos más cercanos y calcular el valor de la corrección que sumar al valor $\psi(N)$.
 
-\item \texttt{entropyd}: con esta comienza una serie de funciones para los estimadores discretos. Se estima la probabilidad contando el número de apariciones de un elemento y dividiendo entre el total de elementos. Se devuelve la suma de las probabilidades multiplicadas por el logaritmo de 1 partido por la probabilidad, todo ello dividido entre $\log base$:\[
+\item \texttt{entropyd(sx, base)}: con esta comienza una serie de funciones para estimaciones en el caso de variables aleatorias discretas. Se estima la probabilidad contando el número de apariciones de un elemento y dividiendo entre el total de elementos. Para calcular la entropía, se devuelve la suma de las probabilidades multiplicadas por el logaritmo de 1 partido por la probabilidad (por eso no aparece el cambio de signo), todo ello dividido entre $\log (base)$:\[
 \frac{\sum p \log \frac{1}{p}}{\log(base)}.
 \]
 
 Si las probabilidades son correctas, esta fórmula coincide con la entropía teórica.
 
-\item \texttt{midd}: calcula la información mutua en el caso discreto restando a la entropía de \texttt{x}, la entropía de $x|y$.
+\item \texttt{midd(x, y, base)}: se calcula la información mutua en el caso discreto utilizando la fórmula vista en el Teorema \ref{t:ent_im}.a), restando a la entropía de \texttt{x}, la entropía de \texttt{x|y}.
 
-\item \texttt{cmidd}: calcula la entropía de \texttt{x,y} condicionada a \texttt{z}. La implementación es similar a la del caso continuo pero llamando a las funciones correspondientes para variables discretas.
+\item \texttt{cmidd(x, y, z, base)}: calcula la entropía de \texttt{(x,y)} condicionada a \texttt{z}. La implementación es similar a la del caso continuo, \texttt{cmi}, pero llamando a las funciones correspondientes para variables discretas.
 
-\item \texttt{centropyd}: entropía de $x|y$ para variables discretas. Se calcula como entropía conjunta menos entropía de y.
+\item \texttt{centropyd(x, y, base)}: entropía de \texttt{x|y} para variables discretas. Se calcula como entropía conjunta menos entropía de y.
 
-\item \texttt{tcd}: a la entropía por características le resta la entropía total.
+\item \texttt{tcd(xs, base)}: a la entropía por características le resta la entropía total.
 
-\item \texttt{ctcd}:  a la entropía condicionada por características le resta la entropía condicionada.
+\item \texttt{ctcd(xs, y, base)}:  a la entropía condicionada por características le resta la entropía condicionada.
 
-\item \texttt{corexd}: la suma de la información mutua por columnas menos la información mutua.
+\item \texttt{corexd(xs, ys, base}: devuelve la suma de la información mutua por columnas menos la información mutua.
 
-\item \texttt{micd}: con este empiezan los estimadores mixtos, calcula la información mutua cuando \texttt{x} sea continua e \texttt{y} discreta. Primero se asegura de que tengamos el mismo número de elementos de ambas variables. Calcula la entropía de \texttt{x} y la probabilidad de cada valor de \texttt{y} (como en el caso discreto, contando el número de veces que aparece cada elemento y dividiendo entre el total). A continuación, para cada valor que toma \texttt{y} se calcula la entropía de \texttt{x} dado \texttt{y} (este valor comienza siendo 0 y se le va sumando la entropía calculada). Para hacer este cálculo, en primer lugar, se toma el vector de elementos de \texttt{x} dado un \texttt{y}, si tiene menos elementos que el $k$ considerado se suma la probabilidad de \texttt{y} por la entropía de \texttt{x}, añadiendo un \textit{warning} de que en este caso se está asumiendo la entropía máxima. Si el número de elementos es suficiente, se calcula la entropía de este vector y se multiplica por la probabilidad de \texttt{y}. La función devolverá el valor absoluto de la diferencia entre la entropía de \texttt{x} y la entropía de \texttt{x} dado \texttt{y}.
+\item \texttt{micd(x, y, k, base, warning)}: con este empiezan los estimadores mixtos, en los que una variable es discreta y la otra continua. En esta función se calcula la información mutua cuando \texttt{x} sea continua e \texttt{y} discreta. Primero se asegura de que tengamos el mismo número de elementos de ambas variables. Se calcula la entropía de \texttt{x} y la probabilidad de cada valor de \texttt{y} (como en el caso discreto, contando el número de veces que aparece cada elemento y dividiendo entre el total). A continuación, para cada valor que toma \texttt{y} se calcula la entropía de \texttt{x} dado \texttt{y} (este valor comienza siendo $0$ y se le va sumando la entropía calculada). Para hacer este cálculo, en primer lugar, se toma el vector de elementos de \texttt{x} dado un \texttt{y}, si tiene menos elementos que el $k$ considerado se suma la probabilidad de \texttt{y} por la entropía de \texttt{x}, añadiendo un \textit{warning} de que en este caso se está asumiendo la entropía máxima. Si el número de elementos es suficiente, se calcula la entropía de este vector y se multiplica por la probabilidad de \texttt{y}. La función devolverá el valor absoluto de la diferencia entre la entropía de \texttt{x} y la entropía de \texttt{x} dado \texttt{y}.
 
-\item \texttt{midc}: este estimador se utilizará cuando \texttt{x} sea discreta e \texttt{y} continua, consiste en llamar al anterior con los argumentos intercambiados.
+\item \texttt{midc(x, y, k, base, warning)}: este estimador se utilizará cuando \texttt{x} sea discreta e \texttt{y} continua, consiste en llamar a la función \texttt{micd} con los argumentos intercambiados.
 
-\item \texttt{centropycd}: calculamos la entropía de \texttt{x} (continua) condicionada a \texttt{y} (discreta). Devuelve la entropía de \texttt{x} menos la información mutua (utilizando el estimador mixto correspondiente) de \texttt{x, y}.
+\item \texttt{centropycd(x, y, k, base, warning)}: calcula la entropía de \texttt{x} (continua) condicionada a \texttt{y} (discreta). Devuelve la entropía de \texttt{x} menos la información mutua (utilizando el estimador mixto correspondiente) de \texttt{x, y}.
 
-\item \texttt{centropydc}: utiliza la función anterior con los parámetros intercambiados.
+\item \texttt{centropydc(x, y, k, base, warning)}: utiliza la función anterior con los parámetros \texttt{x, y} intercambiados.
 
-\item \texttt{ctcdc}: devuelve la suma de la entropía condicionada por columnas menos la entropía condicionada cuando \texttt{x} es discreta e \texttt{y} continua.
+\item \texttt{ctcdc(xs, y, k, base, warning)}: devuelve la suma de la entropía condicionada por columnas menos la entropía condicionada cuando \texttt{x} es discreta e \texttt{y} continua.
 
-\item \texttt{ctccd}: llama a la función anterior para \texttt{x} continua e \texttt{y} discreta.
+\item \texttt{ctccd(xs, y, k, base, warning)}: llama a la función \texttt{ctcdc} para \texttt{x} continua e \texttt{y} discreta.
 
-\item \texttt{corexcd}: devuelve el valor de \texttt{corexdc} intercambiando los parámetros.
+\item \texttt{corexcd(xs, ys, k, base, warning)}: devuelve el valor de \texttt{corexdc} intercambiando los parámetros.
 
-\item \texttt{corexdc}: devuelve la diferencia entre \texttt{tcd(xs)} y \texttt{ctcdc(xs, ys, k)}.
+\item \texttt{corexdc(xs, ys, k, base, warning)}: devuelve la diferencia entre \texttt{tcd(xs)} y \texttt{ctcdc(xs, ys, k)}.
 
 \item Las funciones auxiliares \texttt{add\_noise}, \texttt{query\_neighbors}, \texttt{count\_neighbors}, \texttt{avgdigamma} y \texttt{build\_tree} se han ido comentando a medida que aparecían.
 
-\item \texttt{shuffle\_test}: es una función a la que pasamos la medida a utilizar (entropía, información mutua, condicionadas, \dots) y los vectores \texttt{x} e \texttt{y}. Repite \texttt{ns} veces la medida barajando el vector \texttt{x}, devuelve la media y el intervalo de confianza de los resultados. Dice en un comentario que la información mutua (y la información mutua condicionada) deberían tener una media cercana a cero, ---¿esto por qué?---
+\item \texttt{shuffle\_test}: es una función a la que pasamos la medida a utilizar (entropía, información mutua, condicionadas, \dots) y los vectores \texttt{x} e \texttt{y}. Repite \texttt{ns} veces la medida barajando el vector \texttt{x}, devuelve la media y el intervalo de confianza de los resultados.
 \end{itemize}
 
 Además del archivo con los estimadores, en esta implementación se incluye un segundo archivo \texttt{test.py} en el que se realizan varias pruebas sobre los mismos. Si lo ejecutamos devuelve:
@@ -1625,7 +1624,7 @@ Uno de los objetivos principales de \texttt{Joblib} \cite{joblib} es permitir la
 \subsection{Cálculo de los vecinos más cercanos en \texttt{scikit-learn}}
 La biblioteca \texttt{scikit-learn} proporciona funcionalidades para el uso métodos basados en los $k$ vecinos más cercanos \cite{doc_nn}.\\
 
-Para el cálculo de los $k$ vecinos más cercanos de un conjunto de puntos se puede utilizar la clase \texttt{NearestNegihbors} \cite{nearestneighbors} y su método \texttt{kneighbors}, que devuelve los índices y distancias de los vecinos de cada punto. De esta forma se realiza el cálculo de los vecinos más cercanos en la implementación 1 de la entropía. Internamente, la clase \texttt{NearestNegihbors} utiliza las clases \texttt{KDTree} y \texttt{BallTree} para encontrar los vecinos más cercanos. La implementación 2 crea directamente uno de estos árboles (según la dimensión) y llama directamente a los métodos que va necesitando.\\
+Para el cálculo de los $k$ vecinos más cercanos de un conjunto de puntos se puede utilizar la clase \texttt{NearestNeighbors} \cite{nearestneighbors} y su método \texttt{kneighbors}, que devuelve los índices y distancias de los vecinos de cada punto. De esta forma se realiza el cálculo de los vecinos más cercanos en la implementación 1 de la entropía. Internamente, la clase \texttt{NearestNegihbors} utiliza las clases \texttt{KDTree} y \texttt{BallTree} para encontrar los vecinos más cercanos. La implementación 2 crea directamente uno de estos árboles (según la dimensión) y llama directamente a los métodos que va necesitando.\\
 
 Si nos encontramos con un conjunto de $n$ puntos, cada uno de dimensión $d$, podremos utilizar uno de los tres algoritmos proporcionados por la biblioteca \texttt{scikit-learn} para el cálculo de los vecinos más cercanos: \texttt{brute force}, \texttt{K-D Tree} y \texttt{Ball Tree}.\\
 
@@ -1660,9 +1659,9 @@ Utilizaremos la implementación del \textit{test} encontrada en \cite{ttest}. Da
 
 \section{Análisis comparativo}
 
-Pasamos a implementar el programa \texttt{prueba.py} para poder comparar ambas implementaciones y realizar las modificaciones que consideremos.
+Pasamos a implementar el programa \texttt{prueba.py} para poder comparar ambas implementaciones y realizar las modificaciones que consideremos.\\
 
-Comenzaremos comparando las estimaciones de la entropía. Para ello, creamos la función \texttt{rd\_ent} en la que obtenemos dos variables aleatorias y calculamos su entropía a partir de los estimadores dados por las dos implementaciones.
+Comenzaremos comparando las estimaciones de la entropía. Para ello, creamos la función \texttt{ent} a la que pasamos dos variables aleatorias y calculamos su entropía a partir de los estimadores dados por las dos implementaciones.
 
 \begin{lstlisting}
 Entropía de X:
@@ -1671,11 +1670,12 @@ Estimador 2:  43.499531309829294
 Entropía de Y:
 Estimador 1:  4.232705400287453
 Estimador 2:  6.084047562318489
+
 \end{lstlisting}
 
-Los estimadores obtienen resultados notablemente diferentes. Esto se debe a que uno de ellos nos está dando la entropía en bits (al pasarlo a base 2) y el otro en nats. Modificaremos el primer estimador, dividiendo su resultado entre $\log(2)$, para que los dos estén en las mismas unidades.
+Los estimadores obtienen resultados notablemente diferentes. Esto se debe a que uno de ellos nos está dando la entropía en bits (al pasarlo a base 2) y el otro en nats. Modificaremos el primer estimador, dividiendo su resultado entre $\log(2)$, para que los dos estén en las mismas unidades.\\
 
-Pasamos a comparar estas entropías con una que conozcamos teóricamente, la distribución uniforme, vista en el Ejemplo \ref{ej:uni}, cuya entropía teórica es $\log(a)$. El código utilizado se encuentra en la función \texttt{example\_entu}, los resultados obtenidos son los siguientes:
+Pasamos a comparar estas entropías con una que conozcamos teóricamente, la distribución uniforme, vista en el Ejemplo \ref{ej:uni}, cuya entropía teórica es $\log(a)$. El código utilizado se encuentra en la función \texttt{example\_ent\_unif}, los resultados obtenidos son los siguientes:
 
 \begin{lstlisting}
 Entropía x: (a = 2)
@@ -1687,15 +1687,16 @@ Entropía x: (a = 100)
 Teórica:   6.643856189774725
 Estimador 1:   6.683574884777654
 Estimador 2:   6.68357488477827
+
 \end{lstlisting}
 
-Las estimaciones son parecidas, coincidiendo con la entropía teórica en un decimal y entre ellas unos 11. Notamos que en este caso la variable aleatoria $X$ es unidimensional.
+Las estimaciones son parecidas, coincidiendo con la entropía teórica en un decimal y entre ellas unos 11. Notamos que en este caso la variable aleatoria $X$ es unidimensional.\\
 
-Para comparar las estimaciones de la entropía en una variable multidimensional, aprovechamos la función \texttt{test\_entropy} de la primera implementación y la adaptamos para calcular también la entropía con la segunda implementación. Además, añadimos el parámetro \texttt{d}, con el que podremos variar la dimensión de la variable considerada, y el parámetro \texttt{k} que marcará el número de vecinos a utilizar. La matriz \texttt{P}, utilizada para generar la matriz de covarianzas, ya no está definida de forma fija, sino que se define de forma aleatoria según la dimensión a utilizar. Comenzamos a estudiar el caso d = 2, las estimaciones son muy parecidas entre sí (suelen coincidir en varios decimales), si ejecutamos la función en bucle, en general se obtiene una pequeña diferencia con el estimador real, pero no llega a saltar el \textit{assert}. Este salta algunas veces, cuando la entropía es negativa, si los estimadores dan un resultado menor que la entropía real.
+Para comparar las estimaciones de la entropía en una variable multidimensional, aprovechamos la función \texttt{test\_entropy} de la primera implementación y la adaptamos para calcular también la entropía con la segunda implementación. Además, añadimos el parámetro \texttt{d}, con el que podremos variar la dimensión de la variable considerada, y el parámetro \texttt{k} que marcará el número de vecinos a utilizar. La matriz \texttt{P}, utilizada para generar la matriz de covarianzas, ya no está definida de forma fija, sino que se define de forma aleatoria según la dimensión a utilizar. Comenzamos a estudiar el caso d = 2, las estimaciones son muy parecidas entre sí (suelen coincidir en varios decimales), si ejecutamos la función en bucle, en general se obtiene una pequeña diferencia con el estimador real, pero no llega a saltar el \textit{assert}. Este salta algunas veces, cuando la entropía es negativa, si los estimadores dan un resultado menor que la entropía real.\\
 
-Queremos ser realmente conscientes de la magnitud del error que se está cometiendo, para ello, implementamos la función \texttt{err\_entropy}. Esta función no es más que una modificación de \texttt{test\_entropy} en la que se eliminan los \textit{assert} y se calcula la diferencia entre la entropía gaussiana teórica y las estimadas. Notamos que si aumentamos el valor de $d$, ambas estimaciones obtienen valores parecidos, difiriendo de la entropía teórica.
+Queremos ser realmente conscientes de la magnitud del error que se está cometiendo, para ello, implementamos la función \texttt{err\_entropy}. Esta función no es más que una modificación de \texttt{test\_entropy} en la que se eliminan los \textit{assert} y se calcula la diferencia entre la entropía gaussiana teórica y las estimadas. Notamos que si aumentamos el valor de $d$, ambas estimaciones obtienen valores parecidos, difiriendo de la entropía teórica.\\
 
-Creamos la función \texttt{exp\_err\_ent}. En ella, se pretende obtener un idea más precisa del error obtenido para cada dimensión con ambos estimadores. Para ello, se mide el error un número (\texttt{reps}) determinado de veces y se calcula la media del error obtenido para cada dimensión. Finalmente, se dibuja una gráfica del error obtenido. Llamando a esta función con \texttt{reps = 20}, \texttt{k = 3}, \texttt{d = 2, ..., 10}, se obtienen los errores que podemos observar en la Tabla \ref{tab:err_ent}, vemos cómo a medida que aumenta la dimensión, aumenta el error de forma similar para ambos estimadores.
+Creamos la función \texttt{exp\_err\_ent}. En ella, se pretende obtener un idea más precisa del error obtenido para cada dimensión con ambos estimadores. Para ello, se mide el error un número (\texttt{reps}) determinado de veces y se calcula la media del error obtenido para cada dimensión. Finalmente, se dibuja una gráfica del error obtenido. Llamando a esta función con \texttt{reps = 20}, \texttt{k = 3}, \texttt{d = 2, ..., 10}, se obtienen los errores que podemos observar en la Tabla \ref{tab:err_ent}, vemos cómo a medida que aumenta la dimensión, aumenta el error de forma similar para ambos estimadores.\\
 
 \begin{table}[H]
 %\large
@@ -1718,7 +1719,7 @@ $d$ & Error estimador 1 & Error estimador 2\\ \midrule
 \end{tabular}
 \end{table}
 
-Dibujando una gráfica de los valores anteriores compararemos más fácilmente el error obtenido con ambos estimadores. En la Figura \ref{fig:err_ent} encontramos esta representación. Vemos que los errores obtenidos con los dos estimadores eran prácticamente 0 para $d=2$ y que estos van aumentando con la dimensión, siendo ligeramente superior el error obtenido con el segundo estimador. 
+Dibujando una gráfica de los valores anteriores compararemos más fácilmente el error obtenido con ambos estimadores. En la Figura \ref{fig:err_ent} encontramos esta representación. Vemos que los errores obtenidos con los dos estimadores eran prácticamente $0$ para $d=2$ y que estos van aumentando con la dimensión, siendo ligeramente superior el error obtenido con el segundo estimador, 20 repeticiones por iteración.\\
 
 \begin{figure}[H]
     \centering
@@ -1727,7 +1728,7 @@ Dibujando una gráfica de los valores anteriores compararemos más fácilmente e
     \label{fig:err_ent}
 \end{figure}
 
-El tiempo de cómputo a medida que aumentamos la dimensión se incrementa considerablemente por lo que para hacernos una idea de qué ocurre si la aumentamos un poco más, repetimos el experimento con menos repeticiones por dimensión y llegamos hasta $d = 15$. Se obtienen los errores mostrados en la Figura \ref{fig:err_ent15}. Notamos que los errores no superan al anterior en todos los casos, se puede deber a que en las 10 repeticiones se obtengan estimaciones de la entropía que fueran mejores y ayuden a disminuir el error. Además es destacable cómo, a medida que aumenta la dimensión, crece la diferencia entre las dos estimaciones.
+El tiempo de cómputo a medida que aumentamos la dimensión se incrementa considerablemente por lo que para hacernos una idea de qué ocurre si la aumentamos un poco más, repetimos el experimento con menos repeticiones por dimensión y llegamos hasta $d = 15$. Se obtienen los errores mostrados en la Figura \ref{fig:err_ent15}. Notamos que los errores no superan al anterior en todos los casos, se puede deber a que en las 10 repeticiones se obtengan estimaciones de la entropía que fueran mejores y ayuden a disminuir el error. Además es destacable cómo, a medida que aumenta la dimensión, crece la diferencia entre las dos estimaciones.\\
 
 \begin{figure}[H]
     \centering
@@ -1736,35 +1737,27 @@ El tiempo de cómputo a medida que aumentamos la dimensión se incrementa consid
     \label{fig:err_ent15}
 \end{figure}
 
+Pasamos entonces a comparar los valores devueltos para la información mutua. Las implementaciones realizan la estimación de la información mutua de forma diferente. La implementación 1 utiliza la fórmula que calcula la información mutua como suma de las entropías marginales de las variables y resta de la entropía conjunta. Los errores encontrados en los cálculos individuales podrían afectar al cálculo total. La implementación 2 utiliza el estimador (\ref{eq:est1}) para realizar su estimación de la entropía, es posible que los errores cometidos al calcular la entropía no se vean arrastrados.\\
 
-Tratamos de mejorar la primera implementación añadiendo los detalles que la diferenciaban de la estimación estudiada teóricamente. En la función \texttt{entropy\_mod} se añade el $\frac{1}{2^d}$ que faltaba en el cálculo del volumen de la bola unidad y la distancia de cada punto a su vecino más cercano se multiplica por 2. Los resultados para $d = 2$ no son muy prometedores, por lo que abandonamos esta vía.
-
-\begin{lstlisting}
-k = 3, d = 2
-Error estimador 1:  0.013887003356169863
-Error estimador 1_mod:  1.9861129966437974
-\end{lstlisting}
-
-
-Pasamos entonces a comparar los valores devueltos para la información mutua. Las implementaciones realizan la estimación de la información mutua de forma diferente. La implementación 1 utiliza la fórmula que calcula la información mutua como suma de las entropías marginales de las variables y resta de la entropía conjunta. Los errores encontrados en los cálculos individuales podrían afectar al cálculo total. La implementación 2 utiliza el estimador \ref{eq:est_ent} para realizar su estimación de la entropía, es posible que los errores cometidos al calcular la entropía no se vean arrastrados.
-
-Realizamos pruebas comparando los resultados de los estimadores con los de una gaussiana (en la función \texttt{test\_mutual\_information\_mod}) y calculamos el error como la diferencia entre información mutua teórica y estimada, calculamos la media tras repetir el experimento 100 veces, con $d=2$ y $k=3$. Se obtienen los siguientes resultados:
+Realizamos pruebas comparando los resultados de los estimadores con los de una gaussiana (en la función \texttt{test\_mutual\_information\_mod}) y calculamos el error como la diferencia entre información mutua teórica y estimada, calculamos la media tras repetir el experimento 100 veces, con $d=2$ y $k=3$. Se obtienen los siguientes resultados:\\
 
 \begin{lstlisting}
 Error estimador 1:  0.010671581846025138
 Error estimador 2:  0.007051668015342052
+
 \end{lstlisting}
 
-El error en el primer estimador es ligeramente superior al error en el segundo.
+El error en el primer estimador es ligeramente superior al error en el segundo.\\
 
-Al pasar a dimensión 3, los estimadores comienzan a diferir notablemente de la entropía teórica. Revisando el código notamos que no se adapta la al cambio de dimensión directamente, el cálculo de la entropía teórica de la gaussiana se hace sumando las entropías marginales y restándosela a la conjunta (en este caso como la entropía se calcula correctamente no se arrastran errores), pero la función estaba hecha para el caso $d = 2$. Se modifica utilizando un bucle sobre la dimensión para que, efectivamente, sume todas las entropías marginales. Una vez hecha la modificación correspondiente, realizamos la prueba para $k = 3,\ d = 3$ y 100 repeticiones, con lo que obtenemos:
+Al pasar a dimensión 3, los estimadores comienzan a diferir notablemente de la entropía teórica. Revisando el código notamos que no se adapta la al cambio de dimensión directamente, el cálculo de la entropía teórica de la gaussiana se hace sumando las entropías marginales y restándosela a la conjunta (en este caso como la entropía se calcula correctamente no se arrastran errores), pero la función estaba hecha para el caso $d = 2$. Se modifica utilizando un bucle sobre la dimensión para que, efectivamente, sume todas las entropías marginales. Una vez hecha la modificación correspondiente, realizamos la prueba para $k = 3,\ d = 3$ y 100 repeticiones, con lo que obtenemos:\\
 
 \begin{lstlisting}
 Error estimador 1:  1.6417490587527461
 Error estimador 2:  1.6426795618610046
+
 \end{lstlisting}
 
-Al igual que en el caso anterior, crearemos una función, \texttt{exp\_err\_im}, en la que repetiremos la prueba para las dimensiones dadas. Repitiendo el experimento para $d=2,...,15$; 25 veces por dimensión (calculando la media del error), con $k=3$ se obtienen los errores mostrados en la Tabla \ref{tab:err_im}. Notamos que los errores van aumentando al ir añadiendo más dimensiones. Visualizamos los errores obtenidos en la Figura \ref{fig:err_im}. Destaca que los errores obtenidos con ambas estimaciones son tan similares que se superponen en la gráfica. El error en la estimación es creciente en la dimensión.
+Al igual que en el caso anterior, crearemos una función, \texttt{exp\_err\_im}, en la que repetiremos la prueba para las dimensiones dadas. Repitiendo el experimento para $d=2,...,15$; 25 veces por dimensión (calculando la media del error), con $k=3$ se obtienen los errores mostrados en la Tabla \ref{tab:err_im}. Notamos que los errores van aumentando al ir añadiendo más dimensiones. Visualizamos los errores obtenidos en la Figura \ref{fig:err_im}. Destaca que los errores obtenidos con ambas estimaciones son tan similares que se superponen en la gráfica. El error en la estimación es creciente en la dimensión.\\
 
 \begin{table}[H]
 \centering
