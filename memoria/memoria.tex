@@ -1,6 +1,6 @@
 % article example for classicthesis.sty
 \documentclass[12pt,a4paper]{report} % KOMA-Script article scrartcl
-\usepackage[spanish]{babel}
+\usepackage[british, spanish]{babel}
 %\usepackage[utf8]{inputenc}
 %\usepackage{lipsum}
 \usepackage{url}
@@ -83,46 +83,68 @@
 
 \begin{document}
 %-------------------------- ÍNDICE--------------------------------------
+
 \tableofcontents
 \newpage
+
+\input{resumen.tex}
+
+\begin{otherlanguage}{british}
+  \input{abstract.tex}
+\end{otherlanguage}
+
 
 %-------------------------INTRODUCCIÓN----------------------------------
 \chapter{Introducción}
 
-Es en el ámbito de la teoría de la información donde surgen las definiciones estudiadas en este trabajo. La teoría de la información busca límites teóricos a la capacidad de intercambiar mensajes, así como desarrollar esquemas que alcancen una capacidad óptima. La teoría de la información se puede ver como una rama de la teoría de la probabilidad, aunque también como una rama de la teoría de los sistemas dinámicos.\\
+Este trabajo se desarrolla en el contexto de conceptos asociados a la teoría de la información, como son la entropía y la información mutua. Se estudiarán sus propiedades y algunas propuestas sobre cómo estimarlos. Además, se analizarán desde un punto de vista práctico algunas implementaciones de estos estimadores, profundizando en la calidad de las estimaciones así como en el rendimiento computacional de las mismas.\\
 
-Aunque ya existían conceptos de información, es con los trabajos de Shannon en la década de los 40 cuando realmente se les aporta significado a estos conceptos. Shannon define dos medidas de información, que serán las definiciones centrales de este trabajo. Por un lado, define la \textit{entropía}, a partir de la definición que Hartley había dado en el campo de la termodinámica, como una medida de la ``cantidad de información'' que una variable aleatoria aporta sobre sí misma. Formalmente, para una variable aleatoria discreta $X$ con función masa de probabilidad $p(x)$ se define la entropía, $H(X)$, como\[
+\section{Motivación y antecedentes}
+
+Es en el ámbito de la teoría de la información donde surgen conceptos relativos a la información que nos proporcionan las variables aleatorias. La teoría de la información busca límites teóricos a la capacidad de intercambiar mensajes, así como desarrollar esquemas que alcancen una capacidad óptima para el intercambio de mensajes. Algunos autores consideran la teoría de la información como una rama de la teoría de la probabilidad, aunque también se puede ver como una rama de la teoría de los sistemas dinámicos \cite{gray}.\\
+
+Aunque ya existían conceptos relacionados con la información, es con los trabajos de Shannon en la década de los 40 cuando realmente se formalizan y se les aporta significado \cite{shannon}. Shannon define dos medidas asociadas a la información, que serán las definiciones centrales de este trabajo. Por un lado, define la \textit{entropía}, a partir de la definición que Hartley había dado en el campo de la termodinámica \cite{hartley}, como una medida de la ``cantidad de información'' que una variable aleatoria aporta sobre sí misma. Formalmente, para una variable aleatoria discreta $X$ con función masa de probabilidad $p(x)$ se define la entropía, $H(X)$, como\[
 H(X) = -\sum_{x\in \mathcal{X}}p(x)\log p(x).
-\] Por otro lado, define la \textit{información mutua}, una medida de la cantidad de información que una variable aleatoria nos da sobre otra. Analíticamente, para dos variables aleatorias $X$ e $Y$ discretas con función masa de probabilidad conjunta $p(x,y)$ y funciones masa de probabilidad marginales $p(x), p(y)$ respectivamente, se define la información mutua $I(X;Y)$, como\[
+\] Por otro lado, define la \textit{información mutua}, una medida de la cantidad de información que una variable aleatoria nos proporciona sobre otra. Analíticamente, para dos variables aleatorias $X$ e $Y$ discretas con función masa de probabilidad conjunta $p(x,y)$ y funciones masa de probabilidad marginales $p(x), p(y)$ respectivamente, se define la información mutua $I(X;Y)$, como\[
 I(X;Y) = \sum_{x\in \mathcal{X}}\sum_{y \in \mathcal{Y}}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}.
 \]
 
-Estas medidas se pueden definir también en el caso continuo y no son las únicas medidas de información, tenemos también la entropía relativa, propuesta por Kullback, por ejemplo.\\
+Estas medidas se pueden definir también en el caso continuo y, además, no son las únicas, podemos encontrar también la entropía relativa propuesta por Kullback, por ejemplo \cite{thomas}.\\
 
-Desde un punto de vista estadístico, podemos ver estas medidas de información como una medida de dependencia entre dos variables. De hecho, si comparamos la información mutua con el coeficiente de correlación de Pearson, por ejemplo, veremos que la primera nos da más información que la segunda, ya que no mide un tipo concreto de dependencia y caracteriza la independencia.\\
+Desde un punto de vista estadístico, podemos ver estas medidas asociadas a la información como medidas de dependencia entre dos variables. De hecho, si comparamos la información mutua con el coeficiente de correlación de Pearson, por ejemplo, veremos que la primera nos proporciona más información que la segunda, ya que no mide un tipo concreto de dependencia y caracteriza la independencia.\\
 
-En la práctica, no siempre es posible calcular la entropía o información mutua de una variable aleatoria, puesto que es necesario conocer su función masa de probabilidad o función de densidad. Por ello, surge el problema de cómo estimarla a partir de una realización muestral de dicha variable. El problema de obtener estimaciones precisas de la entropía y la información mutua es importante debido a las múltiples aplicaciones que hacen uso de ellas.\\
+En la práctica, no siempre es posible calcular la entropía o información mutua de una variable aleatoria, puesto que es necesario conocer su función masa de probabilidad o función de densidad. Por ello, surge el problema de cómo estimarla a partir de una realización muestral de dicha variable. El problema de obtener estimaciones precisas de la entropía y la información mutua es importante debido a las múltiples aplicaciones que hacen uso de ellas. Este problema constituye uno de los objetivos centrales de este proyecto.\\
 
-Calcular la entropía o la información mutua resulta de interés no solo en el ámbito de la teoría de la información o en la termodinámica, ya que se les ha encontrado utilidad en numerosos campos como la economía, donde se puede utilizar para estudiar el crecimiento económico, o la biología, para predecir la estructura secundaria del ARN. En el campo del aprendizaje automático se utilizan estimaciones de la entropía para medir cómo de bueno es un modelo o para estimar sus hiperparámetros. La información mutua se puede utilizar como criterio para seleccionar variables, hacer un análisis clúster o detectar causalidades.\\
+Calcular la entropía o la información mutua resulta de interés no solo en el ámbito de la teoría de la información o en la termodinámica, ya que se les ha encontrado utilidad en numerosos campos como la economía, donde se puede utilizar para estudiar el crecimiento económico \cite{economy}, o la biología, para predecir la estructura secundaria del ARN \cite{freyhult}. En el campo del aprendizaje automático se utilizan estimaciones de la entropía para medir la bondad de un modelo \cite{anewclass} o para estimar sus hiperparámetros. La información mutua se puede utilizar como criterio para seleccionar variables \cite{feature}, hacer un análisis clúster \cite{cluster} o detectar causalidades \cite{causality}.\\
 
-En este trabajo se estudiarán los conceptos de entropía e información mutua, algunos conceptos relacionados, como la entropía condicionada, y sus propiedades más importantes, además de las relaciones entre los diferentes conceptos. Puesto que estos conceptos dependen de la función masa de probabilidad o función de densidad de las variables aleatorias, que no siempre resulta conocida, se continuará estudiando cómo estimarlas. Para ello, se introducirán brevemente los estimadores basados en particiones y se desarrollarán estimadores basados en los $k$ vecinos más cercanos y de tipo de Kozachenko - Leonenko. Estos estimadores nos permitirán, para una observación de una variable de la que no conocemos su distribución teórica, aproximar la entropía y la información mutua. Por último, se analizarán dos implementaciones de algunos de los estimadores estudiados teóricamente y se realizará una análisis comparativo entre ellas. Este análisis contemplará la calidad de la solución a través de la observación del error y el rendimiento en términos de tiempo de ejecución mediante \textit{profiling}.\\
 
-El trabajo se organiza en una serie de capítulos donde se agrupan los contenidos de la forma explicada a continuación.\\
-
-En el capítulo 2 se comienza repasando los conceptos básicos necesarios en el desarrollo posterior. Entre otras, se comenta la definición de estimador y sus propiedades, algunas distribuciones que aparecerán a lo largo del desarrollo y se definen otras dos medidas de la dependencia como motivación para la definición de la información mutua. Se continúa presentando los conceptos de teoría de la información a estudiar: entropía e información mutua, así como una serie de propiedades y relaciones entre ellas. Este estudio se realizará tanto para el caso discreto como para el continuo. Se sigue estudiando estimadores de los conceptos anteriores. Se verá brevemente un estimador basado en particiones y en más profundidad un estimador de la entropía basado en los $k$ vecinos más cercanos, así como del tipo de Kozachenko - Leonenko, también veremos estimadores de la información mutua de este tipo. Para cerrar este capítulo se analizarán dos implementaciones de los estimadores estudiados anteriormente.\\
-
-En el capítulo 3 se explica la metodología utilizada para la comparación de estimadores. Se comienza comentando brevemente el lenguaje de programación a utilizar y las bibliotecas utilizadas, centrándonos posteriormente en aquellas utilizadas para medir los tiempos de ejecución. Durante el estudio de las implementaciones adquiere interés conocer cómo funciona el paralelismo en Python y las herramientas que proporciona la biblioteca \texttt{scikit-learn} para calcular los vecinos más cercanos, se incluye una explicación de ambas cosas en este punto. Por último, se explican los fundamentos teóricos del $T-Test$ que será posteriormente utilizado para comparar los diferentes estimadores.\\
-
-En el capítulo 4 es donde se encuentran los resultados de los diferentes análisis realizados. En primer lugar se compara el comportamiento de los estimadores con el de una variable aleatoria con distribución normal, de la que conocemos teóricamente su entropía e información mutua. Se continúa realizando un \textit{T-Test} para saber si las diferencias en media de los estimadores son o no significativas. Se finaliza comparando los tiempos de ejecución de ambas implementaciones mediante \textit{profiling}.\\
-
-\section{Motivación del trabajo}
 \section{Objetivos}
----objetivos, planificación (también se podría poner en objetivos) -> hacer un diagrama de Gantt (revisar bibliografía, adquirir conocimiento, escribir memoria, búsqueda de implementaciones, escribir código)---
+\begin{enumerate}
+\item \textit{Revisión teórica sobre entropía, información mutua y estimadores de las mismas}.
+
+  En este trabajo nos planteamos el objetivo de analizar las nociones de entropía e información mutua, algunos conceptos relacionados, como la entropía condicionada, y sus propiedades más importantes, además de las relaciones entre los diferentes conceptos. Puesto que estos conceptos dependen de la función masa de probabilidad o función de densidad de las variables aleatorias, que no siempre resulta conocida, se continuará analizando cómo estimarlas. Este análisis se desarrollará en dos niveles: a nivel teórico, estudiando diferentes propuestas de estimadores, y a nivel práctico, comparando varias implementaciones de los mismos. En el nivel teórico, se introducirán brevemente los estimadores basados en particiones y se desarrollarán estimadores basados en los $k$ vecinos más cercanos y de tipo de Kozachenko - Leonenko \cite{kraskov}. Estos estimadores nos permitirán, para una observación de una variable de la que no conocemos su distribución teórica, aproximar la entropía y la información mutua.
+  
+\item \textit{Analizar y comparar implementaciones de estimadores de la entropía y de la información mutua.}
+  
+ El segundo objetivo a alcanzar se corresponde con el análisis de los estimadores desde un punto de vista práctico. En este nivel, se analizarán experimentalmente implementaciones de algunos de los estimadores estudiados teóricamente y se realizará una análisis comparativo entre ellas. Este análisis contemplará la calidad de la solución a través de la observación del error, diferencia entre comportamientos medios mediante \textit{T-Test} y el rendimiento en términos de tiempo de ejecución mediante \textit{profiling}.\\
+\end{enumerate}
+
+
+Esta memoria se ha estructurado en cuatro capítulos, este primer capítulo introductorio y tres capítulos adicionales.\\
+
+En el capítulo 2 se estudian los conceptos básicos necesarios para el desarrollo del proyecto. Entre otras, se presenta la definición de estimador y sus propiedades, se describen algunas distribuciones que se usarán a lo largo de este trabajo de fin de grado y se definen dos medidas de la dependencia como motivación para la definición de la información mutua. Asimismo, se presentan los conceptos de teoría de la información a estudiar: entropía e información mutua, así como una serie de propiedades y relaciones entre ellas. Este estudio se realizará tanto para el caso discreto como para el continuo. Se continúa estudiando estimadores de los conceptos de entropía e información mutua. Se estudiará brevemente un estimador basado en particiones y en más profundidad un estimador de la entropía basado en los $k$ vecinos más cercanos. También se estudiarán estimadores del tipo de Kozachenko - Leonenko, tanto para la entropía como para la información mutua. Para cerrar este capítulo se analizarán dos implementaciones en Python de los estimadores estudiados anteriormente: las implementaciones presentadas en \cite{estimating} y \cite{npeet}.\\
+
+En el capítulo 3 se establece la metodología utilizada para la validación computacional de los conceptos teóricos y el estudio experimental de los estimadores. Se describen brevemente las herramientas a utilizar, el lenguaje de programación y las bibliotecas utilizadas, centrándonos posteriormente en aquellas necesarias para llevar a cabo el análisis de rendimiento. Durante el estudio de las implementaciones adquiere interés conocer cómo funciona el paralelismo en Python y las herramientas que proporciona la biblioteca \texttt{scikit-learn} para calcular los vecinos más cercanos. Además, el cálculo de los vecinos más cercanos resultará fundamental para realizar las estimaciones, por ello, se describen las clases en que la biblioteca \texttt{scikit-learn} tienen implementado este algoritmo. Se discuten los fundamentos teóricos del \textit{T-Test} que será posteriormente incluido como parte de la metodología de análisis y validación computacional. La última etapa del análisis de las implementaciones es el análisis de rendimiento, se incluye en este capítulo una explicación de las bibliotecas utilizadas para la realización del mismo.\\
+
+El capítulo 4 recoge los resultados derivados de la experiencia computacional desarrollada. Esta experiencia computacional, en primer lugar, analiza el comportamiento de los estimadores cuando los datos siguen una distribución normal, conocida teóricamente. Continúa realizando un \textit{T-Test} para saber si las diferencias en media de los estimadores son estadísticamente significativas. Asimismo, se desarrolla el análisis de rendimiento de las distintas versiones desarrolladas intentando extraer conclusiones acerca de los requerimientos computacionales de cada método.\\
+
+La memoria finaliza con un apartado de conclusiones, así como un apartado en el que se especifica el presupuesto necesario para su desarrollo.\\
+
+De la experiencia computacional se concluye que los estimadores estudiados incrementan sus errores al aumentar la dimensión de los datos de muestra. Además, el aumento de la dimensión, así como el aumento del tamaño de muestra, provoca un incremento notable en los tiempos de ejecución. Tras el \textit{T-Test} concluimos que las implementaciones de la entropía en media resultan similares para dimensiones pequeñas, pero cuando esta aumenta las diferencias entre ellas también lo hacen, preferiremos en este caso la implementación \cite{estimating} de la entropía, pues es la que obtiene menores errores en la comparación con una variable aleatoria con distribución normal. En el caso de la información mutua, las diferencias entre los estimadores resultan significativas en todos los casos, pero las comparaciones con variables aleatorias con distribución normal no nos permiten decantarnos por ninguno. Atendiendo a los tiempos de ejecución, la elección de la implementación dependerá tanto de la dimensión como del tamaño de muestra.\\
+
 
 %--------------------------- FUNDAMENTOS--------------------------------
-\chapter{Fundamentos y estado del arte}
-
----(De lo de estado del arte comentar que es un tema que se sigue investigando y poner referencias al respecto)---
+\chapter{Fundamentos}
 
 \section{Conceptos previos}
 
@@ -1401,11 +1423,11 @@ En general ambas fórmulas dan resultados similares. Para un mismo $k$, $I^{(1)}
 
 \section{Implementaciones de la entropía y de la información mutua}
 
-En esta sección estudiaremos un par de implementaciones de conceptos anteriores como la entropía o la estimación mutua. En general, dado un número finito de muestras de una variable aleatoria no podemos calcular de forma exacta la entropía o información mutua, ya que no conocemos su distribución. Para implementarlas es necesario usar algún estimador, como los estudiados en el apartado anterior.
+En esta sección estudiaremos dos implementaciones de conceptos anteriores como la entropía o la estimación mutua. En general, dado un número finito de muestras de una variable aleatoria no podemos calcular de forma exacta la entropía o información mutua, ya que no conocemos su distribución. Para implementarlas es necesario usar algún estimador, como los estudiados en el apartado anterior.
 
 \subsection{Implementación 1 - GaelVaroquaux}
 
-Comenzaremos revisando la implementación encontrada en \cite{estimating}. Para ello leeremos el código y nos formaremos una idea de qué hace y cómo cada una de las funciones.
+Comenzaremos revisando la implementación encontrada en \cite{estimating}. Para ello analizaremos el código y nos haremos una idea de qué hace y cómo cada una de las funciones.
 
 \begin{itemize}
 \item \texttt{nearest\_distances(X, k)}: para cada punto de un vector \texttt{X}, devuelve la distancia a su $k$-ésimo vecino más cercano. Se implementa haciendo uso de las funciones de la clase \texttt{NearestNeighbors} de \texttt{scikit-learn} \cite{nearestneighbors}.
@@ -1426,20 +1448,20 @@ Coincidiendo con la fórmula vista en el ejemplo \ref{ej:norm_multi}.
 
 \item \texttt{entropy(X, k)}: calcula la entropía de la variable \texttt{X} usando el estimador de tipo de Kozachenko - Leonenko visto en  (\ref{eq:est_ent}). Comienza inicializando los elementos que se necesitan para aplicar la fórmula: vecinos más cercanos para todos los elementos del vector, dimensiones de \texttt{X}, volumen de la bola unidad ($V_d$). Notamos que en el cálculo de la constante $V_d$ (\texttt{volume\_unit\_ball}) se utiliza el volumen dado por la distancia euclídea. Donde en el estimador estudiado ponía $\varepsilon$ en esta implementación pone \texttt{r + eps}, donde \texttt{eps} es el menor valor que al ser sumado varía el resultado (de forma que  \texttt{1+eps $\neq$ 1}). En ambas implementaciones se añade un ínfimo ruido a los datos, para evitar que varios puntos tengan exactamente las mismas coordenadas. Devuelve el resultado de sustituir estos valores en la expresión (\ref{eq:est_ent}).
 
-\item \texttt{mutual\_information(variables, k)}: devuelve la información mutua entre cualquier número de variables. Para ello suma las entropías marginales de cada una de ellas y les resta la entropía conjunta (usando el mismo valor $k$ para todas las estimaciones), aplicando el Lema \ref{l:ent_im} y calculando la entropía llamando a la función \texttt{entropy}.
+\item \texttt{mutual\_information(variables, k)}: devuelve la información mutua entre cualquier número de variables. Para ello suma las entropías marginales de cada una de ellas y les resta la entropía conjunta (usando el mismo valor $k$ para todas las estimaciones), se aplica el Lema \ref{l:ent_im} realizando el cálculo de las entropías con la función \texttt{entropy}.
 
 \item \texttt{mutual\_information\_2d(x, y, sigma, normalized)}: calcula la información mutua entre dos variables unidimensionales a partir de su histograma conjunto. 
 
-\item \texttt{test\_entropy()}: permite probar la entropía comparando la entropía de una variable aleatoria con distribución normal, que conocemos teóricamente y se calcula en \texttt{entropy\_gaussian}, con la entropía estimada por \texttt{entropy}. Si ambos valores difieren demasiado, saltará un \textit{assert}.
+\item \texttt{test\_entropy()}: permite validar la entropía comparando la entropía de una variable aleatoria con distribución normal, que conocemos teóricamente y se calcula en \texttt{entropy\_gaussian}, con la entropía estimada por \texttt{entropy}. Si ambos valores difieren demasiado, de disparará un \textit{assert}.
 
-\item \texttt{test\_mutual\_information()}: permite probar la información mutua de una variable aleatoria 2 dimensional estimando los resultados para una variable aleatoria con distribución normal y comparándolos con los resultados teóricos.
+\item \texttt{test\_mutual\_information()}: permite comprobar la información mutua de una variable aleatoria 2 dimensional estimando los resultados para una variable aleatoria con distribución normal y comparándolos con los resultados teóricos.
 
 \item \texttt{test\_degenerate()}: comprueba que los estimadores no dan valores infinitos.
 
 \item \texttt{test\_mutual\_information\_2d()}: es una función similar a \texttt{test\_mutual\_information}, pero para probar \texttt{mutual\_information\_2d}.
 \end{itemize} 
 
-Si ejecutamos el código como está, se producen como salida dos parejas. La primera es la estimación de la información mutua entre 2 variables normales correladas usando la función \texttt{mutual\_information}. La segunda muestra lo mismos resultados para la función \texttt{mutual\_information\_2d}. En ambos casos a la izquierda está el valor obtenido y a la derecha el valor teórico. Se obtienen los siguientes resultados:
+Si ejecutamos el código original, se producen como salida dos parejas. La primera es la estimación de la información mutua entre 2 variables normales correladas usando la función \texttt{mutual\_information}. La segunda muestra la misma información para la función \texttt{mutual\_information\_2d}. En ambos casos a la izquierda está el valor obtenido y a la derecha el valor teórico. Se obtienen los siguientes resultados:
 \begin{lstlisting}
 (0.1092329232318674, 0.11157177565710485)
 (2.1173231240729757, 2.2033596236321267)
@@ -1447,27 +1469,27 @@ Si ejecutamos el código como está, se producen como salida dos parejas. La pri
 
 Añadimos a esta tupla la diferencia entre ambos valores:
 \begin{lstlisting}
-(0.1092329232318674, 0.11157177565710485, 0.0023388524252374587)
+(0.1092329232318674, 0.11157177565710485, 0.0023388524252374)
 (2.1173231240729757, 2.2033596236321267, 0.08603649955915094)
 \end{lstlisting}
 
-Observamos una pequeña diferencia entre los valores estimados y los teóricos.
+Observamos una pequeña diferencia entre los valores estimados y los teóricos. Esta pequeña diferencia podría indicar que la estimación es buena. Sin embargo, para afirmar con certeza si la estimación es buena o no habría que fijar un umbral de error y probarla en muchos más casos.\\ 
 
 \subsection{Implementación 2 -  gregversteeg}
 
 Pasamos a revisar la segunda implementación, que encontramos en \cite{npeet}. Como en el caso anterior, comenzamos leyendo el código función por función. 
 \begin{itemize}
-\item \texttt{entropy(x, k, base)}: utiliza el estimador de tipo Kozachenko - Leonenko visto en (\ref{eq:est_ent}) basado en los $k$ vecinos más cercanos. \texttt{x} debe ser una lista de vectores. En primer lugar, hay un \textit{assert} para que el valor $k$ sea mayor que el número de muestras. Se convierte la lista \texttt{x} en un \textit{array}, se almacena el número de elementos y de características, se añade ruido a los elementos de \texttt{x} (en la función \texttt{add\_noise}), se obtiene el árbol de vecinos más cercanos usando árboles \texttt{KDTree} o \texttt{BallTree} de la biblioteca \texttt{scikit-learn} según la dimensión de los datos (en la función \texttt{build\_tree}). Se obtienen los $k$ vecinos más cercanos de \texttt{x} usando este árbol y la función \texttt{query\_neighbors}, que llama a la función \texttt{query} correspondiente de \texttt{scikit-learn}, esta función devolverá la distancia de Chebyshev a los vecinos más cercanos y sus índices, pero nos quedamos solo con las distancias. La función devuelve el siguiente valor:\[
+\item \texttt{entropy(x, k, base)}: utiliza el estimador de tipo Kozachenko - Leonenko visto en (\ref{eq:est_ent}) basado en los $k$ vecinos más cercanos. \texttt{x} debe ser una lista de vectores. En primer lugar, se comprueba mediante un \textit{assert} que el valor de $k$ sea mayor que el número de muestras. Se convierte la lista \texttt{x} en un \textit{array}, se almacena el número de elementos y de características, se añade ruido a los elementos de \texttt{x} (en la función \texttt{add\_noise}), se obtiene el árbol de vecinos más cercanos usando árboles \texttt{KDTree} o \texttt{BallTree} de la biblioteca \texttt{scikit-learn} según la dimensión de los datos (en la función \texttt{build\_tree}). Se obtienen los $k$ vecinos más cercanos de \texttt{x} usando este árbol y la función \texttt{query\_neighbors}, que llama a la función \texttt{query} correspondiente de \texttt{scikit-learn}, esta función devolverá la distancia de Chebyshev(dada por la norma del máximo) a los vecinos más cercanos y sus índices, pero nos quedamos solo con las distancias. La función devuelve el siguiente valor:\[
   \frac{\psi(N) - \psi(k) + d \cdot \log 2 + \frac{d}{N}\sum \varepsilon(i)}{\log(base)}.
   \]
 
-  Este $\log (base)$ se utiliza para que la fórmula pase a estar en base 2. La fórmula coincide con la estudiada, notando que la constante $\log V_d$ es sustituida por $d \cdot \log 2$, debido al uso de la normal del máximo.
+  Dividir entre $\log (base)$ se utiliza para que la fórmula pase a estar en base 2. La fórmula coincide con la estudiada, notando que la constante $\log V_d$ es sustituida por $d \cdot \log 2$, debido al uso de la norma del máximo.
 
-\item \texttt{centropy(x, y, k, base)}: estima la entropía de $X|Y$, para ello usa la función \texttt{entropy} para calcular las entropías de $(X,Y)$ e $Y$. Estima la entropía condicionada usando la definición $h(X|Y) = h(X,Y)-h(Y)$.
+\item \texttt{centropy(x, y, k, base)}: estima la entropía de $X|Y$, se usa la función \texttt{entropy} para calcular las entropías de $(X,Y)$ e $Y$. Estima la entropía condicionada usando la definición $h(X|Y) = h(X,Y)-h(Y)$.
 \item \texttt{tc(xs, k, base)}: calcula la entropía de cada característica, devuelve la suma de las entropías de las características menos la entropía de la variable.
 \item \texttt{ctc(xs, y, k, base)}: similar a la función \texttt{tc}, pero calculando las entropías condicionadas.
 \item \texttt{corex(xs, y, k, base)}: análoga a la función \texttt{tc} pero en vez de la entropía calcula la información mutua.
-\item \texttt{mi(x, y, z, k, base, alpha)}: calcula la información mutua entre \texttt{x, y}, utilizando el estimador (\ref{eq:est1}). Comienza comprobando que ambos vectores tienen la misma longitud y que $k$ es menor que la misma. Hace las transformaciones con los datos correspondientes y les añade ruido. Si se ha pasado como parámetro también la  \texttt{z}, la información mutua a calcular será condicionada a este valor así que se añade el valor \texttt{z} al conjunto de puntos. De forma similar a como se hizo en la función \texttt{entropy}, se construye el árbol de los vecinos más cercanos y se almacena la distancia de cada elemento al $k$-ésimo vecino más cercano. A continuación, se utiliza la función \texttt{avgdigamma} para encontrar el número de puntos a distancia menor que el vecino $k$-ésimo (\texttt{num\_points}, en el espacio marginal) haciendo uso de \texttt{count\_neighbors} y devuelve la media de $\psi(num\_points)$. Si el parámetro \texttt{alpha $>$ 0} se suma a $\psi(N)$ el valor de \texttt{lnc\_correction}. La función devuelve:\[
+\item \texttt{mi(x, y, z, k, base, alpha)}: calcula la información mutua entre \texttt{x} e \texttt{y}, utilizando el estimador (\ref{eq:est1}). Comienza comprobando que ambos vectores tienen la misma longitud y que $k$ es menor que la misma. Hace las transformaciones con los datos correspondientes y les añade ruido. Si se ha pasado como parámetro también la  \texttt{z}, la información mutua a calcular estará condicionada a este valor así que se añade el valor \texttt{z} al conjunto de puntos. De forma similar a como se hizo en la función \texttt{entropy}, se construye el árbol de los vecinos más cercanos y se almacena la distancia de cada elemento al $k$-ésimo vecino más cercano. A continuación, se utiliza la función \texttt{avgdigamma} para encontrar el número de puntos a distancia menor que el vecino $k$-ésimo (\texttt{num\_points}, en el espacio marginal) haciendo uso de \texttt{count\_neighbors} y devuelve la media de $\psi(num\_points)$. Si el parámetro \texttt{alpha $>$ 0} se suma a $\psi(N)$ el valor de \texttt{lnc\_correction}. La función devuelve:\[
 \frac{- \langle \psi(n_x) \rangle - \langle \psi(n_y) \rangle + \psi(k) + \psi(N)}{\log (base)}.
 \]
 \item \texttt{cmi(x, y, z, k, base)}: calcula la información mutua de \texttt{x} e \texttt{y} condicionado a \texttt{z}, hace uso de la anterior función, que en este caso devolvería \[
@@ -1481,7 +1503,7 @@ donde \texttt{nn} y \texttt{nnp} son las distancias a los vecinos más cercanos 
 
 \item \texttt{lnc\_correction(tree, points, k, alpha)}: a partir del árbol de vecinos más cercanos, se queda con los $k$ vecinos más cercanos y calcular el valor de la corrección que sumar al valor $\psi(N)$.
 
-\item \texttt{entropyd(sx, base)}: con esta comienza una serie de funciones para estimaciones en el caso de variables aleatorias discretas. Se estima la probabilidad contando el número de apariciones de un elemento y dividiendo entre el total de elementos. Para calcular la entropía, se devuelve la suma de las probabilidades multiplicadas por el logaritmo de 1 partido por la probabilidad (por eso no aparece el cambio de signo), todo ello dividido entre $\log (base)$:\[
+\item \texttt{entropyd(sx, base)}: con esta comienzan una serie de funciones para estimaciones en el caso de variables aleatorias discretas. Se estima la probabilidad contando el número de apariciones de un elemento y dividiendo entre el total de elementos. Para calcular la entropía, se devuelve la suma de las probabilidades multiplicadas por el logaritmo de 1 partido por la probabilidad (por eso no aparece el cambio de signo), todo ello dividido entre $\log (base)$:\[
 \frac{\sum p \log \frac{1}{p}}{\log(base)}.
 \]
 
@@ -1497,9 +1519,9 @@ Si las probabilidades son correctas, esta fórmula coincide con la entropía te�
 
 \item \texttt{ctcd(xs, y, base)}:  a la entropía condicionada por características le resta la entropía condicionada.
 
-\item \texttt{corexd(xs, ys, base}: devuelve la suma de la información mutua por columnas menos la información mutua.
+\item \texttt{corexd(xs, ys, base)}: devuelve la suma de la información mutua por columnas menos la información mutua.
 
-\item \texttt{micd(x, y, k, base, warning)}: con este empiezan los estimadores mixtos, en los que una variable es discreta y la otra continua. En esta función se calcula la información mutua cuando \texttt{x} sea continua e \texttt{y} discreta. Primero se asegura de que tengamos el mismo número de elementos de ambas variables. Se calcula la entropía de \texttt{x} y la probabilidad de cada valor de \texttt{y} (como en el caso discreto, contando el número de veces que aparece cada elemento y dividiendo entre el total). A continuación, para cada valor que toma \texttt{y} se calcula la entropía de \texttt{x} dado \texttt{y} (este valor comienza siendo $0$ y se le va sumando la entropía calculada). Para hacer este cálculo, en primer lugar, se toma el vector de elementos de \texttt{x} dado un \texttt{y}, si tiene menos elementos que el $k$ considerado se suma la probabilidad de \texttt{y} por la entropía de \texttt{x}, añadiendo un \textit{warning} de que en este caso se está asumiendo la entropía máxima. Si el número de elementos es suficiente, se calcula la entropía de este vector y se multiplica por la probabilidad de \texttt{y}. La función devolverá el valor absoluto de la diferencia entre la entropía de \texttt{x} y la entropía de \texttt{x} dado \texttt{y}.
+\item \texttt{micd(x, y, k, base, warning)}: con este método empiezan los estimadores mixtos, en los que una variable es discreta y la otra continua. En esta función se calcula la información mutua cuando \texttt{x} sea continua e \texttt{y} sea discreta. Primero se asegura de que tengamos el mismo número de elementos de ambas variables. Se calcula la entropía de \texttt{x} y la probabilidad de cada valor de \texttt{y} (como en el caso discreto, contando el número de veces que aparece cada elemento y dividiendo entre el total). A continuación, para cada valor que toma \texttt{y} se calcula la entropía de \texttt{x} dado \texttt{y} (este valor comienza siendo $0$ y se le va sumando la entropía calculada). Para hacer este cálculo, en primer lugar, se toma el vector de elementos de \texttt{x} dado un \texttt{y}, si tiene menos elementos que el $k$ considerado se suma la probabilidad de \texttt{y} por la entropía de \texttt{x}, añadiendo un \textit{warning} de que en este caso se está asumiendo la entropía máxima. Si el número de elementos es suficiente, se calcula la entropía de este vector y se multiplica por la probabilidad de \texttt{y}. La función devolverá el valor absoluto de la diferencia entre la entropía de \texttt{x} y la entropía de \texttt{x} dado \texttt{y}.
 
 \item \texttt{midc(x, y, k, base, warning)}: este estimador se utilizará cuando \texttt{x} sea discreta e \texttt{y} continua, consiste en llamar a la función \texttt{micd} con los argumentos intercambiados.
 
@@ -1582,19 +1604,19 @@ En primer lugar, se calcula la entropía de variables con una distribución unif
 
 El lenguaje de programación utilizado para implementar las diferentes pruebas que nos permiten comparar las implementaciones de los estimadores presentadas anteriormente es Python \cite{python}. No solo es el lenguaje en el que están escritas las implementaciones, es un lenguaje con numerosos módulos y paquetes, tanto en su biblioteca estándar como fuera de la misma, que nos ayudarán a realizar la comparativa desde diferentes puntos de vista.\\
 
-Python es un lenguaje interpretado, interativo y orientado a objetos. Incluye módulos, excepciones, tipado dinámico. Soporta varios paradigmas de programación además de la programación orientada a objetos se permite la programación procedural o funcional. Una de las características principales de este lenguaje es su clara sintaxis.\\
+Python es un lenguaje interpretado, interactivo y orientado a objetos. Incluye módulos, excepciones, tipado dinámico. Soporta varios paradigmas de programación además de la programación orientada a objetos se permite la programación procedural o funcional. Una de las características principales de este lenguaje es su clara sintaxis.\\
 
-Entre las bibliotecas destacamos el uso de NumPy \cite{numpy} y pandas \cite{pandas} para almacenar información, matplotlib \cite{matplotlib} para la generación de gráficas, random \cite{random} para generar los datos con los que realizar pruebas, cProfile y pstats \cite{profilers} para trabajar con las medidas de los tiempos de ejecución.\\
+Entre las bibliotecas destacamos el uso de NumPy \cite{numpy} y pandas \cite{pandas} para almacenar información, matplotlib \cite{matplotlib} para la generación de gráficas, random \cite{random} para generar los conjuntos de datos con los que realizar pruebas, cProfile y pstats \cite{profilers} para trabajar con las medidas de los tiempos de ejecución.\\
 
-Para la construcción de los programas se ha utilizado un diseño basado en prototipos. El programa inicial es revisado y mejorado sucesivas veces hasta obtener la versión final. De esta forma, podremos ir viendo cómo se desarrollan las diferentes pruebas para comparar los estimadores si lo están haciendo de forma correcta no e ir añadiendo funcionalidades o mejoras a medida que nos demos cuenta de que son necesarias.\\
+Para la construcción de los programas se ha utilizado un diseño basado en prototipos. El programa inicial es revisado y mejorado sucesivas veces hasta obtener la versión final. De esta forma, podremos ir viendo cómo se desarrollan las diferentes pruebas para comparar los estimadores si lo están haciendo de forma correcta o no e ir añadiendo funcionalidades o mejoras a medida que nos demos cuenta de que son necesarias.\\
 
 Para tener control sobre las diferentes versiones se ha utilizado Git \cite{git}, un sistema de control de versiones libre que nos permitirá añadir las nuevas versiones de forma que podamos observar con facilidad los cambios entre las versiones así como deshacerlos si fuera necesario.\\
 
-A continuación, se explica con más detalle las herramientas utilizadas para medir el tiempo de ejecución. Además, se desarrollará cómo funciona el paralelismo en Python y la existencia del cerrojo global del intérprete (GIL) y cómo realizar el cálculo de los vecinos más cercanos utilizando la biblioteca \texttt{scikit-learn}, ya que ambas implementaciones hacen uso de la misma.\\
+A continuación, se explican con más detalle las herramientas utilizadas para medir el tiempo de ejecución. Además, se describirá cómo funciona el paralelismo en Python, la existencia del cerrojo global del intérprete (GIL) y cómo realizar el cálculo de los vecinos más cercanos utilizando la biblioteca \texttt{scikit-learn}, ya que ambas implementaciones hacen uso de la misma.\\
 
 \subsection{Herramientas para medir el tiempo de ejecución}
 
-Puesto que estamos comparando dos implementaciones diferentes que deben realizar el mismo cálculo, además de la precisión de sus resultados, podemos medir sus tiempos de ejecución para ver si hay o no diferencias significativas entre ellos. Para ello, se utilizará la herramienta \texttt{cProfile}, que nos permite hacer \textit{profiling} determinístico de programas escritos en Python, y la clase \texttt{Stats} que nos permite acceder a los medidas realizadas por la herramienta anterior \cite{profilers}.\\
+Puesto que estamos comparando dos implementaciones diferentes que deben realizar el mismo cálculo, además de la precisión de sus resultados, podemos medir sus tiempos de ejecución para comprobar si hay o no diferencias significativas entre ellos. Para ello, se utilizará la herramienta \texttt{cProfile}, que nos permite hacer \textit{profiling} determinístico de programas escritos en Python, y la clase \texttt{Stats} que nos permite acceder a los medidas realizadas por la herramienta anterior \cite{profilers}.\\
 
 La herramienta \texttt{cProfile} mide el número de veces que se ejecuta cada función (\texttt{ncalls}), el tiempo total empleado en cada función (\texttt{tottime}), el tiempo empleado en cada función cada vez que se llamó a la función (\texttt{percall}), el tiempo acumulado de cada función y todas a las que estas llamen (\texttt{cumtime}) y el tiempo acumulado entre el número de veces que se llame a esta función (\texttt{percall}). Esta herramienta será precisa incluso en el caso de funciones recursivas, al distinguir el número de veces que se llama a la función del número de veces que fue invocada de forma recursiva.\\
 
@@ -1631,7 +1653,7 @@ GIL, abreviatura de \textit{global interpreter lock}, \cite{glossary_GIL}, \cite
 
 Algunos módulos, de la librería estándar o no, liberan este cerrojo para ejecutar código muy costoso computacionalmente. También es habitual liberarlo en operaciones de entrada o salida, que son más lentas, liberando este cerrojo se permite la ejecución de otras hebras  en lo que se completan las operaciones de entrada o salida.\\
 
-El uso de GIL es controvertido, ya que no permite que programas multihebra aprovechen sistemas multiprocesadores. Se ha intentado crear un intérprete que permita el uso de hebras mediante cerrojos locales, pero estos intentos no han tenido éxito, porque bajaba el rendimiento cuando había un solo procesador. Además, se cree que solucionar este problema haría la implementación mucho más complicada y, por ello, más difícil de mantener.\\
+El uso de GIL es controvertido, ya que no permite que programas multihebra aprovechen sistemas multiprocesadores. Se ha intentado crear un intérprete que permita la ejecución de múltiples hebras simultáneas sin un cerrojo global, sino con cerrojos locales. Sin embargo, no se ha conseguido, ya que los intentos anteriores bajaban el rendimiento en sistemas monoprocesador. Además, se cree que solucionar este problema haría la implementación mucho más complicada y, por ello, más difícil de mantener.\\
 
 % 
 El módulo \texttt{threading} \cite{threading} de la biblioteca estándar de Python proporciona una interfaz de alto nivel para trabajar con hebras en este lenguaje. La clase \texttt{Thread} permite crear y ejecutar hebras diferentes a la principal. Contiene un constructor para crearlas indicando la función a ejecutar, el método \texttt{start()} que permite comenzar su actividad y el método \texttt{join()} para esperar a que la hebra termine, entre otros. Sin embargo, debido al cerrojo global (GIL) solo se puede ejecutar una hebra a la vez. El paralelismo a nivel de hebra podría ser apropiado cuando queramos ejecutar tareas cuyo cuello de botella sea la entrada salida, en cuyo caso se liberaría este cerrojo. \\
@@ -1639,7 +1661,7 @@ El módulo \texttt{threading} \cite{threading} de la biblioteca estándar de Pyt
 
 Una solución para poder ejecutar código en paralelo es usar múltiples procesos en vez de múltiples hebras. El paquete \texttt{multiprocessing} \cite{multiprocessing} de la biblioteca estándar de Python permite la ejecución concurrente de procesos, evitando el cerrojo global del intérprete al usar subprocesos en vez de hebras. La clase \texttt{Process} es análoga a la clase \texttt{Thread} para el caso de procesos. Como los procesos no comparten memoria es necesario implementar un método de comunicación entre procesos, para esto están la clase \texttt{Queue} y la función \texttt{Pipe()}. Además, se proporcionan varias alternativas para sincronizar los procesos como cerrojos (\texttt{Lock}), semáforos (\texttt{Semaphore}) o barreras (\texttt{Barrier}). Así, como una clase (\texttt{Pool}) para gestionar las tareas que queremos que ejecuten los diferentes procesos.\\
 
-No solo existen estos módulos para tratar el paralelismo, de hecho, en la documentación de Python se referencian algunas bibliotecas para ello \cite{parallelprocessing}. Entre estas comentaremos \texttt{Joblib}, pues es la que utilizan las funciones de \texttt{sklearn} usadas en las implementaciones estudiadas.\\
+No solo existen estos módulos para tratar el paralelismo, de hecho, en la documentación de Python se referencian algunas bibliotecas para ello \cite{parallelprocessing}. Entre estas comentaremos \texttt{Joblib}, pues es la que utilizan las funciones de \texttt{scikit-learn} usadas en las implementaciones estudiadas.\\
 
 Uno de los objetivos principales de \texttt{Joblib} \cite{joblib} es permitir la ejecución en paralelo de forma sencilla. Esta biblioteca nos permite hacer uso de la concurrencia a nivel de hebra o de proceso según le indiquemos, notamos que a nivel de hebra solo será efectivo si el GIL ha sido liberado. Por defecto, utilizará el módulo \texttt{'loky'} para separar procesos y ejecutar tareas simultáneamente en varios procesadores, pero es posible indicarle que utilice el módulo \texttt{threading} o \texttt{multiprocessing}.\\
 %----------------------------------------------------------------------
@@ -1649,7 +1671,7 @@ Uno de los objetivos principales de \texttt{Joblib} \cite{joblib} es permitir la
 \subsection{Cálculo de los vecinos más cercanos en \texttt{scikit-learn}}
 La biblioteca \texttt{scikit-learn} proporciona funcionalidades para el uso métodos basados en los $k$ vecinos más cercanos \cite{doc_nn}.\\
 
-Para el cálculo de los $k$ vecinos más cercanos de un conjunto de puntos se puede utilizar la clase \texttt{NearestNeighbors} \cite{nearestneighbors} y su método \texttt{kneighbors}, que devuelve los índices y distancias de los vecinos de cada punto. De esta forma se realiza el cálculo de los vecinos más cercanos en la implementación 1 de la entropía. Internamente, la clase \texttt{NearestNegihbors} utiliza las clases \texttt{KDTree} y \texttt{BallTree} para encontrar los vecinos más cercanos. La implementación 2 crea directamente uno de estos árboles (según la dimensión) y llama directamente a los métodos que va necesitando.\\
+Para el cálculo de los $k$ vecinos más cercanos de un conjunto de puntos se puede utilizar la clase \texttt{NearestNeighbors} \cite{nearestneighbors} y su método \texttt{kneighbors}, que devuelve los índices y distancias de los vecinos de cada punto. De esta forma se realiza el cálculo de los vecinos más cercanos en la implementación 1 de la entropía. Internamente, la clase \texttt{NearestNegihbors} utiliza las clases \texttt{KDTree} y \texttt{BallTree} para encontrar los vecinos más cercanos. La implementación 2 crea directamente uno de estos árboles (según la dimensión) e invoca directamente los métodos que va necesitando.\\
 
 Si nos encontramos con un conjunto de $n$ puntos, cada uno de dimensión $d$, podremos utilizar uno de los tres algoritmos proporcionados por la biblioteca \texttt{scikit-learn} para el cálculo de los vecinos más cercanos: \texttt{brute force}, \texttt{K-D Tree} y \texttt{Ball Tree}.\\
 
@@ -1659,13 +1681,13 @@ Con el objetivo de obtener algoritmos más eficientes que el de fuerza bruta, se
 
 Para solucionar la ineficiencia de los árboles $k$ dimensionales para dimensiones altas, se desarrolló la estructura \textit{ball tree}. En ella, en vez de dividir los puntos según sus valores respecto a algún eje, se hace según una serie de hiperesferas. La construcción de este tipo de árboles es más costosa que la de los árboles $k$ dimensionales, pero mejora la eficiencia de estos para realizar búsquedas cuando las dimensiones sean altas, sus tiempos son del orden $O(d\log n)$.\\
 
-Para un número de muestras muy pequeño, $n<30$, los algoritmos de fuerza bruta podrían resultar más eficientes que los basados en árboles. Por ello, las clases utilizadas para implementar todos estos métodos, proporcionan un parámetro \texttt{leaf\_size} que controla el número de muestras para el que utilizar el algoritmo de fuerza bruta, en vez de uno basado en árboles. Este parámetro afecta a los tiempos de ejecución de las aproximaciones basadas en árboles. Cuanto mayor sea \texttt{leaf\_size}, menor será el tiempo de construcción del árbol, ya que se crean menos nodos. Para buscar un $k$ vecino más cercano, si \texttt{leaf\_size} es muy pequeño, el tiempo de recorrer los nodos puede elevar los tiempos de ejecución, pero si es muy grande, las consultas se realizarán prácticamente por fuerza bruta.\\
+Para un número de muestras muy pequeño, $n<30$, los algoritmos de fuerza bruta podrían resultar más eficientes que los basados en árboles. Por ello, las clases basadas en árboles, proporcionan un parámetro \texttt{leaf\_size} que controla el número de muestras para el que utilizar el algoritmo de fuerza bruta. Este parámetro afecta a los tiempos de ejecución de las aproximaciones basadas en árboles, ya que el árbol se desarrollará hasta que el número de muestras  en un nodo hoja alcance el valor \texttt{leaf\_size}, para calcular la distancia entre puntos de un nodo hoja se utilizará el algoritmo de fuerza bruta. Cuanto mayor sea \texttt{leaf\_size}, menor será el tiempo de construcción del árbol, ya que se crean menos nodos. Para buscar un $k$ vecino más cercano, si \texttt{leaf\_size} es muy pequeño, el tiempo de recorrer los nodos puede elevar los tiempos de ejecución, pero si es muy grande, las consultas se realizarán prácticamente por fuerza bruta.\\
 
 \section{\textit{T-Test} para comparar los estimadores}
 
-Queremos saber si, en media, el comportamiento de ambos estimadores es similar. Para ello, tomaremos como hipótesis nula, $H_0$, que los estimadores en media tienen el mismo comportamiento y como hipótesis alternativa, $H_1$, que las diferencias en el comportamiento de los estimadores son significativas; y realizaremos un contraste de hipótesis. Para llevar a cabo el contraste de hipótesis nos basaremos en un estadístico al que llamaremos \textit{t}. Calcularemos el $p$-valor, la probabilidad de que bajo la hipótesis nula la variable aleatoria $T$, definida a continuación, pudiera obtener valores más extremos que el valor observado en $t$. Cuando este sea muy bajo, la hipótesis nula no se corresponderá con los datos observados y podremos rechazarla.\\
+Uno de los objetivos de este trabajo es conocer el comportamiento de las implementaciones de la entropía y la información mutua. Queremos saber si, en media, el comportamiento de ambos estimadores es similar. Para ello, tomaremos como hipótesis nula, $H_0$, que los estimadores en media tienen el mismo comportamiento y como hipótesis alternativa, $H_1$, que las diferencias en el comportamiento de los estimadores son significativas; y realizaremos un contraste de hipótesis. Para llevar a cabo el contraste de hipótesis nos basaremos en un estadístico al que llamaremos \textit{t}. Calcularemos el $p$-valor, la probabilidad de que bajo la hipótesis nula la variable aleatoria $T$, definida a continuación, pudiera obtener valores más extremos que el valor observado en $t$. Cuando este sea muy bajo, la hipótesis nula no se corresponderá con los datos observados y podremos rechazarla.\\
 
-En este caso, los valores de los estimadores dependen de la muestra por ello, en vez de comparar la media de los estimadores en diferentes datos de muestra, para cada muestra se realiza la estimación con ambas implementaciones y se calcula la diferencia entre ellas, emparejando de esta forma las observaciones. Estas son observaciones $d_1,\dots,d_N$ de la muestra aleatoria $D_1,\dots, D_N$ de la variable aleatoria ``diferencia entre ambas estimaciones'', se asumirá que sigue una distribución normal, con media $\mu_D$ y varianza $\sigma^2_D$. La hipótesis nula será,\[
+En este caso, los valores de los estimadores dependen de la muestra, por ello, en vez de comparar la media de los estimadores en diferentes datos de muestra, para cada muestra se realiza la estimación con ambas implementaciones y se calcula la diferencia entre ellas, emparejando de esta forma las observaciones. Estas son observaciones $d_1,\dots,d_N$ de la muestra aleatoria $D_1,\dots, D_N$ de la variable aleatoria ``diferencia entre ambas estimaciones'', se asumirá que sigue una distribución normal, con media $\mu_D$ y varianza $\sigma^2_D$. La hipótesis nula será,\[
 H_0: \mu_D = 0,\text{ es decir, la diferencia entre las medias es nula}.
 \]
 La variable $T$ se define como\[
@@ -1680,11 +1702,28 @@ p = 2 P \left [ T > t | \mu_D = 0 \right ].
 
 Utilizaremos la implementación del \textit{test} encontrada en \cite{ttest}. Dados dos vectores medirá si la diferencia entre ellos es significativa o no, devuelve el valor del estadístico $t$ y el $p$-valor. Lo utilizaremos dos veces, en un caso pasándole como parámetro las estimaciones de $N$ valores de la entropía realizadas con ambos estimadores, en otro, las estimaciones de $N$ valores de la información  mutua realizadas con ambos estimadores.\\
 
-\chapter{Resultados}
+\chapter{Experiencia computacional y discusión de resultados}
 
-\section{Análisis comparativo}
+\section{Condiciones de experimentación}
 
-Pasamos a implementar el programa \texttt{prueba.py} para poder comparar ambas implementaciones y realizar las modificaciones que consideremos.\\
+Los experimentos mostrados en este capítulo se han realizado en un equipo con las siguientes características:
+
+\begin{itemize}
+\item Arquitectura x86\_64.
+\item Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz.
+\item 1 \textit{socket}, 4 núcleos por \textit{socket}, 2 hilos de procesamiento por núcleo.
+\item 16 GB RAM.\\
+\end{itemize}
+
+Se ha utilizado la versión de Python 3.8.2, así como las siguientes versiones de los paquetes: NumPy 1.18.4, pandas 1.0.3, scikit-learn 0.23.1, joblib 0.15.1 y matplotlib 3.2.1.\\
+
+Además, para generar las muestras se ha creado la clase \texttt{data.py}, donde se crea un conjunto de datos de tamaño y dimensión dada y que siga una distribución normal, uniforme o que sea aleatoria.\\
+
+\section{Análisis de los estimadores}
+
+Pasamos a implementar el programa \texttt{compare.py} para poder comparar ambas implementaciones y realizar las modificaciones que consideremos.\\
+
+\subsection{Estimadores de la entropía}
 
 Comenzaremos comparando las estimaciones de la entropía. Para ello, creamos la función \texttt{ent} a la que pasamos dos variables aleatorias y calculamos su entropía a partir de los estimadores dados por las dos implementaciones.
 
@@ -1700,7 +1739,7 @@ Estimador 2:  6.084047562318489
 
 Los estimadores obtienen resultados notablemente diferentes. Esto se debe a que uno de ellos nos está dando la entropía en bits (al pasarlo a base 2) y el otro en nats. Modificaremos el primer estimador, dividiendo su resultado entre $\log(2)$, para que los dos estén en las mismas unidades.\\
 
-Pasamos a comparar estas entropías con una que conozcamos teóricamente, la distribución uniforme, vista en el Ejemplo \ref{ej:uni}, cuya entropía teórica es $\log(a)$. El código utilizado se encuentra en la función \texttt{example\_ent\_unif}, los resultados obtenidos son los siguientes:
+Pasamos a comparar estas entropías con una que conozcamos teóricamente, la distribución uniforme, vista en el Ejemplo \ref{ej:uni}, cuya entropía teórica es $\log(a)$. El código utilizado se encuentra en la función \texttt{example\_ent\_unif} y los resultados obtenidos son los siguientes:
 
 \begin{lstlisting}
 Entropía x: (a = 2)
@@ -1715,13 +1754,13 @@ Estimador 2:   6.68357488477827
 
 \end{lstlisting}
 
-Las estimaciones son parecidas, coincidiendo con la entropía teórica en un decimal y entre ellas unos 11. Notamos que en este caso la variable aleatoria $X$ es unidimensional.\\
+Las estimaciones son similares, coinciden con la entropía teórica en el primer decimal y entre hasta el undécimo decimal. Notamos que en este caso la variable aleatoria $X$ es unidimensional.\\
 
-Para comparar las estimaciones de la entropía en una variable multidimensional, aprovechamos la función \texttt{test\_entropy} de la primera implementación y la adaptamos para calcular también la entropía con la segunda implementación. Además, añadimos el parámetro \texttt{d}, con el que podremos variar la dimensión de la variable considerada, y el parámetro \texttt{k} que marcará el número de vecinos a utilizar. La matriz \texttt{P}, utilizada para generar la matriz de covarianzas, ya no está definida de forma fija, sino que se define de forma aleatoria según la dimensión a utilizar. Comenzamos a estudiar el caso d = 2, las estimaciones son muy parecidas entre sí (suelen coincidir en varios decimales), si ejecutamos la función en bucle, en general se obtiene una pequeña diferencia con el estimador real, pero no llega a saltar el \textit{assert}. Este salta algunas veces, cuando la entropía es negativa, si los estimadores dan un resultado menor que la entropía real.\\
+Para comparar las estimaciones de la entropía en una variable multidimensional, aprovechamos la función \texttt{test\_entropy} de la primera implementación y la adaptamos para calcular también la entropía con la segunda implementación. Además, añadimos el parámetro \texttt{d}, con el que podremos variar la dimensión de la variable considerada, y el parámetro \texttt{k} que marcará el número de vecinos a utilizar. La matriz \texttt{P}, utilizada para generar la matriz de covarianzas, ya no está definida de forma fija, sino que se define de forma aleatoria según la dimensión a utilizar. Comenzamos a estudiar el caso d = 2, las estimaciones son parecidas entre sí (suelen coincidir en varios decimales), si ejecutamos la función en bucle, en general se obtiene una pequeña diferencia con el estimador real, pero no se llega a disparar el \textit{assert}. Este salta algunas veces, cuando la entropía es negativa, si los estimadores dan un resultado menor que la entropía real.\\
 
-Queremos ser realmente conscientes de la magnitud del error que se está cometiendo, para ello, implementamos la función \texttt{err\_entropy}. Esta función no es más que una modificación de \texttt{test\_entropy} en la que se eliminan los \textit{assert} y se calcula la diferencia entre la entropía gaussiana teórica y las estimadas. Notamos que si aumentamos el valor de $d$, ambas estimaciones obtienen valores parecidos, difiriendo de la entropía teórica.\\
+Queremos ser realmente conscientes de la magnitud del error que se está cometiendo, para ello, implementamos la función \texttt{err\_entropy}. Esta función no es más que una modificación de \texttt{test\_entropy} en la que se eliminan los \textit{assert} y se calcula la diferencia entre la entropía gaussiana teórica y las estimadas. Notamos que si aumentamos el valor de $d$, ambas estimaciones obtienen valores próximos, difiriendo de la entropía teórica.\\
 
-Creamos la función \texttt{exp\_err\_ent}. En ella, se pretende obtener un idea más precisa del error obtenido para cada dimensión con ambos estimadores. Para ello, se mide el error un número (\texttt{reps}) determinado de veces y se calcula la media del error obtenido para cada dimensión. Finalmente, se dibuja una gráfica del error obtenido. Llamando a esta función con \texttt{reps = 20}, \texttt{k = 3}, \texttt{d = 2, ..., 10}, se obtienen los errores que podemos observar en la Tabla \ref{tab:err_ent}, vemos cómo a medida que aumenta la dimensión, aumenta el error de forma similar para ambos estimadores.\\
+Creamos la función \texttt{exp\_err\_ent}. En ella, se pretende obtener un idea más precisa del error obtenido para cada dimensión con ambos estimadores. Para ello, se mide el error un número (\texttt{reps}) determinado de veces y se calcula la media del error obtenido para cada dimensión. Finalmente, se dibuja una gráfica del error obtenido. Ejecutando esta función con \texttt{reps = 20}, \texttt{k = 3}, \texttt{d = 2, ..., 10}, se obtienen los errores que podemos observar en la Tabla \ref{tab:err_ent}, nótese cómo a medida que aumenta la dimensión, aumenta el error de forma similar para ambos estimadores.\\
 
 \begin{table}[H]
 %\large
@@ -1744,16 +1783,16 @@ $d$ & Error estimador 1 & Error estimador 2\\ \midrule
 \end{tabular}
 \end{table}
 
-Dibujando una gráfica de los valores anteriores compararemos más fácilmente el error obtenido con ambos estimadores. En la Figura \ref{fig:err_ent} encontramos esta representación. Vemos que los errores obtenidos con los dos estimadores eran prácticamente $0$ para $d=2$ y que estos van aumentando con la dimensión, siendo ligeramente superior el error obtenido con el segundo estimador, 20 repeticiones por iteración.\\
+Representando gráficamente los valores anteriores compararemos con más facilidad el error obtenido con ambos estimadores. En la Figura \ref{fig:err_ent} encontramos esta representación. Vemos que los errores obtenidos con los dos estimadores eran prácticamente $0$ para $d=2$ y que estos van aumentando con la dimensión, siendo ligeramente superior el error obtenido con el segundo estimador, 20 repeticiones por iteración.\\
 
-\begin{figure}[H]
+\begin{figure}[!htb]
     \centering
     \includegraphics[width=1\textwidth]{err_ent}
     \caption{Errores obtenidos con ambas estimaciones al calcular la entropía de una variable aleatoria con distribución normal y compararla con la entropía teórica.}
     \label{fig:err_ent}
 \end{figure}
 
-El tiempo de cómputo a medida que aumentamos la dimensión se incrementa considerablemente por lo que para hacernos una idea de qué ocurre si la aumentamos un poco más, repetimos el experimento con menos repeticiones por dimensión y llegamos hasta $d = 15$. Se obtienen los errores mostrados en la Figura \ref{fig:err_ent15}. Notamos que los errores no superan al anterior en todos los casos, se puede deber a que en las 10 repeticiones se obtengan estimaciones de la entropía que fueran mejores y ayuden a disminuir el error. Además es destacable cómo, a medida que aumenta la dimensión, crece la diferencia entre las dos estimaciones.\\
+El tiempo de cómputo a medida que aumentamos la dimensión se incrementa considerablemente por lo que para hacernos una idea del comportamiento de los estimadores al aumentar la dimensión, repetimos el experimento con menos repeticiones por dimensión y llegamos hasta $d = 15$. Se obtienen los errores mostrados en la Figura \ref{fig:err_ent15}. Notamos que los errores no superan al anterior en todos los casos, se puede deber a que en las 10 repeticiones se obtengan estimaciones de la entropía que fueran mejores y ayuden a disminuir el error. Además es destacable cómo, a medida que aumenta la dimensión, crece la diferencia entre las dos estimaciones.\\
 
 \begin{figure}[H]
     \centering
@@ -1762,7 +1801,9 @@ El tiempo de cómputo a medida que aumentamos la dimensión se incrementa consid
     \label{fig:err_ent15}
 \end{figure}
 
-Pasamos entonces a comparar los valores devueltos para la información mutua. Las implementaciones realizan la estimación de la información mutua de forma diferente. La implementación 1 utiliza la fórmula que calcula la información mutua como suma de las entropías marginales de las variables y resta de la entropía conjunta. Los errores encontrados en los cálculos individuales podrían afectar al cálculo total. La implementación 2 utiliza el estimador (\ref{eq:est1}) para realizar su estimación de la entropía, es posible que los errores cometidos al calcular la entropía no se vean arrastrados.\\
+\subsection{Estimadores de la información mutua}
+
+A continuación, realizamos el estudio comparativo para los valores de las estimaciones de la información mutua. Las implementaciones realizan la estimación de la información mutua de forma diferente. La implementación 1 utiliza la fórmula que calcula la información mutua como suma de las entropías marginales de las variables y resta de la entropía conjunta. Los errores encontrados en los cálculos individuales podrían afectar al cálculo total. La implementación 2 utiliza el estimador (\ref{eq:est1}) para realizar su estimación de la entropía, es posible que los errores cometidos al calcular la entropía no se vean arrastrados.\\
 
 Realizamos pruebas comparando los resultados de los estimadores con los de una gaussiana (en la función \texttt{test\_mutual\_information\_mod}) y calculamos el error como la diferencia entre información mutua teórica y estimada, calculamos la media tras repetir el experimento 100 veces, con $d=2$ y $k=3$. Se obtienen los siguientes resultados:\\
 
@@ -1774,7 +1815,7 @@ Error estimador 2:  0.007051668015342052
 
 El error en el primer estimador es ligeramente superior al error en el segundo.\\
 
-Al pasar a dimensión 3, los estimadores comienzan a diferir notablemente de la entropía teórica. Revisando el código notamos que no se adapta la al cambio de dimensión directamente, el cálculo de la entropía teórica de la gaussiana se hace sumando las entropías marginales y restándosela a la conjunta (en este caso como la entropía se calcula correctamente no se arrastran errores), pero la función estaba hecha para el caso $d = 2$. Se modifica utilizando un bucle sobre la dimensión para que, efectivamente, sume todas las entropías marginales. Una vez hecha la modificación correspondiente, realizamos la prueba para $k = 3,\ d = 3$ y 100 repeticiones, con lo que obtenemos:\\
+Al pasar a dimensión 3, los estimadores comienzan a diferir notablemente de la entropía teórica. Revisando el código notamos que no se adapta al cambio de dimensión directamente, el cálculo de la entropía teórica de la gaussiana se hace sumando las entropías marginales y restándosela a la conjunta (en este caso como la entropía se calcula correctamente no se arrastran errores), pero la función estaba originalmente desarrollada para el caso $d = 2$. Se modifica utilizando un bucle sobre la dimensión para que, efectivamente, sume todas las entropías marginales. Una vez realizada la modificación correspondiente, realizamos la prueba para $k = 3,\ d = 3$ y 100 repeticiones, con lo que obtenemos:\\
 
 \begin{lstlisting}
 Error estimador 1:  1.6417490587527461
@@ -1782,7 +1823,7 @@ Error estimador 2:  1.6426795618610046
 
 \end{lstlisting}
 
-Al igual que en el caso anterior, crearemos una función, \texttt{exp\_err\_im}, en la que repetiremos la prueba para las dimensiones dadas. Repitiendo el experimento para $d=2,...,15$; 25 veces por dimensión (calculando la media del error), con $k=3$ se obtienen los errores mostrados en la Tabla \ref{tab:err_im}. Notamos que los errores van aumentando al ir añadiendo más dimensiones. Visualizamos los errores obtenidos en la Figura \ref{fig:err_im}. Destaca que los errores obtenidos con ambas estimaciones son tan similares que se superponen en la gráfica. El error en la estimación es creciente en la dimensión.\\
+Al igual que en el análisis de la entropía, crearemos una función, \texttt{exp\_err\_im}, en la que repetiremos la prueba para las dimensiones dadas. Repitiendo el experimento para $d=2,...,15$; 25 veces por dimensión (calculando la media del error), con $k=3$ se obtienen los errores mostrados en la Tabla \ref{tab:err_im}. Notamos que los errores van aumentando al ir añadiendo más dimensiones. Visualizamos los errores obtenidos en la Figura \ref{fig:err_im}. Destaca que los errores obtenidos con ambas estimaciones son similares, de hecho, se superponen en la gráfica. El error en la estimación es creciente en la dimensión.\\
 
 \begin{table}[H]
 \centering
@@ -1817,17 +1858,17 @@ $d$ & Error estimador 1 & Error estimador 2\\ \midrule
 \end{figure}
 
 %-----------------------------------------------------------------------
-\section{Comparación mediante \textit{T-Test}}
+\section{Análisis mediante \textit{T-Test}}
 
 Nos preguntamos si el comportamiento en media de los estimadores de ambas implementaciones es el mismo, por ello, en el archivo \texttt{ttest.py} se escribe el código necesario para llevar a cabo un \textit{T-Test}.\\
 
-Tomaremos muestras de tamaño $N=30$, un número superior incrementaría notablemente los tiempos de ejecución. Realizaremos el \textit{test} para diferentes grupos de muestras, según la dimensión $d$ y el tamaño de muestra $n$ utilizado para realizar la estimación. Consideraremos dimensiones pequeñas, $d=2$, medianas, $d=10$, y grandes, $d=25$; a su vez, tamaños de muestra pequeños, $n=1000$, medianos $n=30000$, y grandes, $n=100000$.\\
+Tomaremos muestras de tamaño $N=30$, un número superior incrementaría notablemente los tiempos de ejecución. Realizaremos el \textit{test} para diferentes grupos de muestras, según la dimensión $d$ y el tamaño de muestra $n$ utilizado para realizar la estimación. Consideraremos dimensiones pequeñas, $d=2$, medianas, $d=10$, y grandes, $d=25$; a su vez, tamaños de muestra pequeños, $n=1000$, medianos $n=30000$, y grandes, $n=100000$\footnote{El caso de dimensión grande y tamaño de muestra grande, resulta demasiado costoso computacionalmente por lo que se omite en este análisis}.\\
 
 Realizamos un \textit{test} de normalidad sobre la muestra, de esta forma nos aseguramos de que nos encontramos bajo las condiciones del \textit{T-Test}.\\
 
 Recordamos que el contraste de hipótesis a realizar toma como hipótesis nula que los estimadores son similares y como hipótesis alternativa que los estimadores son significativamente diferentes. Calcularemos el valor del estadístico $t$ y su $p$-valor asociado en los diferentes casos. Si el $p$-valor es menor o igual que $0.05$ supondremos que tenemos evidencia suficiente de que los estimadores son distintos y rechazaremos la hipótesis nula. En caso contrario, no tendremos evidencia suficiente para rechazar la hipótesis nula y concluiremos que los estimadores en media son similares.\\
 
-En la Tabla \ref{tab:ttest-ent} se recogen los valores del estadístico $t$ y el $p$-valor obtenido en los diferentes casos en los que se ha estimado la entropía. Vemos cómo el valor absoluto del estimador $t$ aumenta a medida que aumenta la dimensión. Esto nos dice que la media muestral de las diferencias entre los estimadores crece con la dimensión. El $p$ valor, al contrario, disminuye a medida que aumenta la dimensión. Podemos atender a la Tabla \ref{tab:ttest-ent-reg} para saber en qué casos rechazamos la hipótesis nula y en cuáles no. Para $d=2$ no tenemos evidencia suficiente para rechazar la hipótesis nula, por tanto, concluimos que en media, para dimensiones pequeñas, los estimadores tienen un comportamiento similar. Al aumentar la dimensión, observamos se observa suficiente evidencia de que los estimadores son diferentes, por lo que se rechaza la hipótesis nula y se afirma que su comportamiento es diferente en media. Notamos que estos resultados no varían según la dimensión de la muestra.\\
+En la Tabla \ref{tab:ttest-ent} se recogen los valores del estadístico $t$ y el $p$-valor obtenido en los diferentes casos en los que se ha estimado la entropía. Vemos cómo el valor absoluto del estimador $t$ aumenta a medida que aumenta la dimensión. Esto nos dice que la media muestral de las diferencias entre los estimadores crece con la dimensión. El $p$ valor, al contrario, disminuye a medida que aumenta la dimensión. Podemos atender a la Tabla \ref{tab:ttest-ent-reg} para saber en qué casos rechazamos la hipótesis nula y en cuáles no. Para $d=2$ no tenemos evidencia suficiente para rechazar la hipótesis nula, por tanto, concluimos que en media, para dimensiones pequeñas, los estimadores tienen un comportamiento similar. Al aumentar la dimensión, se observa suficiente evidencia de que los estimadores son diferentes, por lo que se rechaza la hipótesis nula y se afirma que su comportamiento es diferente en media. Notamos que estos resultados no varían según la dimensión de la muestra.\\
 
 \begin{table}[!htb]
 \centering
@@ -1841,8 +1882,8 @@ En la Tabla \ref{tab:ttest-ent} se recogen los valores del estadístico $t$ y el
    & $t$ &  $0.29502$ & $-2.0275$ & $-0.034430$ \\[5pt]
 10 & $p$ &  $8.7473\cdot10^{-22}$ &  $1.2869\cdot10^{-22}$ &  $2.1281\cdot10^{-23}$ \\
    & $t$ & $-26.302$ & $-28.169$ & $-30.034$ \\[5pt]
-25 & $p$ &  $8.6948\cdot10^{-43}$ &  $2.6519\cdot10^{-61}$ &         NaN \\
-   & $t$ & $-142.08$ & $-618.45$ &         NaN \\
+25 & $p$ &  $8.6948\cdot10^{-43}$ &  $2.6519\cdot10^{-61}$ &          \\
+   & $t$ & $-142.08$ & $-618.45$ &          \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1879,8 +1920,8 @@ Los valores del estadístico $t$ y sus $p$-valores asociados al calcular las dif
    & $t$ &  $5.0887$ &  $13.676$ &  $16.231$ \\[5pt]
 10 & $p$ &  $9.1502\cdot10^{-43}$ &  $3.7462\cdot10^{-57}$ &  $1.5652\cdot10^{-61}$ \\
    & $t$ & $-141.83$ & $-444.82$ & $-629.79$ \\[5pt]
-25 & $p$ &  $1.2286\cdot10^{-46}$ &  $6.7789\cdot10^{-73}$ &         NaN \\
-   & $t$ & $-192.95$ & $-1552.6$ &         NaN \\
+25 & $p$ &  $1.2286\cdot10^{-46}$ &  $6.7789\cdot10^{-73}$ &          \\
+   & $t$ & $-192.95$ & $-1552.6$ &          \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1902,19 +1943,15 @@ Los valores del estadístico $t$ y sus $p$-valores asociados al calcular las dif
 
 
 %-----------------------------------------------------------------------
-\section{Experimentos}
-
-Compararemos ambas implementaciones en función al consumo de recursos, como tiempo y memoria.
-
-\subsection{Comparación de tiempos de ejecución}
+\section{Análisis de rendimiento}
 
 Para realizar la comparación de los tiempos de ejecución de las funciones se ha utilizado el archivo \texttt{profiling.py}.\\
 
-Se ha realizado un análisis de los tiempos de ejecución de las dos implementaciones de la entropía y de las dos implementaciones de la información mutua estudiadas. Para ello, se han ejecutado 5 veces y nos hemos quedado con los tiempos medios de ejecución para diferentes valores del número de muestras y dimensión de las mismas. Remarcamos que el tiempo de ejecución considerado es el tiempo acumulado por la función a estudiar y todas las funciones a las que esta llame.\\
+Se ha realizado un análisis de los tiempos de ejecución de las dos implementaciones de la entropía y de las dos implementaciones de la información mutua estudiadas. Para ello, se han realizado 5 ejecuciones y nos hemos quedado con los tiempos medios de ejecución para diferentes valores del número de muestras y dimensión de las mismas. Remarcamos que el tiempo de ejecución considerado es el tiempo acumulado por la función a estudiar y todas las funciones a las que esta invoque.\\
 
 Se han considerado tres rangos para el tamaño de las muestras: pequeñas (1000 muestras), medianas (30000 muestras) y grandes (100000). De forma similar, en función a la dimensión, se realizaron estimaciones con tres tipos de dimensiones: pequeñas (dimensión 2), medianas (dimensión 10) y grandes (dimensión 25).\\
 
-Comenzaremos analizando los tiempos obtenidos al calcular la entropía. En la Tabla \ref{tab:tiempos_ent_1} vemos los tiempos de de ejecución de la función \texttt{entropy} de la primera implementación para los valores de $n$ y $d$ estudiados. Como es de esperar, a medida que aumenta el número de muestras y la dimensión, se incrementan los tiempos de ejecución en ambos casos. Observamos también la desviación típica de las medidas realizadas, para constatar que el número de medidas tomadas es suficiente. Consideramos que las desviaciones típicas obtenidas son lo suficientemente pequeñas en relación a los tiempos medios de ejecución.\\
+Comenzaremos analizando los tiempos obtenidos al calcular la entropía. En la Tabla \ref{tab:tiempos_ent_1} podemos ver los tiempos de de ejecución, en segundos, de la función \texttt{entropy} de la primera implementación para los valores de $n$ y $d$ estudiados. Como es de esperar, a medida que aumenta el número de muestras y la dimensión, se incrementan los tiempos de ejecución en ambos casos. Observamos también la desviación típica de las medidas realizadas, para constatar que el número de medidas tomadas es suficiente. Consideramos que las desviaciones típicas obtenidas son lo suficientemente pequeñas en relación a los tiempos medios de ejecución.\\
 
 \begin{table}[!htb]
 %  \begin{adjustwidth}{-.45in}{-.45in}  
@@ -1950,7 +1987,7 @@ Comenzaremos analizando los tiempos obtenidos al calcular la entropía. En la Ta
  %   \end{adjustwidth}
 \end{table}
 
-La Tabla \ref{tab:tiempos_ent_2} contiene la misma información, esta vez sobre la función \texttt{entropy} de la implementación 2. En esta implementación de la entropía, los tiempos también aumentan al incrementar el número de muestras y la dimensión. Las desviaciones típicas vuelven a ser pequeñas acorde a los datos medios.\\
+La Tabla \ref{tab:tiempos_ent_2} contiene la misma información, esta vez sobre la función \texttt{entropy} de la implementación 2. En esta implementación de la entropía, los tiempos también aumentan al incrementar el número de muestras y la dimensión. Las desviaciones típicas vuelven a ser no significativas de acuerdo a los datos medios.\\
 
 \begin{table}[!htb]
 %  \begin{adjustwidth}{-.45in}{-.45in}  
@@ -1987,7 +2024,7 @@ La Tabla \ref{tab:tiempos_ent_2} contiene la misma información, esta vez sobre 
 \end{table}
 
 
-Para realizar la comparación atenderemos a la Tabla \ref{tab:tiempos_ent}, que contiene la información relativa a los tiempos medios de ejecución estructurada de forma que resulte más fácil comparar. Cuando la dimensión es 2, los tiempos son similares para muestras pequeñas y medianas, diferenciándose más para muestras grandes. Sin embargo, en casi todos los casos la implementación 1 es más lenta que la 2. Al aumentar la dimensión, se incrementan los tiempos de ejecución de ambas implementaciones, pero también las diferencias entre ellas. Para una muestra pequeña la implementación 1 tarda aproximadamente el doble que la 2. Con muestras mayores la diferencia de tiempo aumenta más todavía, para una muestra grande, la implementación 1 tarda casi el triple de tiempo que la 2. Para una dimensión grande, los tiempos de ejecución son considerablemente mayores en ambas implementaciones. Destaca que para una dimensión grande y un tamaño de muestra grande se invierte la tendencia observada en el resto de combinaciones de tamaño de muestra y dimensión, en este caso la implementación 1 tarda menos que la 2.\\
+Para realizar la comparación atenderemos a la Tabla \ref{tab:tiempos_ent}, que contiene la información relativa a los tiempos medios de ejecución estructurada de forma que resulte más fácil comparar. Cuando la dimensión es 2, los tiempos son próximos para muestras pequeñas y medianas, diferenciándose más para muestras grandes. Sin embargo, en casi todos los casos la implementación 1 es más lenta que la 2. Al aumentar la dimensión, se incrementan los tiempos de ejecución de ambas implementaciones, pero también las diferencias entre ellas. Para una muestra pequeña la implementación 1 invierte aproximadamente el doble de tiempo que la 2. Con muestras mayores la diferencia de tiempo se incrementa, para un tamaño de muestra grande, la implementación 1 tarda casi el triple de tiempo que la 2. Para una dimensión grande, los tiempos de ejecución son considerablemente mayores en ambas implementaciones. Destaca que para una dimensión grande y un tamaño de muestra grande se invierte la tendencia observada en el resto de combinaciones de tamaño de muestra y dimensión, en este caso la implementación 1 tarda menos que la 2.\\
 
 \begin{table}[H]
 \centering
@@ -2009,7 +2046,7 @@ Implementación & \backslashbox{$d$}{$n$} & 1000  & 30000 & 100000\\
 
 Podemos concluir, por tanto, que la segunda implementación es más rápida que la primera para calcular la entropía, salvo para dimensión y tamaño de muestra grande. El cálculo que realizan ambas estimaciones es el mismo, utilizan el mismo estimador, varía únicamente la forma de implementarlo, en cuanto a tiempo de cómputo será preferible la implementación 2.\\
 
-Si analizamos qué pasos emplean más tiempo en las implementaciones de la entropía nos sorprende descubrir que es en la misma función, el método \texttt{query} de \texttt{sklearn.neighbors.\_kd\_tree.BinaryTree}. Sin embargo, aunque ambas implementaciones llaman a este método, la primera pasa más tiempo en ella que la segunda. Por ejemplo, en una ejecución de la implementación 1 para muestras y dimensiones medianas que duró $2.2\,$s, esta función utilizó $2.125\,$s., mientras que la implementación 2 pasó $0.739\,$s en esta función de una ejecución que en total duró $0.776\,$s, véase Tabla \ref{tab:profile-ent-22}. Destaca que esta función no es solo la que más tiempo consume sino que la mayor parte del tiempo del cálculo de la entropía se emplea en realizar este cálculo, siendo los tiempos de las siguientes funciones mucho menores.\\
+Si analizamos qué pasos emplean más tiempo en las implementaciones de la entropía nos sorprende descubrir que es en la misma función, el método \texttt{query} de \texttt{sklearn.neighbors.\_kd\_tree.BinaryTree}. Sin embargo, aunque ambas implementaciones hacen uso de este método, la primera invierte más tiempo en ella que la segunda. Por ejemplo, en una ejecución de la implementación 1 para tamaños de muestra y dimensiones medianas que requirió $2.2\,$s, esta función utilizó $2.125\,$s., mientras que la implementación 2 invirtió $0.739\,$s en esta función de una ejecución que en total consumió $0.776\,$s, véase Tabla \ref{tab:profile-ent-22}. Destaca que esta función no es solo la que más tiempo consume sino que la mayor parte del tiempo del cálculo de la entropía se emplea en realizar este cálculo, siendo los tiempos de las siguientes funciones mucho menores.\\
 
 \begin{table}[!htb]
  %\begin{adjustwidth}{-.3in}{-.3in}  
@@ -2045,19 +2082,19 @@ Si analizamos qué pasos emplean más tiempo en las implementaciones de la entro
  %  \end{adjustwidth}
 \end{table}
 
-En la implementación 1 se obtienen los vecinos más cercanos utilizando la clase \texttt{sklearn.neighbors.NearestNeighbors}, llamando al método \texttt{kneighbors} \cite{imp_kneighbors}. Este método realiza una serie de comprobaciones antes de llamar al método \texttt{query} para obtener realmente los vecinos más cercanos y sus distancias. Además, la llamada a \texttt{query} se realiza usando métodos que proporcionan paralelismo de la biblioteca \texttt{joblib}, indicando que se utilizará paralelismo a nivel de hebra. En este caso, al crear el árbol con las opciones por defecto, se utiliza la métrica de Minkoswki con $p=2$, es decir, la distancia euclídea. Además, el parámetro \texttt{leaf\_size} se inicializa a 30.\\
+En la implementación 1 se obtienen los vecinos más cercanos utilizando la clase \texttt{sklearn.neighbors.NearestNeighbors}, invocando al método \texttt{kneighbors} \cite{imp_kneighbors}. Este método realiza una serie de comprobaciones antes de invocar al método \texttt{query} para obtener realmente los vecinos más cercanos y sus distancias. Además, la llamada a \texttt{query} se realiza usando métodos que proporcionan paralelismo de la biblioteca \texttt{joblib}, indicando que se utilizará paralelismo a nivel de hebra. En este caso, al crear el árbol con las opciones por defecto, se utiliza la métrica de Minkoswki con $p=2$, es decir, la distancia euclídea. Además, el parámetro \texttt{leaf\_size} se inicializa a 30.\\
 
 En la implementación 2, en primer lugar, se crea un árbol, que será de tipo \texttt{sklearn.neighbors.BallTree} cuando la dimensión sea mayor que 20 y de tipo \texttt{sklearn.neighbors.KDTree} cuando la dimensión sea menor que 20; y a continuación, se calculan los vecinos más cercanos llamando directamente al método \texttt{query} de la clase correspondiente. La métrica utilizada es la de Chebyshev y \texttt{leaf\_size = 40}.\\
 
-El incremento de tiempo en las llamadas a \texttt{query} en la primera implementación podría provenir del coste de realizar las llamadas en paralelo y no aprovecharlo realmente, sabemos que el paralelismo a nivel de hebra en Python depende de si el cerrojo global del intérprete (GIL) está activado o desactivado. En la segunda implementación,  se llama al método directamente y no existe este coste.\\
+El incremento de tiempo en las llamadas a \texttt{query} en la primera implementación podría provenir del coste de realizar las llamadas en paralelo y no aprovecharlo realmente, sabemos que el paralelismo a nivel de hebra en Python depende de si el cerrojo global del intérprete (GIL) está activado o desactivado. En la segunda implementación,  se invoca al método directamente y no existe este coste.\\
 
 La diferencia de tiempos también podría venir causada por el valor de \texttt{leaf\_size}. La diferencia entre los valores de este parámetro en ambas implementaciones es 10, comparado con el número de muestras puede parecer pequeño, pero al influir en el cálculo de los vecinos más cercanos de todos los puntos podría afectar notablemente.\\
 
 La métrica utilizada podría generar diferencias en los tiempos de ejecución. La métrica de Minkowski requiere calcular la raíz cuadrada de las diferencias al cuadrado, mientras que la de Chebyshev el máximo de las diferencias.\\ 
 
-El tipo de árbol utilizado para buscar los vecinos más cercanos puede afectar bastante, de hecho, aunque la documentación recomiende usar \texttt{BallTree} para dimensiones mayores que 20, este parámetro no es exacto y es posible que en este caso llegue a resultar más costoso utilizarlo frente a \texttt{KDTree}.\\
+El tipo de árbol utilizado para buscar los vecinos más cercanos puede afectar a los tiempos de ejecución, de hecho, aunque la documentación recomiende usar \texttt{BallTree} para dimensiones mayores que 20, este parámetro no es exacto y es posible que en este caso llegue a resultar más costoso utilizarlo frente a \texttt{KDTree}.\\
 
-Analizamos específicamente el caso en el que tamaño de muestra y dimensión son grandes, a ver si descubrimos qué ocurre exactamente para que la implementación 1 sea más rápida que la 2 solo en este caso. En la Tabla \ref{tab:profile-ent-33} observamos que en las dos implementaciones es el método \texttt{query} el que más tiempo emplea. Con la diferencia de que en la implementación 1 es el método \texttt{query} de \texttt{KDTree} y en la 2 de \texttt{BallTree}. Sin embargo, sabemos que la implementación 2 utiliza el método \texttt{query} de la clase \texttt{BallTree} en todas las ejecuciones en las que $d= 25$ y en las demás sigue siendo más rápida que la implementación 1. Sospechamos que el incremento en el número de muestras provoca que esta implementación sea más lenta únicamente en este caso.\\
+Analizamos específicamente el caso en el que tamaño de muestra y dimensión son grandes, con el fin de averiguar qué ocurre exactamente para que la implementación 1 sea más rápida que la 2 solo en este caso. En la Tabla \ref{tab:profile-ent-33} observamos que en las dos implementaciones es el método \texttt{query} el que más tiempo emplea. Con la diferencia de que en la implementación 1 es el método \texttt{query} de \texttt{KDTree} y en la 2 el de \texttt{BallTree}. Sin embargo, sabemos que la implementación 2 utiliza el método \texttt{query} de la clase \texttt{BallTree} en todas las ejecuciones en las que $d= 25$ y en las demás sigue siendo más rápida que la implementación 1. Sospechamos que el incremento en el número de muestras provoca que esta implementación sea más lenta únicamente en este caso.\\
 
 \begin{table}[!htb]
     \caption{Resultados \texttt{cProfiler}. Funciones que consumen más tiempo en el cálculo de la entropía para ambas implementaciones, caso $d = 25$, $n = 100000$, tiempos en segundos.}
@@ -2163,7 +2200,7 @@ De la misma forma, en la Tabla \ref{tab:tiempos_im_2} encontramos los tiempos de
 %    \end{adjustwidth}
 \end{table}
 
-Compararemos los tiempos de ejecución de ambas implementaciones utilizando la Tabla \ref{tab:tiempos_mi}. Para un tamaño de muestra pequeña y dimensión pequeña, los tiempos son muy similares, pero a medida que van aumentando, tanto dimensión como tamaño de muestra, aumenta también la diferencia entre los tiempos de ejecución de las dos implementaciones. Si nos fijamos en el tamaño de muestra pequeño, la implementación 1 resulta más lenta que la 2 para todas las dimensiones consideradas, ocurriendo lo contrario cuando nos fijamos en un tamaño de muestra grande, en los que la implementación 1 resulta más rápida que la 2 para todas las dimensiones. Para un tamaño de muestra mediano, el comportamiento varía según la dimensión, para $d=2, d= 10$ la implementación 1 resulta más rápida que la 2, mientras que para $d=25$ ocurre lo contrario.\\
+Compararemos los tiempos de ejecución de ambas implementaciones utilizando la Tabla \ref{tab:tiempos_mi}. Para un tamaño de muestra pequeña y dimensión pequeña, los tiempos son próximos, pero a medida que van aumentando, tanto dimensión como tamaño de muestra, aumenta también la diferencia entre los tiempos de ejecución de las dos implementaciones. Si nos fijamos en el tamaño de muestra pequeño, la implementación 1 resulta más lenta que la 2 para todas las dimensiones consideradas, ocurriendo lo contrario cuando nos fijamos en un tamaño de muestra grande, en los que la implementación 1 resulta más rápida que la 2 para todas las dimensiones. Para un tamaño de muestra mediano, el comportamiento varía según la dimensión, para $d=2, d= 10$ la implementación 1 resulta más rápida que la 2, mientras que para $d=25$ ocurre lo contrario.\\
 
 \begin{table}[!htb]
 \centering
@@ -2187,7 +2224,7 @@ En la primera implementación, vuelve a ser el método \texttt{query} de \texttt
 
 En la segunda implementación la función que más tiempo consume es también el método \texttt{query}, de la clase \texttt{KDTree} o \texttt{BallTree} según la dimensión. Notamos que en esta implementación, antes de llamar al método \texttt{query}, se unen los puntos de las variables para las que calculamos la información mutua, por tanto, para $d=10$ se consideraría un árbol con puntos de dimensión $20$. Además, la segunda función que más tiempo consume se aproxima, en tiempo total, a \texttt{query}; es la función  \texttt{query\_radius}, utilizada para calcular el valor de la media de $\psi(n)$. Esta función se llama dos veces, una para contar los puntos de la primera variable que están a menor distancia que el $k$-ésimo vecino y otra para realizar el mismo cálculo respecto de los puntos de la segunda variable. Cada una de estas llamadas individuales a \texttt{query\_radius}, donde consideramos puntos de dimensión $d$, será más rápida que la llamada a \texttt{query}, donde se consideran puntos de dimensión $2d$.\\
 
-En resumen, las funciones que más tiempo consumen son: en la implementación 1 son las 2 llamadas a \texttt{query} para puntos de dimensión $d$ y la llamada a \texttt{query} para puntos de dimensión $2d$, en la implementación 2 la llamada a \texttt{query} sobre puntos de dimensión $2d$ y las 2 llamadas a \texttt{query\_radius} para puntos de dimensión $d$.\\
+En resumen, las funciones que más tiempo consumen son: en la implementación 1 las 2 llamadas a \texttt{query} para puntos de dimensión $d$ y la llamada a \texttt{query} para puntos de dimensión $2d$, en la implementación 2 la llamada a \texttt{query} sobre puntos de dimensión $2d$ y las 2 llamadas a \texttt{query\_radius} para puntos de dimensión $d$.\\
 
 Comenzamos analizando qué ocurre para un número de muestras pequeño, $n=1000$, en la Tabla \ref{tab:profile-im-21} los resultados del \textit{profiling} para muestras de dimensión 10. Por un lado, al estudiar el caso de la entropía vimos que los tiempos del cálculo de \texttt{query} en la implementación 1 eran más lentos que en la 2. Por otro lado, es posible que para muestras pequeñas el cálculo de \texttt{query\_radius} sea más rápido que el de \texttt{query}. Estos motivos nos permiten justificar que la implementación 2 haya resultado más rápida para este tamaño de muestra.\\
 
@@ -2319,11 +2356,15 @@ Para tamaños de muestras medianos, $n = 30000$, tendremos que distinguir según
     \end{subtable}
 \end{table}
 
-
-
-\section{Discusión}
-
 \chapter{Conclusiones}
+
+Este trabajo comienza con una revisión de los conceptos necesarios para abordar sus objetivos, se estudian incialmente los conceptos de entropía e información mutua, tanto en el caso discreto como en el caso continuo. Posteriormente, se han estudiado sus propiedades, conceptos relacionados y relaciones entre ellas. A continuación, se analiza teóricamente algunas propuestas de estimadores de la entropía, basadas en los $k$ vecinos y también del tipo de Kozachenko - Leonenko, y de la información mutua, basadas en particiones y en el estimador de la entropía del tipo de Kozachenko - Leonenko.\\
+
+El análisis teórico y experimental de los estimadores nos permite obtener algunas conclusiones. El análisis de su comportamiento en el caso de la distribución normal permite afirmar que los errores en ambos estimadores aumentan a medida que crece la dimensión de los datos. En el caso de la entropía es ligeramente inferior el error obtenido por la implementación \cite{estimating}, pero en el caso de la información mutua estos errores resultan similares en ambas implementaciones.\\
+
+La realización del \textit{T-Test} sobre las implementaciones de la entropía permite concluir que el comportamiento de los estimadores es similar para dimensiones pequeñas, pero a medida que la dimensión crece, las diferencias en media entre los estimadores son significativas. En el caso de la entropía, las pruebas realizadas comparando con variables aleatorias generadas con una distribución normal, permitirían concluir que el estimador \cite{estimating} presenta errores menores y, por tanto, resultaría preferible al estimador \cite{npeet}. En el caso de la información mutua, sin embargo, no concluimos nada en este sentido, ya que los errores obtenidos por ambos estimadores fueron similares.\\
+
+Atendiendo al rendimiento, la implementación más rápida para realizar el cálculo de la entropía es la dada en \cite{npeet}, excepto cuando el número de observaciones y la dimensión sean grandes, en cuyo caso resulta más rápida la implementación \cite{estimating}. En el estudio de la información mutua, si tenemos que elegir la estimación más rápida, dependerá del tamaño de la muestra y de la dimensión. Para muestras de tamaño pequeño resulta más veloz la implementación \cite{npeet}, al igual que para muestras de tamaño medio y dimensión grande. En el resto de casos, muestras de tamaño grande y muestras de tamaño mediano con dimensiones pequeñas y medianas es más rápida la implementación \cite{estimating}. Notamos que para dimensiones grandes y tamaños de muestra grande los tiempos de ejecución se incrementan notablemente, tiempos cercanos a unos pocos segundos de ejecución cuando la dimensión es pequeña se transforman en tiempos entre 45 minutos y una hora para dimensiones grandes y tamaños de muestra grandes. Se hace necesario, por tanto, el uso de paralelismo a nivel de ejecución si se desea obtener resultados en tiempo aceptables.\\
 
 \chapter{Estimación del coste del TFG}
 ---Ordenador, horas a precio de junior---
