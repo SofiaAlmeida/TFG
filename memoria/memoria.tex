@@ -48,6 +48,9 @@
 \usepackage{subcaption}
 \usepackage{chngpage} % allows for temporary adjustment of side margins
 
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
 %%% Código
 %\usepackage{listingsutf8}
@@ -71,6 +74,8 @@
   urlseen = {Último acceso}
 }
 \addbibresource{citations.bib}
+\appto{\bibsetup}{\sloppy}
+
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definición}[section]
@@ -81,17 +86,31 @@
 \newtheorem{example}[theorem]{Ejemplo}
 \newtheorem{corollary}{Corolario}[theorem]
 
+% Título
+\usepackage{scrextend}
+\newcommand{\myTitle}{Estimadores de la entropía e información mutua}
+\newcommand{\myName}{Sofía Almeida Bruno}
+\newcommand{\myDegree}{Doble Grado en Ingeniería Informática y Matemáticas}
+\newcommand{\myFaculty}{ETSIIT -- Facultad de Ciencias}
+\newcommand{\myUni}{Universidad de Granada}
+\newcommand{\myYear}{Curso 2019-2020}
+\newcommand{\myProf}{Alberto Guillén Perales\\\textit{Departamento de Arquitectura y Tecnología de Computadores}\\ETSIIT}
+\newcommand{\myOtherProf}{Ana I. Garralda Guillem\\\textit{Departamento de Matemática Aplicada}\\Facultad de Ciencias}
+
 \begin{document}
 %-------------------------- ÍNDICE--------------------------------------
-
-\tableofcontents
-\newpage
+\include{Titlepage}
+\include{Titleback}
+\include{agradecimientos}
 
 \input{resumen.tex}
 
 \begin{otherlanguage}{british}
   \input{abstract.tex}
 \end{otherlanguage}
+
+\tableofcontents
+\newpage
 
 
 %-------------------------INTRODUCCIÓN----------------------------------
@@ -148,12 +167,12 @@ De la experiencia computacional se concluye que los estimadores estudiados incre
 
 \section{Conceptos previos}
 
-Antes de entrar en materia, se recogen una serie de definiciones y resultados que se utilizarán a lo largo del trabajo.\\
+En esta sección se incluyen algunas definiciones y resultados sobre probabilidad y estadística estudiados a lo largo del grado que utilizamos en el cuerpo del trabajo.\\
 
 \begin{definition}[$\sigma$-álgebra]
   Sea $\Omega$ un conjunto no vacío. Una $\sigma$-álgebra $\mathcal{A}$ sobre $\Omega$ es una familia de subconjuntos de $\Omega$ que verifica:
   \begin{itemize}
-  \item  El conjunto vacío, $\emptyset$, pertenece a $\mathcal{A}$,
+  \item  el conjunto vacío, $\emptyset$, pertenece a $\mathcal{A}$,
   \item  si $A$ pertenece a $\mathcal{A}$, entonces su complementario $\Omega\ \backslash\ A$ también pertenece a $\mathcal{A}$,
  \item si tomamos una serie de conjuntos $\{A_i\}_{i\in \mathbb{N}}$ de $\mathcal{A}$, entonces su unión numerable $\cup_{i\in \mathbb{N}}A_i$ también pertenece a $\mathcal{A}$.\\
   \end{itemize}
@@ -185,8 +204,6 @@ La condición de medibilidad quiere decir que $X^{-1}(B) \in \mathcal{A}\quad \f
 
 Cuando $n=1$ diremos que la variable aleatoria es unidimensional, mientras que cuando $n >1$ diremos que la variable aleatoria es multidimensional, en ocasiones también denominada, vector aleatorio. En el caso de la variable aleatoria multidimensional podremos querer información sobre ella misma, $X=(X_1,\dots, X_n)$, lo que llamaremos variable aleatoria conjunta, o sobre alguna de las variables aleatoria $X_i$, que denominaremos variable aleatoria marginal.\\
 
-Cuando la imagen de la variable aleatoria $X$ sea numerable, diremos que la variable aleatoria es \textit{discreta}, será descrita por la función masa de probabilidad que asigna una probabilidad a cada valor de la imagen de $X$. Por otro lado, cuando la imagen de la variable aleatoria $X$ sea infinita no numerable, diremos que la variable aleatoria es \textit{continua}. Si además puede ser descrita por una función de densidad, será \textit{absolutamente continua}.\\
-
 Cada variable aleatoria nos da una medida de probabilidad, su probabilidad inducida.\\
 
 \begin{definition}[Probabilidad inducida]
@@ -195,6 +212,8 @@ P_X[B]:= P[X^{-1}(B)],
   \]
 para todo $B \in \mathcal{B}(\mathbb{R}^n)$.\\
 \end{definition}
+
+\textbf{Nota:} en adelante por comodidad, omitiremos el subíndice $X$ cuando no haya lugar a confusión.\\
 
 \begin{definition}[Función de distribución]
   La función de distribución de una variable aleatoria unidimensional $X$ es la aplicación $F_X:\mathbb{R}\to[0,1]$ definida como:\[
@@ -207,26 +226,24 @@ F_X(x_1,\dots,x_n) = P[X_1\leq x_1,\dots, X_n\leq x_n].
 
 \begin{proposition}
   La función de distribución $F_X$ de la variable aleatoria $X$ es no decreciente, continua a la derecha y $\lim_{x\to - \infty}F_X(x) = 0$, $\lim_{x\to +\infty}F_X(x) = 1$.\\
-  
-  Si la variable aleatoria $X$ es discreta, la función de distribución tendrá puntos de discontinuidad en los valores de la imagen de $X$. Mientras que si la variable aleatoria es continua, su función de distribución será continua.\\
 \end{proposition}
 
-\begin{definition}[Función Borel]
-  Una función $f:\mathbb{R}^n\to \mathbb{R}^m$ será Borel si la imagen inversa $f^{-1}(B)$ de cualquier conjunto Borel $B\in \mathbb{R}^m$ es un conjunto Borel.\\
-\end{definition}
+Cuando la imagen de la variable aleatoria $X$ sea numerable, diremos que la variable aleatoria es \textit{discreta}, será descrita por la función masa de probabilidad que asigna una probabilidad a cada valor de la imagen de $X$. Por otro lado, cuando la imagen de la variable aleatoria $X$ sea infinita no numerable, diremos que la variable aleatoria es \textit{continua}. Si además puede ser descrita por una función de densidad, será \textit{absolutamente continua}.\\
+  
+  Si la variable aleatoria $X$ es discreta, la función de distribución tendrá puntos de discontinuidad en los valores de la imagen de $X$. Mientras que si la variable aleatoria es continua, su función de distribución será continua.\\
 
-\begin{definition}[Función de densidad y función masa de probabilidad]
-  Si hay una función Borel $f_X:\mathbb{R}^n\to \mathbb{R}$ tal que para cualquier conjunto Borel $B\subset \mathbb{R}$\[
+  \begin{definition}[Función de densidad y función masa de probabilidad]
+ $X$ es una variable aleatoria con distribución absolutamente continua si existe una función integrable Lebesgue $f_X:\mathbb{R}^n\to \mathbb{R}$ tal que para cualquier conjunto Borel $B\subset \mathbb{R}$\[
 P[X\in B] = \int_B f_X(x) dx,
 \]
-se dice que $X$ es una variable aleatoria con distribución absolutamente continua y $f_X$ se llama función de densidad de $X$. Si hay una secuencia (finita o infinita) de vectores $x_1,x_2,\dots$ tal que para cualquier conjunto Borel $B\subset \mathbb{R}^n$\[
+$f_X$ se llama función de densidad de $X$. Si hay una secuencia (finita o numerable) de vectores $x_1,x_2,\dots$ tal que para cualquier conjunto Borel $B\subset \mathbb{R}^n$\[
 P[X\in B] = \sum_{x_i\in B}P[X = x_i],
 \]
 entonces decimos que $X$ tiene una distribución discreta que toma los valores $x_1,x_2,\dots$ y cuya función masa de probabilidad es $P[X=x_i]=p(x_i)$ en $x_i$.\\
 \end{definition}
 
 \begin{definition}[Soporte]
-Llamamos soporte de una variable aleatoria $X$ al conjunto de puntos donde $f(x)>0$, lo notaremos $sop(X)$.\\
+Llamamos soporte de una variable aleatoria continua $X$ al conjunto de puntos donde $f(x)>0$, lo notaremos $sop(X)$.\\
 \end{definition}
 
 
@@ -237,7 +254,7 @@ P[A|B] = \frac{P[A\cap B]}{P[B]}.
 \end{definition}
 
 \begin{definition}[Función de densidad condicionada]
-  Para cualesquiera dos variables aleatorias $X$, $Y$ con función de densidad $f_X$ y $f_Y$ respectivamente y función de densidad conjunta $f$, la densidad de $X$ condicionada a que $Y=y$ viene dada por\[
+  Para cualesquiera dos variables aleatorias $X$, $Y$ con funciones de densidad $f_X$ y $f_Y$ respectivamente y función de densidad conjunta $f$, la densidad de $X$ condicionada a que $Y=y$ viene dada por\[
 f_X(x|Y=y) = \frac{f(x,y)}{f_Y(y)}.
   \]\\[-10pt]
 \end{definition}
@@ -291,15 +308,15 @@ En el caso de que $X$ sea una variable aleatoria absolutamente continua y admita
 \end{definition}
 
 \begin{proposition}[Propiedades de la esperanza]\label{p:prop_esp}
-  Sea $X$ una variable aleatoria con función de densidad $f(x)$, entonces se cumplen las siguientes propiedades de la esperanza:
+  Sean $X, X_1,\dots, X_n$ variables aleatorias con funciones de densidad $f_X,f_{X_1},\dots,f_{X_n}$ respectivamente y $g,g_1,\dots,g_n:\R\to \R$ funciones integrables Lebesgue, entonces se cumplen las siguientes propiedades de la esperanza:
   \begin{itemize}
-  \item Para una función $g(x)$, $g(X)$ será también una variable aleatoria y su esperanza será\[
-\mathbb{E}[g(X)] = \int g(x)f(x)dx.
+  \item $g(X)$ es también una variable aleatoria y su esperanza será\[
+\mathbb{E}[g(X)] = \int g(x)f_X(x)dx.
 \]
 Esta propiedad se conoce como \textit{ley del estadístico inconsciente}.
-\item $\mathbb{E}\left [\sum_{j=1}^kc_jg_j(X) \right] = \sum_{j=1}^k c_j \mathbb{E} \left [ g_j(X_i) \right ]$.
+\item $\mathbb{E}\left [\sum_{j=1}^kc_jg_j(X) \right] = \sum_{j=1}^k c_j \mathbb{E} \left [ g_j(X) \right ]$.
 
-\item Si $X_1,\dots,X_n$ son variables aleatorias independientes, entonces\[
+\item Si $X_1,\dots,X_n$ son independientes, entonces\[
 \mathbb{E} \left [ \prod_{i=1}^n X_i \right ] = \prod_{i=1}^k\mathbb{E}[X_i].
   \]\\[-10pt]
   \end{itemize}
@@ -307,14 +324,14 @@ Esta propiedad se conoce como \textit{ley del estadístico inconsciente}.
 \end{proposition}
 
 \begin{theorem}[Desigualdad de Jensen]\label{th:jensen}
-  Si $g$ es una función convexa y $X$ es una variable aleatoria, entonces\[
+  Si $g$ es una función integrable Lebesgue, convexa y $X$ es una variable aleatoria, entonces\[
  g\left ( \E[X] \right) \leq \E\left[g(X)\right]
   \]
 dándose la igualdad si, y solo si, $g$ es una función afín.\\
 \end{theorem}
 
 \begin{definition}[Esperanza condicionada]
-  Se define la esperanza condicionada de la variable aleatoria $Y$ dado $X$ como la variable aleatoria $\mathbb{E}[Y|X] = g(X)$ tal que \[
+  Se define la esperanza condicionada de la variable aleatoria $Y$ dado $X$ como la variable aleatoria $\mathbb{E}[Y|X]$ tal que \[
 \mathbb{E} [ Y | X = x ] = \int y f_Y(y| X = x) dy.
   \] \\[-10pt]
   
@@ -337,10 +354,10 @@ En esta sección recordaremos algunos conceptos sobre estimación puntual que ut
   Una muestra aleatoria simple de tamaño $n$ de una variable aleatoria $X$ con distribución teórica $F$, son $n$ variables aleatorias $(X_1,\dots,X_n)$, independientes e idénticamente distribuidas, todas con la misma distribución $F$.\\
 \end{definition}
 
-En un amplio número de estudios estadísticos la distribución teórica $F$ de la variable aleatoria a estudiar es desconocida. Notamos $\mathcal{F}$ a la familia de distribuciones candidatas a ser realmente la distribución (se obtiene a partir de información previa). En estadística paramétrica se conoce la forma funcional de $F$ pero se desconocen uno o algunos parámetros de la misma. Para tratar de obtener información sobre este parámetro desconocido a partir de una muestra utilizaremos los \textit{estimadores}.\\
+En un amplio número de estudios estadísticos la distribución teórica $F$ de la variable aleatoria a estudiar es desconocida. Notamos $\mathcal{F}$ a la familia de distribuciones candidatas a ser realmente la distribución (se obtiene a partir de información previa). En estadística paramétrica se conoce la forma funcional de $F$ pero se desconocen uno o algunos parámetros de la misma. Para tratar de obtener información sobre este parámetro desconocido a partir de una muestra utilizaremos los \textit{estimadores}. En estadística no paramétrica se desconoce la forma funcional de $F$, y se trata de obtener aproximaciones de la distribución o de algunos de sus momentos a partir de una muestra.\\
 
 \begin{definition}[Estadístico]
-  Se denomina estadístico a cualquier función medible de una muestra aleatoria simple $T(X_1,\dots,X_n)$, $T:\mathbb{R}^n\to \mathbb{R}$ es una determinada función medible.\\
+  Se denomina estadístico a cualquier función medible de una muestra aleatoria simple $T(X_1,\dots,X_n)$, donde $T:\mathbb{R}^n\to \mathbb{R}$ es una determinada función medible.\\
 \end{definition}
 
 \begin{example}
@@ -358,7 +375,7 @@ En un amplio número de estudios estadísticos la distribución teórica $F$ de 
 Un estimador es un estadístico cuyos valores se utilizan para obtener información (estimación puntual) de un parámetro desconocido $\theta$, lo notaremos  $\widehat{\theta}(X_1, \dots, X_n)$.\\
 \end{definition}
 
-Como comentamos anteriormente, se usan los valores del estimador para obtener información del parámetro de la población. Las siguientes propiedades nos informan de la ``calidad'' de la estimación y permiten comparar diferentes estimadores de un mismo parámetro.\\
+Como comentamos anteriormente, se usan los valores del estimador para obtener información de algún parámetro de la población. Las siguientes propiedades nos informan de la ``calidad'' de la estimación y permiten comparar diferentes estimadores de un mismo parámetro.\\
 
 \begin{definition}[Estimador insesgado]
   Si $\widehat{\theta}$ es un estimador del parámetro $\theta$, la diferencia \[
@@ -379,7 +396,7 @@ hemos comprobado que la media muestral es un estimador insesgado para $\mu$.\\
 \end{example}
 
 \begin{definition}[Eficiencia]
-  Si $\hat{\theta}_1, \hat{\theta}_2$ son dos estimadores insesgados del parámetro $\theta$, diremos que $\hat{\theta}_1$ es más eficiente que $\hat{\theta}_2$ si \[
+  Si $\hat{\theta}_1, \hat{\theta}_2$ son dos estimadores del parámetro $\theta$, diremos que $\hat{\theta}_1$ es más eficiente que $\hat{\theta}_2$ si \[
 \Var\left(\hat{\theta}_1\right) < \Var\left(\hat{\theta}_2\right).
   \]\\[-10pt]
 \end{definition}
@@ -400,14 +417,14 @@ El tamaño de la muestra será un factor que influya en la estimación. Por ello
 \end{definition}
 
 \begin{lemma}\label{l:est_cons}
-  Sea $\hat{\theta}_n$ un estimador del parámetro $\theta$ para una muestra de tamaño $n$. Si $\bias\left(\hat{\theta}_n\right)\to 0$ y $\Var\left(\hat{\theta}_n\right)\to0$, entonces $\hat{\theta}_n\xrightarrow[]{P}\theta$, esto es, el estimador $\hat{\theta}_n$ es consistente.\\
+  Sea $\hat{\theta}_n$ un estimador del parámetro $\theta$ para una muestra de tamaño $n$. Si $\bias\left(\hat{\theta}_n\right)\xrightarrow[]{n\to\infty} 0$ y $\Var\left(\hat{\theta}_n\right)\xrightarrow[]{n\to\infty}0$, entonces $\hat{\theta}_n\xrightarrow[]{P}\theta$, esto es, el estimador $\hat{\theta}_n$ es consistente.\\
 \end{lemma}
 
-Cuando $\bias\left(\hat{\theta}_n\right)\to 0$ diremos que el estimador $\hat{\theta}_n$ es asintóticamente insesgado.\\
+Cuando $\bias\left(\hat{\theta}_n\right)\xrightarrow[]{n\to\infty} 0$ diremos que el estimador $\hat{\theta}_n$ es asintóticamente insesgado.\\
 
 \begin{example}
   % Estimadores consistentes
-  Consideramos la media muestral, un estimador insesgado de la media de una variable aleatoria $X$. La variable aleatoria $X$, de la que conocemos una muestra $X_1,\dots,X_n$, tendrá varianza $\sigma^2$. Veamos el comportamiento asintótico de la varianza de la media muestral.\[
+  Sea $X$ una variable aleatoria con media $\mu$ y varianza $\sigma^2$. Hemos visto que la media muestral es un estimador insesgado de $\mu$. Veamos ahora el comportamiento asintótico de la varianza de la media muestral.\[
 \Var(\olsi{X}) = \Var\left(\frac{1}{n}\sum_{i=1}^nX_i\right) = \frac{1}{n^2}\sum_{i=1}^n\Var(X_i) = \frac{\sigma^2}{n}\xrightarrow[]{n\to\infty}0.\\
 \]
 
@@ -417,7 +434,7 @@ En el Ejemplo \ref{ej:medest} habíamos visto que el sesgo de $\olsi{X}$ era nul
 La media muestral no es solo un estimador insesgado y consistente de la media teórica de una variable aleatoria $X$. La ley (débil) de los grandes números prueba que este estimador converge en probabilidad a la media teórica.\\
 
 \begin{theorem}[Ley (débil) de los grandes números]\label{t:lgn}
-  Sean $X_1,\dots,X_n$ variables aleatorias con distribución $F$ y $\mu =\mathbb{E}\left [X_1 \right]$. Si $\mu =\mathbb{E}\left [X_1 \right] < \infty$, entonces la media muestral\[
+  Sean $X_1,\dots,X_n$ variables aleatorias independientes e idénticamente distribuidas con media $\mu<\infty$, entonces la media muestral\[
 \olsi{X}_n = \frac{1}{n}\sum_{i=1}^nX_i
 \]converge en probabilidad a $\mu$, esto es,\[
 \olsi{X}_n\xrightarrow[]{P} \mu.\]\\  [-10pt]
@@ -429,7 +446,7 @@ La media muestral no es solo un estimador insesgado y consistente de la media te
 Durante el desarrollo del trabajo se utilizarán algunas distribuciones que se presentan a continuación.\\
 %--------------------------------- Uniforme unidimensional--------------
 \begin{definition}[Distribución uniforme discreta]
-Si $X$ es una variable aleatoria con distribución uniforme discreta sobre el intervalo $[a,b]$. $X$ tomará $n$ posibles valores, $x_1,\dots,x_n$ ($x_i\in [a,b]$ para $i=1,\dots,n$), con igual probabilidad $\frac{1}{n}$. La función masa de probabilidad será $f(x_i) = \frac{1}{n}$ para todo $i = 1,\dots, n$. \\
+Sea $X$ una variable aleatoria discreta con valores $\{x_1,\dots,x_n\}$. $X$ tiene una distribución uniforme si $P[X = x_i] = \frac{1}{n}$ para $i=1,\dots,n$. Es decir, la función masa de probabilidad $p(x_i) = \frac{1}{n}$ para $i=1,\dots,n$.\\
 \end{definition}
 
 \begin{example}
@@ -449,7 +466,7 @@ f(x) =
 
 %---------------------------------Distribución normal-------------------
 \begin{definition}[Distribución normal unidimensional]
-  Una variable aleatoria unidimensional seguirá una distribución normal, o distribución gaussiana, si su función de densidad es \[
+  Una variable aleatoria unidimensional seguirá una distribución normal, o distribución gaussiana, si su función de densidad $f:\R\to\R$ viene dada por \[
 f(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}\left( \frac{x-\mu}{\sigma}\right ) ^2}.
 \]\\[-10pt]
 \end{definition}
@@ -457,9 +474,9 @@ f(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}\left( \frac{x-\mu}{\sigma}\rig
 Generalizamos esta definición para el caso multivariante.\\
 
 \begin{definition}[Distribución normal multivariante]
-  Una variable aleatoria sigue una distribución normal multivariante si cualquier combinación de sus componentes tiene una distribución normal univariante. Su función de densidad es \[
+  Una variable aleatoria sigue una distribución normal multivariante si cualquier combinación de sus componentes tiene una distribución normal univariante. Su función de densidad $f:\R^n\to\R$ viene dada por \[
 f(x) = \frac{1}{\left (\sqrt{2\pi}\right )^n |\Sigma|^{\frac{1}{2}}} e^{-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)},
-  \] donde $\Sigma$ es una matriz definida positiva.\\
+  \] donde $\mu\in \R^n$ y $\Sigma$ es una matriz $n\times n$ definida positiva.\\
 \end{definition}
 %--------------------------------Fin - normal---------------------------
 
@@ -506,9 +523,9 @@ r_{xy}=\frac{\sum_{i=1}^n(x_i-\olsi{x})(y_i-\olsi{y})}{\sqrt{\sum_{i=1}^n(x_i-\o
 \] donde $\olsi{x} = \frac{1}{n}\sum_{i=1}^nx_i$ la media muestral, de forma análoga para $\olsi{y}$.\\
 \end{definition}
 
-Este coeficiente mide la correlación lineal entre las variables $X,Y$. Su valor se encuentra entre $+1$ y $-1$, donde $+1$ indica una correlación lineal positiva total, $0$ que no hay correlación lineal y $-1$ correlación lineal total negativa. Si el coeficiente de correlación de Pearson de dos variables aleatorias es $0$, sabremos que no existe una dependencia lineal entre ellas, pero no podremos asegurar nada acerca de la independencia, pues podría existir otro tipo de dependencia entre ellas.\\
+Este coeficiente mide la correlación lineal entre las variables $X,Y$. Su valor se encuentra entre $+1$ y $-1$, donde $+1$ indica una correlación lineal positiva total, $0$ que no hay correlación lineal y $-1$ correlación lineal total negativa. Si el coeficiente de correlación de Pearson de dos variables aleatorias es $0$, sabremos que no existe una dependencia lineal entre ellas, pero no podremos garantizar la independencia, pues podría existir otro tipo de dependencia entre ellas.\\
 
-Este coeficiente es paramétrico, depende de las distribuciones marginales, el que presentamos a continuación será no paramétrico.\\
+Este coeficiente es paramétrico, depende de las distribuciones marginales, el que presentamos a continuación es no paramétrico.\\
 
 El coeficiente de correlación de Spearman mide la relación entre dos variables más allá de si es lineal o no. Atiende a si ambas variables tienen la misma monotonía, esto es, si a medida que los valores de una de las variables crecen, los de la otra también lo hacen (o al revés). Para ello, tendremos que ordenar los datos de cada variable de menor a mayor.\\
 
@@ -529,7 +546,7 @@ Este coeficiente también toma valores entre $-1$ y $+1$. Si los valores son cer
 
 Así, hemos visto un par de ejemplos de medidas de dependencia que caracterizan adecuadamente tipos concretos de dependencia, pero no caracterizan la independencia.\\
 
-La información mutua es otra forma de medir la dependencia entre dos variables aleatorias capaz de determinar otros tipos de dependencias, además de las lineales o monótonas. Podríamos decir que es una medida de la dependencia global. Además, esta medida también nos dará información sobre la independencia de las variables aleatorias en estudio (véanse Teorema \ref{t:im_indd} y Corolario \ref{c:im_indc}).
+La información mutua es otra forma de medir la dependencia entre dos variables aleatorias capaz de determinar otros tipos de dependencias, además de las lineales o monótonas. Podríamos decir que es una medida de la dependencia global. Además, esta medida también nos dará información sobre la independencia de las variables aleatorias en estudio (véanse Teorema \ref{t:im_indd} y Corolario \ref{c:im_indc}).\\
 
 %-----------------------------------------------------------------------
 %-----------------------TEORÍA DE LA INFORMACIÓN------------------------
@@ -1268,7 +1285,7 @@ La diferencia vendrá marcada por la forma de estimar $\widehat{\log f}(X_i)$, p
 
 Siguiendo con la notación anterior, llamamos $\mathcal{E}_{i_k}$ a la variable aleatoria $\Vert X_i - X_{i_k} \Vert$ y $P_k(\epsilon)$ a su función de densidad.\\
 
-Para obtener el estimador $\widehat{\log f}(X_i)$, para un $k$ fijo, consideramos la función de densidad, $P_k(\varepsilon)$, de la distancia entre $X_i$ y su $k$-ésimo vecino más cercano, $\epsilon$ será una realización de $\mathcal{E}_{i_k}$.\\
+Para obtener el estimador $\widehat{\log f}(X_i)$, para un $k$ fijo, consideramos la función de densidad, $P_k(\varepsilon)$, de la distancia entre $X_i$ y su $k$-ésimo vecino más cercano, donde $\epsilon$ será una realización de $\mathcal{E}_{i_k}$.\\
 
 Partimos de una observación $x_1,\dots, x_n$, de la que seleccionamos un punto $x_i$ cualquiera. Vamos a calcular $P\left[\epsilon \leq \mathcal{E}_{i_k} \leq \epsilon + h \right]$. Esta probabilidad es igual a la probabilidad de que haya un punto a distancia $r\in \left[ \varepsilon,\varepsilon + h \right ]$ de $x_i$, de que haya otras $k-1$ observaciones a distancia menor que $\epsilon$; y de que el resto de puntos se encuentren a mayor distancia de $x_i$.\\
 
@@ -1419,15 +1436,15 @@ I^{(2)}(X,Y) \approx \psi(k) - \frac{1}{k} - \langle \psi(n_x) + \psi(n_y) \rang
 \end{align}\\[-10pt]
 
 
-En general ambas fórmulas dan resultados similares. Para un mismo $k$, $I^{(1)}$ da menores errores estadísticos (porque $n_x(i)$ y $n_y(i)$ tienden a ser más grandes y tener menores variaciones relativas), pero tiene mayores errores sistemáticos. Esto último es grave solo si estamos interesados en variables con dimensiones muy altas, donde $\varepsilon(i)$ es habitualmente más grande que la marginal $\varepsilon_x(i)$. En ese caso, parece preferible el segundo algoritmo, de resto es indiferente usar uno u otro.\\
+En general ambas fórmulas dan resultados similares. Para un mismo $k$, $I^{(1)}$ da menores errores estadísticos (porque $n_x(i)$ y $n_y(i)$ tienden a ser más grandes y tener menores variaciones relativas), pero tiene mayores errores sistemáticos. Esto último es grave solo si estamos interesados en variables con dimensiones muy altas, donde $\varepsilon(i)$ es habitualmente más grande que la marginal $\varepsilon_x(i)$. En ese caso, parece preferible el segundo algoritmo, en caso contrario es indiferente usar uno u otro.\\
 
 \section{Implementaciones de la entropía y de la información mutua}
 
-En esta sección estudiaremos dos implementaciones de conceptos anteriores como la entropía o la estimación mutua. En general, dado un número finito de muestras de una variable aleatoria no podemos calcular de forma exacta la entropía o información mutua, ya que no conocemos su distribución. Para implementarlas es necesario usar algún estimador, como los estudiados en el apartado anterior.
+En esta sección estudiaremos dos implementaciones en Python de conceptos anteriores como la entropía o la estimación mutua. En general, dado un número finito de muestras de una variable aleatoria no podemos calcular de forma exacta la entropía o información mutua, ya que no conocemos su distribución. Para implementarlas es necesario usar algún estimador, como los estudiados en el apartado anterior.
 
 \subsection{Implementación 1 - GaelVaroquaux}
 
-Comenzaremos revisando la implementación encontrada en \cite{estimating}. Para ello analizaremos el código y nos haremos una idea de qué hace y cómo cada una de las funciones.
+Comenzaremos revisando la implementación encontrada en \cite{estimating}. Esta implementación fue desarrollada por Gaël Varoquaux \cite{gael-varoquaux}, un investigador de la facultad de Inria que trabaja en el ámbito de la ciencia de datos, contribuye, entre otros proyectos, en las bibliotecas \texttt{scikit-learn} y joblib. En esta implementación hace uso de la biblioteca \texttt{scikit-learn} para calcular estimadores de la entropía y la información mutua. Para revisar esta implementación analizaremos el código y nos haremos una idea de qué hace y cómo cada una de las funciones.
 
 \begin{itemize}
 \item \texttt{nearest\_distances(X, k)}: para cada punto de un vector \texttt{X}, devuelve la distancia a su $k$-ésimo vecino más cercano. Se implementa haciendo uso de las funciones de la clase \texttt{NearestNeighbors} de \texttt{scikit-learn} \cite{nearestneighbors}.
@@ -1477,7 +1494,7 @@ Observamos una pequeña diferencia entre los valores estimados y los teóricos. 
 
 \subsection{Implementación 2 -  gregversteeg}
 
-Pasamos a revisar la segunda implementación, que encontramos en \cite{npeet}. Como en el caso anterior, comenzamos leyendo el código función por función. 
+Pasamos a revisar la segunda implementación, que encontramos en \cite{npeet}. Esta implementación, cuyo desarrollador principal es Greg Ver Steeg \cite{gregv}, investigador asociado a la universidad de California del sur, se basa en los estimadores estudiados, aquellos propuestos en \cite{kraskov}. Como en el caso anterior, comenzamos analizando el código función por función. 
 \begin{itemize}
 \item \texttt{entropy(x, k, base)}: utiliza el estimador de tipo Kozachenko - Leonenko visto en (\ref{eq:est_ent}) basado en los $k$ vecinos más cercanos. \texttt{x} debe ser una lista de vectores. En primer lugar, se comprueba mediante un \textit{assert} que el valor de $k$ sea mayor que el número de muestras. Se convierte la lista \texttt{x} en un \textit{array}, se almacena el número de elementos y de características, se añade ruido a los elementos de \texttt{x} (en la función \texttt{add\_noise}), se obtiene el árbol de vecinos más cercanos usando árboles \texttt{KDTree} o \texttt{BallTree} de la biblioteca \texttt{scikit-learn} según la dimensión de los datos (en la función \texttt{build\_tree}). Se obtienen los $k$ vecinos más cercanos de \texttt{x} usando este árbol y la función \texttt{query\_neighbors}, que llama a la función \texttt{query} correspondiente de \texttt{scikit-learn}, esta función devolverá la distancia de Chebyshev(dada por la norma del máximo) a los vecinos más cercanos y sus índices, pero nos quedamos solo con las distancias. La función devuelve el siguiente valor:\[
   \frac{\psi(N) - \psi(k) + d \cdot \log 2 + \frac{d}{N}\sum \varepsilon(i)}{\log(base)}.
@@ -2366,8 +2383,58 @@ La realización del \textit{T-Test} sobre las implementaciones de la entropía p
 
 Atendiendo al rendimiento, la implementación más rápida para realizar el cálculo de la entropía es la dada en \cite{npeet}, excepto cuando el número de observaciones y la dimensión sean grandes, en cuyo caso resulta más rápida la implementación \cite{estimating}. En el estudio de la información mutua, si tenemos que elegir la estimación más rápida, dependerá del tamaño de la muestra y de la dimensión. Para muestras de tamaño pequeño resulta más veloz la implementación \cite{npeet}, al igual que para muestras de tamaño medio y dimensión grande. En el resto de casos, muestras de tamaño grande y muestras de tamaño mediano con dimensiones pequeñas y medianas es más rápida la implementación \cite{estimating}. Notamos que para dimensiones grandes y tamaños de muestra grande los tiempos de ejecución se incrementan notablemente, tiempos cercanos a unos pocos segundos de ejecución cuando la dimensión es pequeña se transforman en tiempos entre 45 minutos y una hora para dimensiones grandes y tamaños de muestra grandes. Se hace necesario, por tanto, el uso de paralelismo a nivel de ejecución si se desea obtener resultados en tiempo aceptables.\\
 
-\chapter{Estimación del coste del TFG}
----Ordenador, horas a precio de junior---
+\chapter{Estimación del coste del trabajo}
+
+Se realiza un presupuesto del coste del trabajo, en el que se incluyen las horas dedicadas a cada concepto y se realiza una estimación a precio 35€/hora, véase Tabla \ref{tab:coste}.\\
+
+Para la realización del presupuesto se ha dividido el trabajo en tres módulos: módulo teórico, módulo práctico y módulo general.\\
+
+En el módulo teórico se recogen las tareas asociadas al estudio y análisis de los contenidos de carácter teórico. Notamos que aquí se incluye el estudio de las diferentes nociones a partir de varias fuentes para su posterior síntesis.\\
+
+En el módulo experimental se recogen las diferentes tareas asociadas al análisis de las implementaciones. No sólo se realiza un análisis de las mismas sino que es necesario la implementación y validación de código para llevar a cabo el análisis desde diferentes perspectivas. Además, se tiene en cuenta el equipo utilizado y el tiempo dedicado a la instalación del sistema operativo y las bibliotecas necesarias para llevar a cabo el análisis.\\
+
+En el módulo general se encuentran las tareas relativas a la redacción de este documento, además de las correcciones que ha requerido, así como las reuniones con los tutores.\\
+
+\begin{table}[hpt]
+  
+\begin{adjustwidth}{-.4in}{-.4in} 
+\centering
+\caption{Estimación del coste del trabajo.}
+\label{tab:coste}
+\begin{tabular}{p{7.3cm}R{2cm}R{2cm}R{2cm}}
+  \toprule
+Concepto & Cantidad (horas) & Coste unidad (€/h) & Coste total (€)\\
+ \midrule
+Módulo teoría & & &\\
+ \midrule
+ Análisis/estudio conceptos previos & 15 & 35 & 525\\[3pt]
+ Análisis/estudio caso discreto & 25 & 35 & 875\\[3pt]
+ Análisis/estudio caso continuo & 25 & 35 & 875\\[3pt]
+ Análisis/estudio estimadores & 60 & 35 & 2100\\[5pt]
+ \midrule
+ Módulo experimental & & &\\
+ \midrule
+ Equipo de trabajo: Dell portátil Vostro 5590 & & 1085 & 1085\\[3pt]
+ Instalación sistema operativo, bibliotecas, entorno de desarrollo & 10 & 35 & 350\\[3pt]
+ Análisis implementaciones estimadores & 20 & 35 & 700\\[3pt]
+ Análisis/desarrollo código análisis del error & 30 & 35 & 1050\\[3pt]
+ Análisis/desarrollo/validación clase para generación de muestras & 5 & 35 & 175\\[3pt]
+ Análisis del \textit{T-Test}, desarrollo del \textit{T-Test}, validación del \textit{T-Test} & 25 & 35 & 875\\[3pt]
+ Análisis \textit{profilers}, implementación/integración/validación código para \textit{profiling}, ejecución & 32 & 35 & 1120\\[3pt]
+ Análisis de resultados obtenidos & 20 & 35 & 700\\[5pt]
+ \midrule
+ Módulo general& & &\\
+ \midrule
+ Redacción memoria & 50 & 35 & 1750\\[3pt]
+ Corrección memoria & 15 & 35 & 525\\[3pt]
+ Reuniones con los tutores & 30 & 35 & 1050\\[3pt]
+ \midrule
+ Total & 362 & &13755\\
+ \bottomrule\\
+ IVA no incluido.&&&\\
+\end{tabular}
+\end{adjustwidth}
+\end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %       REFERENCIAS

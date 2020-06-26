@@ -1,0 +1,46 @@
+%*******************************************************
+% Titlepage
+%*******************************************************
+\begin{titlepage}
+    %\pdfbookmark[1]{\myTitle}{titlepage}
+    % if you want the titlepage to be centered, uncomment and fine-tune the line below (KOMA classes environment)
+    \begin{addmargin}[-1cm]{-1cm}
+    \begin{center}
+        \large
+
+        \hfill
+
+        \vfill
+
+        \begingroup
+            \color{CTtitle}\spacedallcaps{\myTitle} 
+        \endgroup
+
+        \spacedlowsmallcaps{\myName}\\\bigskip
+
+        \small
+
+        \spacedlowsmallcaps{Responsables de tutorización}: \\
+        \myProf \\[5pt]
+        \myOtherProf \\ \bigskip
+
+       % \vfill
+
+        \includegraphics[width=6cm, angle = -90]{ugr} \\ \medskip
+%        \vfill
+
+        %  \mySubtitle \\ \medskip
+     
+        \myDegree \\
+        %\myDepartment \\
+        \myFaculty \\
+        \myUni \\
+        \myYear \\ \bigskip
+
+    %    \myTime\ -- \myVersion
+
+        \vfill
+
+    \end{center}
+  \end{addmargin}
+\end{titlepage}
