@@ -20,6 +20,13 @@
 %\usepackage{lipsum}
 \usepackage{url}
 
+% Licencia
+\usepackage[
+    type={CC},
+    modifier={by-sa},
+    version={4.0},
+]{doclicense}
+
 % Cargamos amsmath antes que classicthesis que si no tenemos fallos de compilación
 \usepackage{amsmath}
 \usepackage{./classicthesis}
@@ -116,6 +123,7 @@
 %-------------------------- ÍNDICE--------------------------------------
 \include{Titlepage}
 \include{Titleback}
+\doclicenseThis
 \include{agradecimientos}
 
 \input{resumen.tex}
